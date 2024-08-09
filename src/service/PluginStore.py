@@ -1,7 +1,9 @@
 import os
+import shutil
 import logging
 import inspect
 import importlib
+from pathlib import Path
 
 from src.interface.ObPlugin import ObPlugin
 from src.interface.ObController import ObController
@@ -14,6 +16,7 @@ from src.model.enum.VariableType import VariableType
 from src.model.enum.HookType import HookType
 from src.model.hook.HookRegistration import HookRegistration
 from src.model.hook.StaticHookRegistration import StaticHookRegistration
+from src.util.UtilFile import copy_files
 from typing import List, Dict
 
 
@@ -53,6 +56,9 @@ class PluginStore:
         return self._hooks
 
     def find_plugins_in_directory(self, directory: str) -> list:
+        plugin_type = Path(directory).stem.capitalize()
+        logging.info("#")
+        logging.info("[plugin] {}...".format(plugin_type))
         plugins = []
         for root, dirs, files in os.walk('{}/{}'.format(self._kernel.get_application_dir(), directory)):
             for file in files:
@@ -114,6 +120,10 @@ class PluginStore:
             self._hooks[hook_type] = sorted(self._hooks[hook_type], key=lambda hook_reg: hook_reg.priority, reverse=True)
 
     def setup_plugin(self, plugin: ObPlugin) -> None:
+        # LANGS
+        self._model_store.lang().load(directory=plugin.get_directory(), prefix=plugin.use_id())
+        self._model_store.variable().reload()
+
         # VARIABLES
         variables = plugin.use_variables() + [
             plugin.add_variable(
@@ -121,17 +131,14 @@ class PluginStore:
                 value=False,
                 type=VariableType.BOOL,
                 editable=True,
-                description=self._model_store.lang().translate("common_enable_plugin")
+                description=self._model_store.lang().translate("common_enable_plugin"),
+                description_edition=plugin.use_help_on_activation()
             )
         ]
 
         for variable in variables:
             if variable.name in self._dead_variables_candidates:
                 del self._dead_variables_candidates[variable.name]
-
-        # LANGS
-        self._model_store.lang().load(directory=plugin.get_directory(), prefix=plugin.use_id())
-        self._model_store.variable().reload()
 
         if not self.is_plugin_enabled(plugin):
             return
@@ -163,6 +170,12 @@ class PluginStore:
 
         # WEB CONTROLLERS
         self.load_controllers(plugin)
+
+        # STATIC FILES
+        static_src = plugin.get_plugin_static_src_dir()
+        static_dst = self._web_server.get_plugin_static_dst_dir(plugin.use_id())
+        if os.path.exists(static_src):
+            copy_files(static_src, static_dst)
 
     def clean_dead_variables(self) -> None:
         for variable_name, variable in self._dead_variables_candidates.items():

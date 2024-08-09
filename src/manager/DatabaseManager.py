@@ -3,6 +3,7 @@ import re
 import json
 import sqlite3
 import logging
+import uuid
 
 from sqlite3 import Cursor
 from typing import Optional, Dict
@@ -213,8 +214,11 @@ class DatabaseManager:
             "DELETE FROM settings WHERE name = 'playlist_default_time_sync'",
             "DELETE FROM settings WHERE name = 'slide_animation_exit_effect'",
             "DELETE FROM settings WHERE name = 'playlist_enabled'",
+            "DELETE FROM settings WHERE name = 'external_url_storage'",
             "UPDATE fleet_player_group SET slug = id WHERE slug = '' or slug is null",
             "UPDATE content SET uuid = id WHERE uuid = '' or uuid is null",
+            "UPDATE slide SET uuid = id WHERE uuid = '' or uuid is null",
+            "UPDATE user SET apikey = \'{}\' || id WHERE apikey = '' or apikey is null".format(str(uuid.uuid4())),
         ]
 
         for query in queries:

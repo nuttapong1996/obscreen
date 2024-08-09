@@ -10,6 +10,11 @@ Obscreen is a user-friendly self-hosted digital signage tool leveraging chromium
 
 <img src="https://github.com/jr-k/obscreen/blob/master/docs/screenshot-playlist-edit.png" width="700" alt="" />
 
+🧑‍🎄 Open to feature request and pull request. [Cast your vote for your preferred ones on the Canny platform](https://obscreen.canny.io/feature-requests)
+
+⭐️ You liked it ? Give this repository a star, it's free :)
+
+---
 
 ## 🕹️ Live Demo
 
@@ -19,7 +24,7 @@ Demo Server (Location: Roubaix - France): [https://demo.obscreen.io](https://dem
 
 It is a temporary live demo, all data will be deleted after 30 minutes (~30secs downtime).
 
-## ⭐️ Features
+## 🎉 Features
 - Dead simple chromium webview inside
 - Fancy graphical user interface
 - Very few dependencies
@@ -28,12 +33,12 @@ It is a temporary live demo, all data will be deleted after 30 minutes (~30secs 
 - Playlist management
 - Authentication management
 - Plays content from flashdrive in offline mode
-- Plugin system to extend capabilities
+- Core API & Plugin system to extend capabilities
 - [Multi Languages](https://github.com/jr-k/obscreen/tree/master/lang)
 - Cast pictures and iframes to Chromecast
 - No costly monthly pricing plan per screen or whatever, no cloud, no telemetry
 
-## 👨‍🍳 Cookbooks
+## 👨‍🍳 How to install
 
 ### 🔴 [I want to power a RaspberryPi and automatically see my slideshow on a screen connected to it and manage the slideshow](docs/setup-run-on-rpi.md)
 ### 🔵 [I just want a slideshow manager and I'll deal with screen and browser myself](docs/setup-run-headless.md)
@@ -78,7 +83,7 @@ If you value this project, please think about awarding it a ⭐. Thanks ! 🙏
 
 
 <details closed>
-<summary><h3>Videos aren't playing why ?</h3></summary>
+<summary><h3>Why aren't the videos starting?</h3></summary>
 
 This is "normal" behavior. Videos do not play automatically in Chrome because it requires user interaction with the page (a simple click inside the webpage is enough). If you open the console, you'll see the error: [Uncaught (in promise) DOMException: play() failed because the user didn't interact with the document first...](https://goo.gl/xX8pDD)
 

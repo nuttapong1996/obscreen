@@ -84,6 +84,7 @@
         <div class="preview-holder">
             {% set base_url = external_url if external_url else request.scheme ~ '://' ~ request.headers.get('host') %}
             {% set preview_url = base_url ~ url_for('player_use', playlist_slug_or_id=current_playlist.slug) %}
+
             <h4 class="divide">
                 URL
             </h4>
@@ -99,9 +100,15 @@
                     <button type="button" class="btn btn-naked copy-link" data-target-id="playlist-preview-url">
                         <i class="fa fa-copy"></i>
                     </button>
-                    <a href="{{ preview_url }}" class="btn btn-neutral" target="_blank">
+                    <a href="{{ preview_url }}" class="btn btn-info" target="_blank">
                         <i class="fa-solid fa-up-right-from-square"></i>
                     </a>
+                    <button type="button" class="btn btn-neutral cast-url chrome-only hidden" data-target-id="playlist-preview-url">
+                        <i class="fa fa-brands fa-chromecast"></i>
+                    </button>
+{#                    <button type="button" class="btn btn-neutral cast-scan">#}
+{#                        <i class="fa fa-brands fa-chromecast"></i>#}
+{#                    </button>#}
                 </div>
             </div>
 

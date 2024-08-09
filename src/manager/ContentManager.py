@@ -2,6 +2,7 @@ import os
 
 from typing import Dict, Optional, List, Tuple, Union
 from werkzeug.datastructures import FileStorage
+from flask import url_for
 
 from src.model.entity.Content import Content
 from src.model.entity.Playlist import Playlist
@@ -16,6 +17,7 @@ from src.service.ModelManager import ModelManager
 from src.util.UtilFile import randomize_filename
 from src.util.UtilNetwork import get_preferred_ip_address
 from src.util.UtilVideo import mp4_duration_with_ffprobe
+from src.util.utils import encode_uri_component
 
 
 class ContentManager(ModelManager):
@@ -92,14 +94,17 @@ class ContentManager(ModelManager):
         for content_id, edits in edits_contents.items():
             self._db.update_by_id(self.TABLE_NAME, content_id, edits)
 
-    def get_contents(self, slide_id: Optional[id] = None, folder_id: Optional[id] = None) -> List[Content]:
+    def get_contents(self, slide_id: Optional[int] = None, folder_id: Optional[int] = None) -> List[Content]:
         query = " 1=1 "
 
         if slide_id:
             query = "{} {}".format(query, "AND slide_id = {}".format(slide_id))
 
-        if folder_id:
-            query = "{} {}".format(query, "AND folder_id = {}".format(folder_id))
+        if folder_id is not None:
+            if folder_id == 0:
+                query = "{} {}".format(query, "AND folder_id is null")
+            else:
+                query = "{} {}".format(query, "AND folder_id = {}".format(folder_id))
 
         return self.get_by(query=query)
 
@@ -198,7 +203,7 @@ class ContentManager(ModelManager):
                     content.duration = mp4_duration_with_ffprobe(content.location)
 
         else:
-            content.location = location
+            content.location = location if location else ''
 
         self.add_form(content)
         return self.get_one_by(query="uuid = '{}'".format(content.uuid))
@@ -230,19 +235,18 @@ class ContentManager(ModelManager):
         var_external_url = self._variable_manager.get_one_by_name('external_url').as_string().strip().strip('/')
         location = content.location
 
-        if content.type == ContentType.EXTERNAL_STORAGE:
-            var_external_storage_url = self._variable_manager.get_one_by_name('external_url_storage').as_string().strip().strip('/')
-            port_ex_st = self._config_manager.map().get('port_http_external_storage')
-            location = "{}/{}".format(
-                var_external_storage_url if var_external_storage_url else 'http://{}:{}'.format(get_preferred_ip_address(), port_ex_st),
-                content.location.strip('/')
-            )
-        elif content.type == ContentType.YOUTUBE:
+        if content.type == ContentType.YOUTUBE:
             location = "https://www.youtube.com/watch?v={}".format(content.location)
-        elif len(var_external_url) > 0 and content.has_file():
-            location = "{}/{}".format(var_external_url, content.location)
-        elif content.has_file():
-            location = "/{}".format(content.location)
+        elif content.has_file() or content.type == ContentType.EXTERNAL_STORAGE:
+            location = "{}/{}".format(
+                var_external_url if len(var_external_url) > 0 else "",
+                url_for(
+                    'serve_content_file',
+                    content_location=encode_uri_component(content.location),
+                    content_type=content.type.value,
+                    content_id=content.id
+                ).strip('/')
+            )
         elif content.type == ContentType.URL:
             location = 'http://' + content.location if not content.location.startswith('http') else content.location
 

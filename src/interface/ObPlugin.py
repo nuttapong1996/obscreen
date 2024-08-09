@@ -13,8 +13,6 @@ from src.model.hook.FunctionalHookRegistration import FunctionalHookRegistration
 from src.service.ModelStore import ModelStore
 from src.service.TemplateRenderer import TemplateRenderer
 from src.constant.WebDirConstant import WebDirConstant
-from src.service.AliasFileSystemLoader import AliasFileSystemLoader
-
 
 
 class ObPlugin(abc.ABC):
@@ -26,7 +24,7 @@ class ObPlugin(abc.ABC):
         self._plugin_dir = plugin_dir
         self._model_store = model_store
         self._template_renderer = template_renderer
-        self._rendering_env = self._init_rendering_env()
+        self._rendering_env = template_renderer.init_rendering_env(self._plugin_dir)
 
     @abc.abstractmethod
     def use_id(self) -> str:
@@ -41,11 +39,19 @@ class ObPlugin(abc.ABC):
         pass
 
     @abc.abstractmethod
+    def use_help_on_activation(self) -> Optional[str]:
+        pass
+
+    @abc.abstractmethod
     def use_variables(self) -> List[Variable]:
         pass
 
     @abc.abstractmethod
     def use_hooks_registrations(self) -> List[HookRegistration]:
+        pass
+
+    @abc.abstractmethod
+    def get_version(self) -> str:
         pass
 
     def get_directory(self) -> Optional[str]:
@@ -59,6 +65,9 @@ class ObPlugin(abc.ABC):
 
     def get_plugin_variable_name(self, name: str) -> str:
         return "{}_{}".format(self.get_plugin_variable_prefix(), name)
+
+    def get_plugin_static_src_dir(self) -> str:
+        return "{}/{}".format(self._plugin_dir, WebDirConstant.FOLDER_PLUGIN_STATIC_SRC)
 
     def add_variable(self, name: str, value='', section: str = '', type: VariableType = VariableType.STRING, editable: bool = True, description: str = '', description_edition: str = '', selectables: Optional[Dict[str, str]] = None, unit: Optional[VariableUnit] = None, refresh_player: bool = False) -> Variable:
         return self._model_store.variable().set_variable(
@@ -81,32 +90,12 @@ class ObPlugin(abc.ABC):
     def add_functional_hook_registration(self, hook: HookType, priority: int = 0, function=None) -> FunctionalHookRegistration:
         return FunctionalHookRegistration(plugin=self, hook=hook, priority=priority, function=function)
 
-    def _init_rendering_env(self) -> Environment:
-        alias_paths = {
-            "::": "{}/".format(WebDirConstant.FOLDER_TEMPLATES),
-            "@": "{}/{}/".format(self._plugin_dir.replace(self._kernel.get_application_dir(), ''), WebDirConstant.FOLDER_TEMPLATES)
-        }
+    def translate(self, token, resolve=True) -> Union[Dict, str]:
+        if not token:
+            token = '<UNKNOWN>'
 
-        env = Environment(
-            loader=AliasFileSystemLoader(
-                searchpath=self._kernel.get_application_dir(),
-                alias_paths=alias_paths
-            ),
-            autoescape=select_autoescape(['html', 'xml'])
-        )
-
-        return env
-
-    def render_view(self, template_file: str, **parameters: dict) -> str:
-        template = self.get_rendering_env().get_template(template_file)
-
-        return template.render(
-            request=request,
-            url_for=url_for,
-            **parameters,
-            **self._template_renderer.get_view_globals(),
-        )
-
-    def translate(self, token, resolve=False) -> Union[Dict, str]:
         token = token if token.startswith(self.use_id()) else "{}_{}".format(self.use_id(), token)
         return self._model_store.lang().translate(token) if resolve else token
+
+    def render_view(self, template_file: str, **parameters: dict) -> str:
+        return self._template_renderer.render_view(template_file, self, **parameters)
