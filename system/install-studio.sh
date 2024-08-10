@@ -42,7 +42,7 @@ usermod -aG plugdev $OWNER
 # Automount script for external storage
 # ============================================================
 
-curl https://raw.githubusercontent.com/jr-k/obscreen/master/system/external-storage/10-obscreen-media-automount.rules  | sed "s#/home/pi#$WORKING_DIR#g" | tee /etc/udev/rules.d/10-obscreen-media-automount.rules
+curl https://raw.githubusercontent.com/jr-k/obscreen/master/system/external-storage/10-obscreen-media-automount.rules | sed "s#/home/pi#$WORKING_DIR#g" | tee /etc/udev/rules.d/10-obscreen-media-automount.rules
 udevadm control --reload-rules
 systemctl restart udev
 udevadm trigger

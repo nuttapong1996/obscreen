@@ -42,7 +42,6 @@ class TemplateRenderer:
             external_url=self._model_store.variable().map().get('external_url').as_string().strip('/'),
             last_pillmenu_fleet=self._model_store.variable().map().get('last_pillmenu_fleet').as_string(),
             last_pillmenu_security=self._model_store.variable().map().get('last_pillmenu_security').as_string(),
-            external_url=self._model_store.variable().map().get('external_url').as_string(),
             track_created=self._model_store.user().track_user_created,
             track_updated=self._model_store.user().track_user_updated,
             PORT=self._model_store.config().map().get('port'),
