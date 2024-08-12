@@ -37,8 +37,6 @@ jQuery(document).ready(function ($) {
         'padding-top': '0px'
     });
 
-
-
     function createElement() {
         let screen = $('#screen');
         let screenWidth = screen.width();
@@ -57,7 +55,7 @@ jQuery(document).ready(function ($) {
         y = Math.round(Math.max(0, Math.min(y, screenHeight - elementHeight)));
 
         let elementId = elementCounter++;
-        let element = $('<div class="element" id="element-' + elementId + '" data-id="' + elementId + '"><button>Button</button></div>');
+        let element = $('<div class="element" id="element-' + elementId + '" data-id="' + elementId + '"><i class="fa fa-cog"></i></div>');
         // let element = $('<div class="element" id="' + elementId + '"><button>Button</button><div class="rotate-handle"></div></div>');
 
         element.css({
@@ -106,6 +104,8 @@ jQuery(document).ready(function ($) {
         setTimeout(function() {
             focusElement(element);
         }, 10);
+
+        return element;
     }
 
     $(document).on('click', '.element-list-item', function(){
@@ -113,7 +113,9 @@ jQuery(document).ready(function ($) {
     })
 
     $(document).on('click', '.remove-element', function(){
-          removeElementById($(this).attr('data-id'));
+        if (confirm(l.js_common_are_you_sure)) {
+            removeElementById($(this).attr('data-id'));
+        }
     })
 
     function removeElementById(elementId) {
@@ -122,8 +124,16 @@ jQuery(document).ready(function ($) {
     }
 
     function addElementToList(elementId) {
-        let listItem = $('<div class="element-list-item" data-id="' + elementId + '">Element ' + elementId + ' <button type="button" class="remove-element" data-id="' + elementId + '">remove</button></div>');
-        $('#elementList').append(listItem);
+        const listItem = `<div class="element-list-item" data-id="__ID__">
+            Element __ID__ 
+            <button type="button" class="btn btn-neutral configure-element content-explr-picker" data-id="__ID__">
+                <i class="fa fa-cog"></i>
+            </button>
+            <button type="button" class="btn btn-naked remove-element" data-id="__ID__">
+                <i class="fa fa-trash"></i>
+            </button>
+        </div>`;
+        $('#elementList').append($(listItem.replace(/__ID__/g, elementId)));
         updateZIndexes();
     }
 
@@ -145,9 +155,11 @@ jQuery(document).ready(function ($) {
     function updateForm(element) {
         if (!element) {
             $('form#elementForm input').val('').prop('disabled', true);
+            $('.form-element-properties').addClass('hidden');
             return;
         }
 
+        $('.form-element-properties').removeClass('hidden');
         $('form#elementForm input').prop('disabled', false);
 
         let offset = element.position();
@@ -158,6 +170,8 @@ jQuery(document).ready(function ($) {
             $('#elem-width').val(element.width());
             $('#elem-height').val(element.height());
         }
+
+        $(element).find('i').css('font-size', Math.min(element.width(), element.height()) / 3);
         /*
         let rotation = element.css('transform');
         let values = rotation.split('(')[1].split(')')[0].split(',');
@@ -201,13 +215,19 @@ jQuery(document).ready(function ($) {
         }
     });
 
-    $(document).on('click', '#addElement', function () {
-        createElement();
-    });
+    // $(document).on('click', '#addElement', function () {
+    //     createElement();
+    // });
 
     $(document).on('click', '#removeAllElements', function () {
-        $('.element, .element-list-item').remove();
-        updateZIndexes();
+        if (confirm(l.js_common_are_you_sure)) {
+            $('.element, .element-list-item').remove();
+            updateZIndexes();
+        }
+    });
+
+    $(document).on('dblclick', '.element', function (e) {
+        $('.content-explr-picker[data-id='+$(this).attr('data-id')+']').click();
     });
 
     $(document).on('mousedown', function (e) {
@@ -220,7 +240,7 @@ jQuery(document).ready(function ($) {
         if (!keepFocusedElement) {
             unfocusElements();
         }
-    });
+    })
 
     $(document).on('click', '#presetGrid2x2', function () {
         let screenWidth = $('#screen').width();
@@ -252,6 +272,22 @@ jQuery(document).ready(function ($) {
         });
     });
 
+    $(document).on('click', '.content-explr-picker', function () {
+        const elementId = $(this).attr('data-id');
+        const isNew = !elementId;
+        const $element = isNew ? $(createElement()) : $('#element-'+elementId);
+
+        showPickers('modal-content-explr-picker', function (content) {
+            console.log(content);
+            $element.attr('data-content-id', content.id);
+            $element.attr('data-content-name', content.name);
+            $element.attr('data-content-type', content.type);
+            console.log($element)
+            $element.find('i').get(0).classList = ['fa', content.classIcon, content.classColor].join(' ');
+
+        });
+    });
+
     function updateZIndexes() {
         const zindex = $('.element-list-item').length + 1;
         $('.element-list-item').each(function(index) {
@@ -266,6 +302,5 @@ jQuery(document).ready(function ($) {
         }
     });
 
-    createElement();
-    updateForm(null);
+    $('#presetGrid2x2').click();
 });

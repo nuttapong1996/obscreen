@@ -110,11 +110,14 @@ class ContentController(ObController):
         if not content:
             return abort(404)
 
+        vargs = {}
         working_folder_path, working_folder = self.get_folder_context()
         edit_view = 'slideshow/contents/edit.jinja.html'
 
         if content.type == ContentType.COMPOSITION:
             edit_view = 'slideshow/contents/edit-composition.jinja.html'
+            vargs['folders_tree'] = self._model_store.folder().get_folder_tree(FolderEntity.CONTENT)
+            vargs['foldered_contents'] = self._model_store.content().get_all_indexed('folder_id', multiple=True)
 
         return render_template(
             edit_view,
@@ -122,7 +125,8 @@ class ContentController(ObController):
             working_folder_path=working_folder_path,
             working_folder=working_folder,
             enum_content_type=ContentType,
-            external_storage_mountpoint=self._model_store.config().map().get('external_storage_mountpoint')
+            external_storage_mountpoint=self._model_store.config().map().get('external_storage_mountpoint'),
+            **vargs
         )
 
     def slideshow_content_save(self, content_id: int = 0):

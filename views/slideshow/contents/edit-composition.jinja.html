@@ -6,8 +6,8 @@
 {% endblock %}
 
 {% block add_css %}
-    <link rel="stylesheet" href="{{ STATIC_PREFIX }}css/lib/flatpickr.min.css"/>
     <link rel="stylesheet" href="{{ STATIC_PREFIX }}css/lib/jquery-explr-1.4.css"/>
+    <link rel="stylesheet" href="{{ STATIC_PREFIX }}css/lib/flatpickr.min.css"/>
     {{ HOOK(H_SLIDESHOW_CONTENT_CSS) }}
 {% endblock %}
 
@@ -17,6 +17,7 @@
     <script src="{{ STATIC_PREFIX }}js/lib/jquery-ui.min.js"></script>
     {# <script src="{{ STATIC_PREFIX }} js/lib/jquery-ui-rotatable.min.js"></script> #}
     <script src="{{ STATIC_PREFIX }}js/slideshow/content-composition.js"></script>
+    <script src="{{ STATIC_PREFIX }}js/explorer.js"></script>
     {{ HOOK(H_SLIDESHOW_CONTENT_JAVASCRIPT) }}
 {% endblock %}
 
@@ -109,7 +110,7 @@
             <div class="inner">
                 <div class="toolbar">
                     <button id="presetGrid2x2">Grid 2x2</button>
-                    <button id="addElement">Add Element</button>
+                    <button id="addElement" class="content-explr-picker">Add Element</button>
                     <button id="removeAllElements">Remove All Elements</button>
                 </div>
 
@@ -123,23 +124,55 @@
 
 
         <div class="page-panel right-panel">
-            <div class="form-element-properties">
+            <div class="form-element-properties hidden">
                 <form id="elementForm">
                     <h3>Element Properties</h3>
-                    <label for="elem-x">X:</label>
-                    <input type="number" id="elem-x" name="elem-x"><br>
-                    <label for="elem-y">Y:</label>
-                    <input type="number" id="elem-y" name="elem-y"><br>
-                    <label for="elem-width">Width:</label>
-                    <input type="number" id="elem-width" name="elem-width"><br>
-                    <label for="elem-height">Height:</label>
-                    <input type="number" id="elem-height" name="elem-height"><br>
-                    <!--<label for="elem-rotate">Rotate (deg):</label>-->
-                    <!--<input type="number" id="elem-rotate" name="elem-rotate"><br>-->
+
+                    <div class="form-group">
+                        <label for="elem-x">Position X</label>
+                        <div class="widget">
+                            <input type="number" id="elem-x" name="elem-x">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="elem-y">Position Y</label>
+                        <div class="widget">
+                            <input type="number" id="elem-y" name="elem-y">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="elem-width">Width</label>
+                        <div class="widget">
+                            <input type="number" id="elem-width" name="elem-width">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="elem-height">Height</label>
+                        <div class="widget">
+                            <input type="number" id="elem-height" name="elem-height">
+                        </div>
+                    </div>
+
+{#                    <div class="form-group">#}
+{#                        <label for="elem-rotate">Rotate (deg)</label>#}
+{#                        <div class="widget">#}
+{#                            <input type="number" id="elem-rotate" name="elem-rotate">#}
+{#                        </div>#}
+{#                    </div>#}
                 </form>
             </div>
         </div>
     </div>
 
+    <div class="pickers hidden">
+        <div class="modals-outer">
+            <div class="modals-inner">
+                {% include 'slideshow/contents/modal/explr-picker.jinja.html' %}
+            </div>
+        </div>
+    </div>
 
 {% endblock %}

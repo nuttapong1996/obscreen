@@ -155,8 +155,6 @@ form {
 				color: $gscale5;
 				background: none;
 				box-shadow: none;
-				border: none;
-				border-bottom: 1px solid $gscale3;
 				border-radius: 0;
 			}
 
@@ -167,11 +165,8 @@ form {
 
 			&.disabled,
 			&[disabled] {
-				border: none;
 				background: $gscale0;
 				border-radius: $baseRadius;
-				padding-left: 10px;
-				padding-right: 10px;
 			}
 		}
 	}

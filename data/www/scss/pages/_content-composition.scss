@@ -45,18 +45,30 @@
 
 			.element {
 				position: absolute !important;
-				background-color: #f0f0f0;
-				outline: 1px solid rgba($black, .5);
+				background-color: $gkscaleE;
+				outline: 1px solid $gkscaleC;
 				text-align: center;
 				box-sizing: border-box;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
 
 				&.focused {
 					border: none;
-					outline: 2px solid blue;
+					outline: 2px solid $seaBlue;
 					z-index: 89 !important;
 
 					.ui-resizable-handle {
 						display: block;
+					}
+				}
+
+				i {
+					font-size: 20px;
+					color: $gkscaleC;
+					&.fa-cog {
+						text-shadow: 0 -2px $gkscaleB, 0 0px 2px $gkscaleB;
 					}
 				}
 
@@ -72,8 +84,8 @@
 				}
 
 				.ui-resizable-handle {
-					background: black;
-					border: 1px solid #000;
+					background: $gkscaleA;
+					border: 1px solid $gkscale5;
 					width: 10px;
 					height: 10px;
 					z-index: 90;
@@ -145,25 +157,61 @@
 
 
 	.form-element-properties {
-		margin-left: 20px;
-		padding: 10px;
-		background-color: #f9f9f9;
-		border: 1px solid #ccc;
+		flex: 1;
+		align-self: stretch;
 
 		form {
 			display: flex;
 			flex-direction: column;
 
-			label,
-			input {
-				margin-bottom: 10px;
-			}
-		}
-
-		#elementList {
 			h3 {
-				margin: 0 0 10px 0;
+				font-size: 16px;
+				font-weight: 500;
+				color: $gscaleD;
+				text-decoration: none;
+				border-bottom: 1px solid $gscale2;
+				margin-bottom: 20px;
+				padding-bottom: 10px;
+				align-self: stretch;
 			}
+
+			.form-group {
+				flex-direction: row;
+				justify-content: flex-start;
+				align-items: center;
+				display: flex;
+
+				label {
+					flex-grow: 1;
+					flex-direction: row;
+					justify-content: flex-start;
+					align-items: center;
+					display: flex;
+					font-weight: bold;
+					margin-right: 10px;
+				}
+
+				.widget {
+					flex-grow: 1;
+					flex-direction: row;
+					justify-content: flex-start;
+					align-items: center;
+					display: flex;
+					margin: 0;
+
+					input {
+						flex: 1;
+						margin: 0;
+
+						&[disabled] {
+							padding: 8px 0 5px 8px;
+							border: 1px solid rgba(255,255,255,.05);
+						}
+					}
+				}
+			}
+
+
 		}
 	}
 
