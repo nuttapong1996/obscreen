@@ -108,12 +108,21 @@
 
         <div class="page-content">
             <div class="inner">
+                <h3 class="main">
+                    Monitor
+                </h3>
+
                 <div class="toolbar">
-                    <button id="presetGrid2x2">Grid 2x2</button>
-                    <button id="addElement" class="content-explr-picker">Add Element</button>
-                    <button id="removeAllElements">Remove All Elements</button>
+                    <button id="addElement" class="content-explr-picker"><i class="fa fa-plus icon-left"></i>Add element</button>
+                    <button id="removeAllElements" class="btn btn-danger"><i class="fa fa-trash icon-left"></i> Delete all</button>
                 </div>
 
+                <div class="presets">
+                    <h4 class="divide">
+                        Presets:
+                    </h4>
+                    <button type="button" id="presetGrid2x2" class="btn btn-wire-neutral">Grid 2x2</button>
+                </div>
                 <div class="screen-holder">
                     <div class="screen" id="screen">
                         <!-- Elements will be dynamically added here -->

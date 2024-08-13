@@ -180,14 +180,14 @@
 
                 <div class="context-divider"></div>
 
-                <div class="{% if not AUTH_ENABLED %}contex-tail{% endif %}">
+                <div class="{% if not AUTH_ENABLED %}context-tail{% else %}context-tail-auth{% endif %}">
                     <a href="{{ url_for('slideshow_player_refresh', next=request.full_path) }}" class="btn btn-naked btn-double-icon">
                         <i class="fa fa-display main"></i>
                         <sub><i class="fa fa-refresh"></i></sub>
                     </a>
                 </div>
 
-                {% if fully_authenticated_view %}
+                {% if fully_authenticated_view and AUTH_ENABLED %}
                     <div class="context-divider"></div>
                     <div class="context-user">
                         <div class="dropdown">

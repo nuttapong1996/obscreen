@@ -31,8 +31,16 @@ main {
 			margin-right: 20px;
 		}
 
-		.contex-tail {
-			margin-right: 20px;
+		.context-tail {
+			margin-right: 30px;
+
+			.btn {
+				margin-right: 0;
+			}
+		}
+
+		.context-tail-auth {
+			margin-right: 10px;
 
 			.btn {
 				margin-right: 0;
