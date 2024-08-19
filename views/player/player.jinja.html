@@ -193,7 +193,7 @@
     }
 
     const getEmptySlide = function() {
-        return Array.from(document.getElementsByClassName('slide-loop')).filter(slide => slide.innerHTML.replaceAll(/\s/g,'') === '')[0];
+        return Array.from(document.getElementsByClassName('slide-loop')).filter(slide => slide.innerHTML.replace(/\s/g,'') === '')[0];
     };
 
     const refreshSlidesOrder = function() {
