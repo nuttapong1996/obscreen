@@ -42,7 +42,7 @@
     const playlistCheckResolutionMs = {{ polling_interval * 1000 }};
 
     // Backend flag updates
-    let needHardRefresh = null;
+    const lastHardRefreshRequest = items.hard_refresh_request;
 
     // Frontend config
     const syncWithTime = items['time_sync'];
@@ -107,9 +107,7 @@
             items = data;
             itemsLoadedProcess();
 
-            if (needHardRefresh === null) {
-                needHardRefresh = items.hard_refresh_request;
-            } else if (needHardRefresh != items.hard_refresh_request) {
+            if (lastHardRefreshRequest != items.hard_refresh_request) {
                 document.location.reload();
             }
         }).catch(function(err) {
