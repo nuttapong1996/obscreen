@@ -3,6 +3,8 @@
     <head>
         <script type="text/javascript">
             const time_with_seconds = {{ 'true' if time_with_seconds.as_bool() else 'false' }};
+            const last_hard_refresh_request = {{ hard_refresh_request }};
+            const no_playlist = {% if noplaylist %}true{% else %}false{% endif %};
             let external_url = '{{ external_url.strip() }}';
 
             function updateTime() {
@@ -35,7 +37,15 @@
                     if (xhr.readyState === 4 && xhr.status === 200) {
                         const json_response = JSON.parse(xhr.responseText);
                         external_url = json_response.external_url;
-                        setIps(json_response.interfaces)
+                        setIps(json_response.interfaces);
+
+                        if (no_playlist) {
+                            setTimeout(function () {
+                                if (last_hard_refresh_request != json_response.hard_refresh_request) {
+                                    document.location.href = '{{ url_for('player') }}';
+                                }
+                            }, 2000);
+                        }
                     }
                 };
                 xhr.send();

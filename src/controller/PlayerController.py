@@ -81,7 +81,8 @@ class PlayerController(ObController):
             interfaces=[iface['ip_address'] for iface in get_network_interfaces()],
             external_url=self._model_store.variable().get_one_by_name('external_url').as_string().strip(),
             time_with_seconds=self._model_store.variable().get_one_by_name('default_slide_time_with_seconds'),
-            noplaylist=request.args.get('noplaylist', '0') == '1'
+            noplaylist=request.args.get('noplaylist', '0') == '1',
+            hard_refresh_request=self._model_store.variable().get_one_by_name("refresh_player_request").as_int()
         )
 
     def player_playlist(self, playlist_slug_or_id: str = ''):
