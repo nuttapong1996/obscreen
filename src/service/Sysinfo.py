@@ -118,7 +118,7 @@ def get_network_ipaddr():
 def get_all_sysinfo():
     rpi_model = get_rpi_model()
     infos = {
-        "sysinfo_rpi_model": rpi_model if rpi_model else 'sysinfo_rpi_model_unknown',
+        "sysinfo_device_model": rpi_model if rpi_model else 'sysinfo_device_model_unknown',
         "sysinfo_storage_free_space": get_free_space(),
         "sysinfo_memory_usage": "{}{}".format(get_memory_usage()['percent'], "%"),
         "sysinfo_os_version": get_os_version(),

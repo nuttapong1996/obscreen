@@ -55,7 +55,8 @@ class PlaylistController(ObController):
         playlist = Playlist(
             name=request.form['name'],
             enabled=True,
-            time_sync=False
+            time_sync=False,
+            fallback=self._model_store.playlist().count_fallbacks() == 0
         )
 
         try:
