@@ -67,10 +67,10 @@ CHROMIUM=""
 # Attempt to install chromium-browser
 if sudo apt-get install -y chromium-browser; then
   CHROMIUM="chromium-browser"
-fi
-
-if sudo apt-get install -y chromium; then
-  CHROMIUM="chromium"
+else
+  if sudo apt-get install -y chromium; then
+    CHROMIUM="chromium"
+  fi
 fi
 
 if [ -z "$CHROMIUM" ]; then
