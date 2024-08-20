@@ -30,7 +30,7 @@ chromium-browser \
   --kiosk \
   --incognito \
   --user-data-dir=/home/pi/.config/chromium \
-  --no-sandbox
+  --no-sandbox \
   --window-position=0,0 \
   --window-size=${WIDTH},${HEIGHT} \
   --display=:0 \
