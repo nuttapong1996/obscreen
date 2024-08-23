@@ -163,7 +163,7 @@ GROUP BY playlist_id;
     def post_delete(self, playlist_id: str) -> str:
         return playlist_id
 
-    def update_form(self, id: int, name: Optional[str] = None, time_sync: Optional[bool] = None, enabled: Optional[bool] = None) -> None:
+    def update_form(self, id: int, name: Optional[str] = None, time_sync: Optional[bool] = None, enabled: Optional[bool] = None, fallback: Optional[bool] = None) -> None:
         playlist = self.get(id)
 
         if not playlist:
@@ -173,6 +173,7 @@ GROUP BY playlist_id;
             "name": name if isinstance(name, str) else playlist.name,
             "time_sync": time_sync if isinstance(time_sync, bool) else playlist.time_sync,
             "enabled": enabled if isinstance(enabled, bool) else playlist.enabled,
+            "fallback": fallback if isinstance(fallback, bool) else playlist.fallback,
         }
 
         if name != playlist.name:
