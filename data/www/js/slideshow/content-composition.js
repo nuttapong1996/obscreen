@@ -1,29 +1,3 @@
- const getPayload = function() {
-        let screen = $('#screen');
-        let screenWidth = screen.width();
-        let screenHeight = screen.height();
-
-        $('.element').each(function () {
-            let offset = $(this).position();
-            let x = offset.left;
-            let y = offset.top;
-            let width = $(this).width();
-            let height = $(this).height();
-
-            let xPercent = (x / screenWidth) * 100;
-            let yPercent = (y / screenHeight) * 100;
-            let widthPercent = (width / screenWidth) * 100;
-            let heightPercent = (height / screenHeight) * 100;
-
-            console.log(JSON.stringify({
-                xPercent: xPercent,
-                yPercent: yPercent,
-                widthPercent: widthPercent,
-                heightPercent: heightPercent
-            }));
-        });
-    };
-
 jQuery(document).ready(function ($) {
     let currentElement = null;
     let elementCounter = 0;
@@ -37,32 +11,30 @@ jQuery(document).ready(function ($) {
         'padding-top': '0px'
     });
 
-    function createElement() {
-        let screen = $('#screen');
-        let screenWidth = screen.width();
-        let screenHeight = screen.height();
+    function createElement(config = null) {
+        const screen = $('#screen');
+        const screenWidth = screen.width();
+        const screenHeight = screen.height();
 
-        // Dimensions de l'élément
-        let elementWidth = 100;
-        let elementHeight = 50;
+        const elementWidth = config ? (config.widthPercent / 100) * screenWidth : 100;
+        const elementHeight = config ? (config.heightPercent / 100) * screenHeight : 50;
+        let x = config ? (config.xPercent / 100) * screenWidth : Math.round(Math.random() * (screenWidth - elementWidth));
+        let y = config ? (config.yPercent / 100) * screenHeight : Math.round(Math.random() * (screenHeight - elementHeight));
+        const zIndex = config ? config.zIndex : elementCounter++;
 
-        // Générer des positions aléatoires
-        let x = Math.round(Math.random() * (screenWidth - elementWidth));
-        let y = Math.round(Math.random() * (screenHeight - elementHeight));
-
-        // Constrain x and y
         x = Math.round(Math.max(0, Math.min(x, screenWidth - elementWidth)));
         y = Math.round(Math.max(0, Math.min(y, screenHeight - elementHeight)));
 
-        let elementId = elementCounter++;
-        let element = $('<div class="element" id="element-' + elementId + '" data-id="' + elementId + '"><i class="fa fa-cog"></i></div>');
-        // let element = $('<div class="element" id="' + elementId + '"><button>Button</button><div class="rotate-handle"></div></div>');
+        const elementId = zIndex;
+        const element = $('<div class="element" id="element-' + zIndex + '" data-id="' + zIndex + '"><i class="fa fa-cog"></i></div>');
+        // const element = $('<div class="element" id="' + elementId + '"><button>Button</button><div class="rotate-handle"></div></div>');
 
         element.css({
             left: x,
             top: y,
             width: elementWidth,
             height: elementHeight,
+            zIndex: zIndex,
             transform: `rotate(0deg)`
         });
 
@@ -86,6 +58,7 @@ jQuery(document).ready(function ($) {
                 updateForm(ui.element);
             }
         });
+
         /*
         element.rotatable({
             handle: element.find('.rotate-handle'),
@@ -101,9 +74,24 @@ jQuery(document).ready(function ($) {
 
         $('#screen').append(element);
         addElementToList(elementId);
-        setTimeout(function() {
-            focusElement(element);
-        }, 10);
+
+        if (config !== null && config.contentId !== null) {
+            element.attr('data-content-id', config.contentId);
+            element.attr('data-content-name', config.contentName);
+            element.attr('data-content-type', config.contentType);
+
+            applyContentToElement({
+                id: config.contentId,
+                name: config.contentName,
+                type: config.contentType,
+            }, element);
+
+            updateForm(element);
+        } else {
+            setTimeout(function () {
+                focusElement(element);
+            }, 10);
+        }
 
         return element;
     }
@@ -125,15 +113,23 @@ jQuery(document).ready(function ($) {
 
     function addElementToList(elementId) {
         const listItem = `<div class="element-list-item" data-id="__ID__">
-            Element __ID__ 
-            <button type="button" class="btn btn-neutral configure-element content-explr-picker" data-id="__ID__">
-                <i class="fa fa-cog"></i>
-            </button>
-            <button type="button" class="btn btn-naked remove-element" data-id="__ID__">
-                <i class="fa fa-trash"></i>
-            </button>
+            <i class="fa fa-cog"></i>
+            <div class="inner">
+                <label>__EMPTY__ __ID__ </label>
+                <button type="button" class="btn btn-naked remove-element" data-id="__ID__">
+                    <i class="fa fa-trash"></i>
+                </button>
+                <button type="button" class="btn btn-neutral configure-element content-explr-picker" data-id="__ID__">
+                    <i class="fa fa-cog"></i>
+                </button>
+            </div>
         </div>`;
-        $('#elementList').append($(listItem.replace(/__ID__/g, elementId)));
+        $('#elementList').append(
+            $(listItem
+                .replace(/__ID__/g, elementId)
+                .replace(/__EMPTY__/g, l.js_common_empty)
+            )
+        );
         updateZIndexes();
     }
 
@@ -162,7 +158,7 @@ jQuery(document).ready(function ($) {
         $('.form-element-properties').removeClass('hidden');
         $('form#elementForm input').prop('disabled', false);
 
-        let offset = element.position();
+        const offset = element.position();
 
         if (offset !== undefined) {
             $('#elem-x').val(offset.left);
@@ -173,17 +169,17 @@ jQuery(document).ready(function ($) {
 
         $(element).find('i').css('font-size', Math.min(element.width(), element.height()) / 3);
         /*
-        let rotation = element.css('transform');
-        let values = rotation.split('(')[1].split(')')[0].split(',');
-        let angle = Math.round(Math.atan2(values[1], values[0]) * (180/Math.PI));
+        const rotation = element.css('transform');
+        const values = rotation.split('(')[1].split(')')[0].split(',');
+        const angle = Math.round(Math.atan2(values[1], values[0]) * (180/Math.PI));
         $('#elem-rotate').val(angle);
         */
     }
 
     $(document).on('input', '#elementForm input', function () {
         if (currentElement) {
-            let screenWidth = $('#screen').width();
-            let screenHeight = $('#screen').height();
+            const screenWidth = $('#screen').width();
+            const screenHeight = $('#screen').height();
 
             let x = Math.round(parseInt($('#elem-x').val()));
             let y = Math.round(parseInt($('#elem-y').val()));
@@ -243,8 +239,8 @@ jQuery(document).ready(function ($) {
     })
 
     $(document).on('click', '#presetGrid2x2', function () {
-        let screenWidth = $('#screen').width();
-        let screenHeight = $('#screen').height();
+        const screenWidth = $('#screen').width();
+        const screenHeight = $('#screen').height();
         let elements = $('.element');
         if (elements.length < 4) {
             while (elements.length < 4) {
@@ -253,7 +249,7 @@ jQuery(document).ready(function ($) {
             }
         }
 
-        let gridPositions = [
+        const gridPositions = [
             {x: 0, y: 0},
             {x: screenWidth / 2, y: 0},
             {x: 0, y: screenHeight / 2},
@@ -261,7 +257,7 @@ jQuery(document).ready(function ($) {
         ];
 
         elements.each(function (index) {
-            let position = gridPositions[index];
+            const position = gridPositions[index];
             $(this).css({
                 left: position.x,
                 top: position.y,
@@ -278,20 +274,31 @@ jQuery(document).ready(function ($) {
         const $element = isNew ? $(createElement()) : $('#element-'+elementId);
 
         showPickers('modal-content-explr-picker', function (content) {
-            console.log(content);
-            $element.attr('data-content-id', content.id);
-            $element.attr('data-content-name', content.name);
-            $element.attr('data-content-type', content.type);
-            console.log($element)
-            $element.find('i').get(0).classList = ['fa', content.classIcon, content.classColor].join(' ');
-
+            applyContentToElement(content, $element)
         });
+    });
+
+    const applyContentToElement = function (content, $element) {
+        $element.attr('data-content-id', content.id);
+        $element.attr('data-content-name', content.name);
+        $element.attr('data-content-type', content.type);
+        const $elementList = $('.element-list-item[data-id='+$element.attr('data-id')+']');
+        const iconClasses = ['fa', content_type_icon_classes[content.type]].join(' ');
+        $element.find('i').get(0).classList = iconClasses;
+        $elementList.find('label').text(content.name);
+        $elementList.find('i:eq(0)').get(0).classList = iconClasses;
+    };
+
+    $(document).on('submit', 'form.form', function (e) {
+        unfocusElements();
+        const composites = getCompositesPayload();
+        $('#content-edit-location').val(JSON.stringify(composites));
     });
 
     function updateZIndexes() {
         const zindex = $('.element-list-item').length + 1;
         $('.element-list-item').each(function(index) {
-            let id = $(this).attr('data-id');
+            const id = $(this).attr('data-id');
             $('#element-' + id).css('z-index', zindex - index);
         });
     }
@@ -302,5 +309,52 @@ jQuery(document).ready(function ($) {
         }
     });
 
-    $('#presetGrid2x2').click();
+    const applyElementsFromContent = function() {
+        const contentData = JSON.parse($('#content-edit-location').val());
+        for (let i = 0; i < contentData.length; i++) {
+            createElement(contentData[i]);
+        }
+    };
+
+    applyElementsFromContent();
 });
+
+const getCompositesPayload = function() {
+    const screen = $('#screen');
+    const screenWidth = screen.width();
+    const screenHeight = screen.height();
+    const composites = [];
+
+    $('.element').each(function () {
+        const offset = $(this).position();
+        const x = offset.left;
+        const y = offset.top;
+        const width = $(this).width();
+        const height = $(this).height();
+
+        const xPercent = (x / screenWidth) * 100;
+        const yPercent = (y / screenHeight) * 100;
+        const widthPercent = (width / screenWidth) * 100;
+        const heightPercent = (height / screenHeight) * 100;
+        const contentId = $(this).attr('data-content-id');
+        const contentName = $(this).attr('data-content-name');
+        const contentType = $(this).attr('data-content-type');
+
+        composites.push({
+            xPercent: xPercent,
+            yPercent: yPercent,
+            widthPercent: widthPercent,
+            heightPercent: heightPercent,
+            zIndex: parseInt($(this).css('zIndex')),
+            contentId: contentId ? parseInt(contentId) : null,
+            contentName: contentName ? contentName : null,
+            contentType: contentType ? contentType : null
+        });
+    });
+
+    composites.sort(function(a, b) {
+        return parseInt(b.zIndex) - parseInt(a.zIndex);
+    });
+
+    return composites;
+};

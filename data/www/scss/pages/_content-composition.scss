@@ -176,8 +176,8 @@
 		}
 
 		.form-elements-list {
-			background: $gscale2;
 			padding: 10px;
+			background: $gscale2;
 			border-radius: $baseRadius;
 			display: flex;
 			flex-direction: column;
@@ -185,26 +185,74 @@
 			align-self: flex-start;
 
 			.element-list-item {
-				cursor: pointer;
-				padding: 5px 10px;
-				margin-bottom: 5px;
-				background: $gscaleA;
-				border-radius: $baseRadius;
 				display: flex;
 				flex-direction: row;
 				justify-content: flex-start;
 				align-items: center;
-				align-self: stretch;
-				color: $gscale2;
 
-				&.focused {
+				> i {
+					color: $gscaleE;
+					margin:0 10px 0 0;
+					cursor: move;
+					width: 30px;
+					text-align: center;
+				}
+
+				.inner:hover,
+				&.focused .inner {
 					background-color: $seaBlue;
 					color: white;
 					font-weight: bold;
+
+					button.btn-naked {
+						color: $white;
+					}
 				}
 
-				button {
-					display: none;
+				.inner {
+					cursor: pointer;
+					padding: 5px 5px 5px 10px;
+					margin-bottom: 5px;
+					background: $gscaleE;
+					border-radius: $baseRadius;
+					display: flex;
+					flex-direction: row;
+					justify-content: flex-start;
+					align-items: center;
+					align-self: stretch;
+					color: $gscale2;
+					min-height: 46px;
+					flex: 1;
+
+					label {
+						flex: 1;
+						cursor: pointer;
+						text-overflow: ellipsis;
+						white-space: nowrap;
+						max-width: 219px;
+						overflow: hidden;
+					}
+
+					button {
+						display: none;
+						margin-left: 5px;
+					}
+
+					button.btn-naked {
+						color: $gscale5;
+					}
+
+					&:hover {
+						label {
+							max-width: 150px;
+							overflow: hidden;
+							text-overflow: ellipsis;
+							white-space: nowrap;
+						}
+						button {
+							display: block;
+						}
+					}
 				}
 			}
 		}
