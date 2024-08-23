@@ -87,7 +87,7 @@ If you value this project, please think about awarding it a ⭐. Thanks ! 🙏
 
 This is "normal" behavior. Videos do not play automatically in Chrome because it requires user interaction with the page (a simple click inside the webpage is enough). If you open the console, you'll see the error: [Uncaught (in promise) DOMException: play() failed because the user didn't interact with the document first...](https://goo.gl/xX8pDD)
 
-To resolve this, you need to use the Chrome flag --autoplay-policy=no-user-gesture-required. When connecting a Raspberry Pi with Obscreen Player autorun, this issue doesn't occur because the flag is handled automatically for you.You need to enable this flag yourself otherwise.
+To resolve this, you need to use the Chrome flag `--autoplay-policy=no-user-gesture-required`. When connecting a Raspberry Pi with Obscreen Player autorun, this issue doesn't occur because the flag is handled automatically for you. You need to enable this flag yourself otherwise.
 
 ---
 
