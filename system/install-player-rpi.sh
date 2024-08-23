@@ -52,14 +52,40 @@ fi
 # Installation
 # ============================================================
 
-
 echo ""
 echo "# Waiting 3 seconds before installation..."
 sleep 3
 
 # Update and install necessary packages
 apt update
-apt install -y xinit xserver-xorg chromium-browser unclutter pulseaudio
+
+# ------------------
+# Chromium package
+# ------------------
+CHROMIUM=""
+
+# Attempt to install chromium-browser
+if sudo apt-get install -y chromium-browser; then
+  CHROMIUM="chromium-browser"
+else
+  if sudo apt-get install -y chromium; then
+    CHROMIUM="chromium"
+  fi
+fi
+
+if [ -z "$CHROMIUM" ]; then
+  echo "Error: Chromium could not be installed." >&2
+  exit 1
+fi
+
+# ------------------
+# Remaining packages
+# ------------------
+apt install -y xinit xserver-xorg x11-xserver-utils unclutter pulseaudio
+
+# ------------------
+# Configuration
+# ------------------
 
 # Add user to tty, video groups
 usermod -aG tty,video $OWNER
@@ -82,7 +108,7 @@ systemctl set-default graphical.target
 # ============================================================
 
 mkdir -p "$WORKING_DIR/obscreen/var/run"
-curl https://raw.githubusercontent.com/jr-k/obscreen/master/system/autostart-browser-x11.sh  | sed "s#/home/pi#$WORKING_DIR#g" | sed "s#=pi#=$OWNER#g" | sed "s#http://localhost:5000#$obscreen_studio_url#g" | tee "$WORKING_DIR/obscreen/var/run/play"
+curl https://raw.githubusercontent.com/jr-k/obscreen/master/system/autostart-browser-x11.sh  | sed "s#/home/pi#$WORKING_DIR#g" | sed "s#=pi#=$OWNER#g" | sed "s#chromium-browser#$CHROMIUM#g" | sed "s#http://localhost:5000#$obscreen_studio_url#g" | tee "$WORKING_DIR/obscreen/var/run/play"
 chmod +x "$WORKING_DIR/obscreen/var/run/play"
 chown -R $OWNER:$OWNER "$WORKING_DIR/obscreen"
 

@@ -69,5 +69,6 @@ class SysinfoController(ObController):
     def sysinfo_get_ipaddr(self):
         return jsonify({
             'external_url': self._model_store.variable().get_one_by_name('external_url').as_string().strip(),
-            'interfaces': [iface['ip_address'] for iface in get_network_interfaces()]
+            'interfaces': [iface['ip_address'] for iface in get_network_interfaces()],
+            'hard_refresh_request': self._model_store.variable().get_one_by_name("refresh_player_request").as_int()
         })

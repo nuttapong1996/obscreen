@@ -142,7 +142,9 @@ GROUP BY playlist_id;
         return playlist
 
     def pre_update(self, playlist: Dict) -> Dict:
-        playlist = self.slugify(playlist)
+        if 'slug' in playlist:
+            playlist = self.slugify(playlist)
+
         self.user_manager.track_user_on_update(playlist)
         return playlist
 
@@ -173,6 +175,9 @@ GROUP BY playlist_id;
             "enabled": enabled if isinstance(enabled, bool) else playlist.enabled,
         }
 
+        if name != playlist.name:
+            form["slug"] = True
+
         self._db.update_by_id(self.TABLE_NAME, id, self.pre_update(form))
 
         if playlist.fallback and not enabled:
@@ -181,7 +186,7 @@ GROUP BY playlist_id;
         self.post_update(id)
 
     def check_and_set_fallback(self):
-        if len(self.get_by("fallback = 1")) == 0:
+        if self.count_fallbacks() == 0:
             self.set_fallback()
 
     def set_fallback(self, playlist_id: Optional[int] = 0) -> None:
@@ -221,3 +226,8 @@ GROUP BY playlist_id;
     def to_dict(self, playlists: List[Playlist]) -> List[Dict]:
         return [playlist.to_dict() for playlist in playlists]
 
+    def count_all(self):
+        return len(self.get_all())
+
+    def count_fallbacks(self):
+        return len(self.get_by("fallback = 1"))

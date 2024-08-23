@@ -54,10 +54,18 @@
                 var script_sender = document.createElement('script');
                 script_sender.src = "{{ STATIC_PREFIX }}js/lib/cast-sender.js";
                 document.body.appendChild(script_sender);
+                const isHttps = document.location.protocol.indexOf('https') === 0;
+                const isLoopback = document.location.host.indexOf('localhost') === 0 || document.location.host.indexOf('127.0.0.1') === 0;
 
-                var script_caster = document.createElement('script');
-                script_caster.src = "{{ STATIC_PREFIX }}js/cast-url.js";
-                document.body.appendChild(script_caster);
+                if (isLoopback || !isHttps)  {
+                    var script_caster = document.createElement('script');
+                    script_caster.src = "{{ STATIC_PREFIX }}js/cast-url.js";
+                    document.body.appendChild(script_caster);
+                } else {
+                    $(document).on('click', '.cast-url', function() {
+                        window.open('https://cast.obscreen.io/sender.html?url=' + encodeURIComponent($('#' + $(this).attr('data-target-id')).val()));
+                    });
+                }
             }
         });
     </script>

@@ -30,13 +30,21 @@ class PlayerController(ObController):
         self._app.add_url_rule('/serve/content/<content_type>/<content_id>/<content_location>', 'serve_content_file', self.serve_content_file, methods=['GET'])
 
     def player(self, playlist_slug_or_id: str = ''):
+        preview_playlist = request.args.get('preview_playlist')
         preview_content_id = request.args.get('preview_content_id')
         playlist_slug_or_id = self._get_dynamic_playlist_id(playlist_slug_or_id)
 
-        current_playlist = self._model_store.playlist().get_one_by("slug = ? OR id = ?", {
+        query = " (slug = ? OR id = ?) "
+        query_args = {
             "slug": playlist_slug_or_id,
-            "id": playlist_slug_or_id
-        })
+            "id": playlist_slug_or_id,
+        }
+
+        if not preview_playlist:
+            query = query + " AND enabled = ? "
+            query_args["enabled"] = True
+
+        current_playlist = self._model_store.playlist().get_one_by(query, query_args)
 
         if playlist_slug_or_id and not current_playlist:
             return abort(404)
@@ -73,7 +81,8 @@ class PlayerController(ObController):
             interfaces=[iface['ip_address'] for iface in get_network_interfaces()],
             external_url=self._model_store.variable().get_one_by_name('external_url').as_string().strip(),
             time_with_seconds=self._model_store.variable().get_one_by_name('default_slide_time_with_seconds'),
-            noplaylist=request.args.get('noplaylist', '0') == '1'
+            noplaylist=request.args.get('noplaylist', '0') == '1',
+            hard_refresh_request=self._model_store.variable().get_one_by_name("refresh_player_request").as_int()
         )
 
     def player_playlist(self, playlist_slug_or_id: str = ''):
