@@ -2,9 +2,9 @@ jQuery(document).ready(function ($) {
     let currentElement = null;
     let elementCounter = 0;
 
-    $('.screen').css({
-        width: $('.screen').width(),
-        height: $('.screen').height(),
+    $('#screen').css({
+        width: $('#screen').width(),
+        height: $('#screen').height(),
         position: 'relative',
     }).parents('.screen-holder:eq(0)').css({
         width: 'auto',
@@ -72,7 +72,7 @@ jQuery(document).ready(function ($) {
             focusElement($(this));
         });
 
-        $('#screen').append(element);
+        screen.append(element);
         addElementToList(elementId);
 
         if (config !== null && config.contentId !== null) {
@@ -291,8 +291,8 @@ jQuery(document).ready(function ($) {
 
     $(document).on('submit', 'form.form', function (e) {
         unfocusElements();
-        const composites = getCompositesPayload();
-        $('#content-edit-location').val(JSON.stringify(composites));
+        const layers = getLayersPayload();
+        $('#content-edit-location').val(JSON.stringify(layers));
     });
 
     function updateZIndexes() {
@@ -319,11 +319,11 @@ jQuery(document).ready(function ($) {
     applyElementsFromContent();
 });
 
-const getCompositesPayload = function() {
+const getLayersPayload = function() {
     const screen = $('#screen');
     const screenWidth = screen.width();
     const screenHeight = screen.height();
-    const composites = [];
+    const layers = [];
 
     $('.element').each(function () {
         const offset = $(this).position();
@@ -340,7 +340,7 @@ const getCompositesPayload = function() {
         const contentName = $(this).attr('data-content-name');
         const contentType = $(this).attr('data-content-type');
 
-        composites.push({
+        layers.push({
             xPercent: xPercent,
             yPercent: yPercent,
             widthPercent: widthPercent,
@@ -352,9 +352,9 @@ const getCompositesPayload = function() {
         });
     });
 
-    composites.sort(function(a, b) {
+    layers.sort(function(a, b) {
         return parseInt(b.zIndex) - parseInt(a.zIndex);
     });
 
-    return composites;
+    return layers;
 };

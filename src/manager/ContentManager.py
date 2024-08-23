@@ -73,10 +73,12 @@ class ContentManager(ModelManager):
     def get_all(self, sort: Optional[str] = 'created_at', ascending=False) -> List[Content]:
         return self.hydrate_list(self._db.get_all(table_name=self.TABLE_NAME, sort=sort, ascending=ascending))
 
-    def get_all_indexed(self, attribute: str = 'id', multiple=False) -> Dict[str, Content]:
+    def get_all_indexed(self, attribute: str = 'id', multiple=False, query: str = None) -> Dict[str, Content]:
         index = {}
 
-        for item in self.get_contents():
+        items = self.get_by(query) if query else self.get_contents()
+
+        for item in items:
             id = getattr(item, attribute)
             if multiple:
                 if id not in index:
@@ -237,6 +239,14 @@ class ContentManager(ModelManager):
 
         if content.type == ContentType.YOUTUBE:
             location = content.location
+        elif content.type == ContentType.COMPOSITION:
+            location = "{}/{}".format(
+                var_external_url if len(var_external_url) > 0 else "",
+                url_for(
+                    'serve_content_composition',
+                    content_id=content.id
+                ).strip('/')
+            )
         elif content.has_file() or content.type == ContentType.EXTERNAL_STORAGE:
             location = "{}/{}".format(
                 var_external_url if len(var_external_url) > 0 else "",

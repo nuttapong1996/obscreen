@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            html, body, #screen {
+                margin: 0;
+                padding: 0;
+                background: black;
+                width: 100vw;
+                height: 100vh;
+                overflow: hidden;
+            }
+            iframe {
+                border: none;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="screen"></div>
+        <script src="{{ STATIC_PREFIX }}js/lib/jquery.min.js"></script>
+        <script>
+            const base_iframe_route = '{{ url_for('player', preview_content_id='!c!', autoplay=1) }}';
+
+            jQuery(function($) {
+                function createElement(config = null) {
+                    const screen = $('#screen');
+                    const screenWidth = screen.width();
+                    const screenHeight = screen.height();
+
+                    const elementWidth = (config.widthPercent / 100) * screenWidth
+                    const elementHeight = (config.heightPercent / 100) * screenHeight;
+                    let x = (config.xPercent / 100) * screenWidth;
+                    let y = (config.yPercent / 100) * screenHeight;
+                    const zIndex = config.zIndex;
+
+                    x = Math.round(Math.max(0, Math.min(x, screenWidth - elementWidth)));
+                    y = Math.round(Math.max(0, Math.min(y, screenHeight - elementHeight)));
+
+                    const element = $('<iframe class="element" id="element-' + zIndex + '" data-id="' + zIndex + '" src="'+base_iframe_route.replace('!c!', config.contentId)+'"></iframe>');
+
+                    element.css({
+                        left: x,
+                        top: y,
+                        width: elementWidth,
+                        height: elementHeight,
+                        zIndex: zIndex,
+                        display: 'block',
+                        position: 'absolute',
+                        transform: `rotate(0deg)`
+                    });
+
+                    screen.append(element);
+                }
+
+                const applyElementsFromContent = function() {
+                    $('#screen').html('');
+
+                    const contentData = JSON.parse({{ json_dumps(content.location) | safe }});
+                    for (let i = 0; i < contentData.length; i++) {
+                        if (contentData[i].contentId !== null) {
+                            createElement(contentData[i]);
+                        }
+                    }
+                };
+
+                const main = function() {
+                    applyElementsFromContent();
+                };
+
+                $(window).on('resize', function() {
+                    main();
+                });
+
+                main();
+            });
+        </script>
+    </body>
+</html>

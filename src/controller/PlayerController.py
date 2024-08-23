@@ -28,28 +28,31 @@ class PlayerController(ObController):
         self._app.add_url_rule('/player/playlist', 'player_playlist', self.player_playlist, methods=['GET'])
         self._app.add_url_rule('/player/playlist/use/<playlist_slug_or_id>', 'player_playlist_use', self.player_playlist, methods=['GET'])
         self._app.add_url_rule('/serve/content/<content_type>/<content_id>/<content_location>', 'serve_content_file', self.serve_content_file, methods=['GET'])
+        self._app.add_url_rule('/serve/content/composition/<content_id>', 'serve_content_composition', self.serve_content_composition, methods=['GET'])
 
     def player(self, playlist_slug_or_id: str = ''):
         preview_playlist = request.args.get('preview_playlist')
         preview_content_id = request.args.get('preview_content_id')
+        playlist_id = None
         playlist_slug_or_id = self._get_dynamic_playlist_id(playlist_slug_or_id)
 
-        query = " (slug = ? OR id = ?) "
-        query_args = {
-            "slug": playlist_slug_or_id,
-            "id": playlist_slug_or_id,
-        }
+        if not preview_content_id:
+            query = " (slug = ? OR id = ?) "
+            query_args = {
+                "slug": playlist_slug_or_id,
+                "id": playlist_slug_or_id,
+            }
 
-        if not preview_playlist:
-            query = query + " AND enabled = ? "
-            query_args["enabled"] = True
+            if not preview_playlist:
+                query = query + " AND enabled = ? "
+                query_args["enabled"] = True
 
-        current_playlist = self._model_store.playlist().get_one_by(query, query_args)
+            current_playlist = self._model_store.playlist().get_one_by(query, query_args)
 
-        if playlist_slug_or_id and not current_playlist:
-            return abort(404)
+            if playlist_slug_or_id and not current_playlist:
+                return abort(404)
 
-        playlist_id = current_playlist.id if current_playlist else None
+            playlist_id = current_playlist.id if current_playlist else None
 
         try:
             items = self._get_playlist(playlist_id=playlist_id, preview_content_id=preview_content_id)
@@ -62,6 +65,8 @@ class PlayerController(ObController):
         slide_animation_speed = request.args.get('animation_speed', self._model_store.variable().get_one_by_name('slide_animation_speed').eval()).lower()
         slide_animation_entrance_effect = request.args.get('animation_effect', self._model_store.variable().get_one_by_name('slide_animation_entrance_effect').eval())
         slide_animation_exit_effect = request.args.get('slide_animation_exit_effect', self._model_store.variable().get_one_by_name('slide_animation_exit_effect').eval())
+
+
 
         return render_template(
             'player/player.jinja.html',
@@ -122,7 +127,7 @@ class PlayerController(ObController):
         preview_content = self._model_store.content().get(preview_content_id) if preview_content_id else None
         preview_mode = preview_content is not None
 
-        if playlist_id == 0 or not playlist_id:
+        if not preview_mode and (playlist_id == 0 or not playlist_id):
             playlist = self._model_store.playlist().get_one_by(query="fallback = 1")
 
             if playlist:
@@ -132,8 +137,9 @@ class PlayerController(ObController):
 
         enabled_slides = [Slide(content_id=preview_content.id, duration=1000000)] if preview_mode else self._model_store.slide().get_slides(enabled=True, playlist_id=playlist_id)
         slides = self._model_store.slide().to_dict(enabled_slides)
-        contents = self._model_store.content().get_all_indexed()
-        playlist = self._model_store.playlist().get(playlist_id)
+        content_ids = [str(slide['content_id']) for slide in slides if slide['content_id'] is not None]
+        contents = self._model_store.content().get_all_indexed(query="id IN ({})".format(','.join(content_ids)))
+        playlist = self._model_store.playlist().get(playlist_id) if not preview_mode else None
         position = 9999
 
         playlist_loop = []
@@ -248,3 +254,14 @@ class PlayerController(ObController):
         response.headers['ETag'] = etag
 
         return response
+
+    def serve_content_composition(self, content_id):
+        content = self._model_store.content().get(content_id)
+
+        if not content or content.type != ContentType.COMPOSITION:
+            abort(404, 'Content not found')
+
+        return render_template(
+            'player/content/composition.jinja.html',
+            content=content,
+        )

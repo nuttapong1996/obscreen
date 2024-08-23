@@ -162,5 +162,12 @@ jQuery(document).ready(function ($) {
 
         showToast(l.js_common_copied);
     });
+
+    $(window).on('beforeunload', function(event) {
+        $('.modal').each(function() {
+            $(this).find('button[type=submit]').removeClass('hidden');
+            $(this).find('.btn-loading').addClass('hidden');
+        });
+    });
 });
 

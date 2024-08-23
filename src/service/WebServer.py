@@ -50,7 +50,6 @@ class WebServer:
             host=self._model_store.config().map().get('bind'),
             port=self._model_store.config().map().get('port'),
             threads=100,
-            max_request_body_size=self.get_max_upload_size(),
         )
 
     def reload(self) -> None:
@@ -58,6 +57,7 @@ class WebServer:
 
     def setup(self) -> None:
         self._setup_flask_app()
+        self._setup_flask_headers()
         self._setup_web_globals()
         self._setup_web_errors()
         self._setup_web_controllers()
@@ -160,6 +160,19 @@ class WebServer:
         def inject_global_vars() -> dict:
             return self._template_renderer.get_view_globals()
 
+    def _setup_flask_headers(self) -> None:
+        @self._app.after_request
+        def modify_headers(response):
+            # Supprimer les en-têtes de sécurité
+            response.headers.pop('X-Frame-Options', None)
+            response.headers.pop('X-Content-Type-Options', None)
+            response.headers.pop('X-XSS-Protection', None)
+
+            # Modifier ou supprimer la politique CSP
+            response.headers['Content-Security-Policy'] = "frame-ancestors *"
+
+            return response
+
     def _setup_web_errors(self) -> None:
         def handle_error(error):
             if request.headers.get('Content-Type') == 'application/json' or request.headers.get('Accept') == 'application/json':
@@ -171,14 +184,16 @@ class WebServer:
                 })
                 return make_response(response, error.code)
 
-            if error.code == 404:
-                return send_from_directory(self.get_template_dir(), 'core/error404.html'), 404
-
-            return error
+            return self._template_renderer.render_view(
+                '@core/http-error.html',
+                error_code=error.code,
+                error_message=error.description
+            )
 
         self._app.register_error_handler(400, handle_error)
         self._app.register_error_handler(404, handle_error)
         self._app.register_error_handler(409, handle_error)
+        self._app.register_error_handler(413, handle_error)
         self._app.register_error_handler(HttpClientException, handle_error)
 
 
