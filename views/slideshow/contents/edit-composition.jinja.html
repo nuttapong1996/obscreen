@@ -44,6 +44,10 @@
                 <i class="fa {{ icon }} {{ color }}"></i> {{ t(content.type) }}
             </span>
         </h3>
+
+        <a href="{{ url_for('serve_content_composition', content_id=content.id, autoplay=1) }}" target="_blank" class="btn btn-naked">
+            <i class="fa fa-external-link"></i>
+        </a>
     </div>
 
     {% if request.args.get('saved') %}
