@@ -71,7 +71,8 @@ class PlaylistController(ObController):
             id=request.form['id'],
             name=request.form['name'],
             time_sync=True if 'time_sync' in request.form else False,
-            enabled=True if 'enabled' in request.form else False
+            enabled=True if 'enabled' in request.form else False,
+            fallback=True if self._model_store.playlist().count_fallbacks() == 0 else None
         )
         return redirect(url_for('playlist_list', playlist_id=request.form['id']))
 
