@@ -276,7 +276,7 @@
   "composition_monitor": "Écran",
   "composition_element_x_axis": "Axe X",
   "composition_element_y_axis": "Axe Y",
-  "composition_element_match_content_aspect_ratio": "Faire correspondre au ratio hauteur/largeur du contenu",
+  "composition_element_match_content_aspect_ratio": "Ajuster l'échelle du contenu",
   "logout": "Déconnexion",
   "login_error_not_found": "Identifiants invalides",
   "login_error_bad_credentials": "Identifiants invalides",

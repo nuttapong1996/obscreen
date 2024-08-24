@@ -275,7 +275,7 @@
   "composition_monitor": "Pantalla",
   "composition_element_x_axis": "Eje X",
   "composition_element_y_axis": "Eje Y",
-  "composition_element_match_content_aspect_ratio": "Coincidir con la relación de aspecto del contenido",
+  "composition_element_match_content_aspect_ratio": "Ajustar la escala del contenido",
   "logout": "Cerrar sesión",
   "login_error_not_found": "Credenciales incorrectas",
   "login_error_bad_credentials": "Credenciales incorrectas",

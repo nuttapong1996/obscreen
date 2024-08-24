@@ -275,7 +275,7 @@
   "composition_monitor": "Schermo",
   "composition_element_x_axis": "Asse X",
   "composition_element_y_axis": "Asse Y",
-  "composition_element_match_content_aspect_ratio": "Corrispondenza proporzioni contenuto",
+  "composition_element_match_content_aspect_ratio": "Regola la scala del contenuto",
   "logout": "Logout",
   "login_error_not_found": "Credenziali errate",
   "login_error_bad_credentials": "Credenziali errate",
