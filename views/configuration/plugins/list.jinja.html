@@ -11,20 +11,7 @@
 
 {% block body_class %}view-plugins-list{% endblock %}
 
-{% block page %}
-
-    {% if request.args.get('error') %}
-        <div class="alert alert-error">
-            {{ t(request.args.get('error')) }}
-        </div>
-    {% endif %}
-
-    {% if request.args.get('info') %}
-        <div class="alert alert-info">
-            {{ t(request.args.get('info')) }}
-        </div>
-    {% endif %}
-
+{% block main_page %}
     <div class="bottom-content">
         <div class="page-content">
             <div class="inner">

@@ -213,14 +213,41 @@
             </div>
         {% endif %}
         <div class="main-container">
-            {% if request.args.get('refresh_player') %}
-                <div class="alert alert-success">
-                    <i class="fa fa-refresh icon-left"></i>
-                    {{ l.slideshow_slide_refresh_player_success|replace('%time%', request.args.get('refresh_player')) }}
-                </div>
-            {% endif %}
+            {% block top_page %}{% endblock %}
 
-            {% block page %}{% endblock %}
+            {% block toolbar_page %}
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            {% set alert_class = '' %}
+                            {% set alert_icon = '' %}
+
+                            {% if category == 'success' %}
+                                {% set alert_class = 'success' %}
+                                {% set alert_icon = 'fa-check' %}
+                            {% elif category == 'success:refresh' %}
+                                {% set alert_class = 'success' %}
+                                {% set alert_icon = 'fa-refresh' %}
+                            {% elif category == 'error' %}
+                                {% set alert_class = 'danger' %}
+                                {% set alert_icon = 'fa-warning' %}
+                            {% elif category == 'warning' %}
+                                {% set alert_class = 'yellow' %}
+                                {% set alert_icon = 'fa-warning' %}
+                            {% endif %}
+
+                            {% if alert_class %}
+                                <div class="alert alert-{{ alert_class }} alert-timeout">
+                                    <i class="fa {{ alert_icon }} icon-left"></i>
+                                    {{ message }}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            {% endblock %}
+
+            {% block main_page %}{% endblock %}
         </div>
     </main>
 

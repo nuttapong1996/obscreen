@@ -14,14 +14,7 @@
 
 {% block body_class %}view-login{% endblock %}
 
-{% block page %}
-
-    {% if login_error %}
-        <div class="alert alert-error">
-            {{ t('login_error_' ~ login_error) }}
-        </div>
-    {% endif %}
-
+{% block main_page %}
     <div class="login-content">
         <div class="form-holder">
             <div class="card">

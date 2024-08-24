@@ -40,7 +40,7 @@ jQuery(function ($) {
                     }
 
                     if (statusCode !== 200) {
-                        const $alert = $('.alert-danger').removeClass('hidden');
+                        const $alert = $('.alert-upload').removeClass('hidden');
                         if (statusCode === 413) {
                             $alert.text(l.js_common_http_error_413);
                         } else {

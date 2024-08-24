@@ -2,7 +2,7 @@ import json
 import os
 import time
 
-from flask import Flask, render_template, redirect, request, url_for, send_from_directory, jsonify, abort
+from flask import Flask, render_template, redirect, request, url_for, send_from_directory, jsonify, abort, flash
 from werkzeug.utils import secure_filename
 from src.service.ModelStore import ModelStore
 from src.model.entity.Slide import Slide
@@ -102,11 +102,11 @@ class SlideController(ObController):
         return jsonify({'status': 'ok'})
 
     def slideshow_player_refresh(self):
+        referrer_path = self.get_referrer_path()
+        max_timeout_value = self._model_store.variable().get_one_by_name('polling_interval').as_string()
+        flash(self.t('slideshow_slide_refresh_player_success').replace('%time%', max_timeout_value), 'success:refresh')
         self._model_store.variable().update_by_name("refresh_player_request", time.time())
-        max_timeout_value = self._model_store.variable().get_one_by_name('polling_interval').as_int()
-        query_params = '{}={}'.format('refresh_player', max_timeout_value)
-        next_url = request.args.get('next')
-        return redirect('{}{}{}'.format(next_url, '&' if '?' in next_url else '?', query_params))
+        return redirect(referrer_path)
 
     def _post_update(self):
         self._model_store.variable().update_by_name("last_slide_update", time.time())

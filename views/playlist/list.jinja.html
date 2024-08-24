@@ -82,7 +82,7 @@
 
 {% block body_class %}view-playlist-list{% endblock %}
 
-{% block page %}
+{% block top_page %}
     <div class="top-content">
         <div class="top-actions">
             {{ HOOK(H_PLAYLIST_TOOLBAR_ACTIONS_START) }}
@@ -119,13 +119,9 @@
             ('<a href="javascript:void(0);" class="item-add playlist-add">'~l.playlist_button_add~'</a>')|safe
         ) }}
     </div>
+{% endblock %}
 
-    {% if error %}
-        <div class="alert alert-danger">
-            {{ l[error] }}
-        </div>
-    {% endif %}
-
+{% block main_page %}
     <div class="bottom-content">
         <div class="page-panel left-panel">
             {% with playlists=playlists %}

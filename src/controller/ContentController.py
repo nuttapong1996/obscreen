@@ -2,7 +2,7 @@ import json
 import os
 import time
 
-from flask import Flask, render_template, redirect, request, url_for, send_from_directory, jsonify, abort
+from flask import Flask, render_template, redirect, request, url_for, send_from_directory, jsonify, abort, flash
 from werkzeug.utils import secure_filename
 from src.service.ModelStore import ModelStore
 from src.model.entity.Content import Content
@@ -145,17 +145,19 @@ class ContentController(ObController):
         )
         self._post_update()
 
-        return redirect(url_for('slideshow_content_edit', content_id=content_id, saved=1))
+        flash(self.t('common_saved'), 'success')
+
+        return redirect(url_for('slideshow_content_edit', content_id=content_id))
 
     def slideshow_content_delete(self):
         working_folder_path, working_folder = self.get_folder_context()
-        error_tuple = self.delete_content_by_id(request.args.get('id'))
+        error = self.delete_content_by_id(request.args.get('id'))
         route_args = {
             "path": working_folder_path,
         }
 
-        if error_tuple:
-            route_args[error_tuple[0]] = error_tuple[1]
+        if error:
+            flash(error, 'error')
 
         return redirect(url_for('slideshow_content_list', **route_args))
 
@@ -235,13 +237,13 @@ class ContentController(ObController):
 
     def slideshow_content_folder_delete(self):
         working_folder_path, working_folder = self.get_folder_context()
-        error_tuple = self.delete_folder_by_id(request.args.get('id'))
+        error = self.delete_folder_by_id(request.args.get('id'))
         route_args = {
             "path": working_folder_path,
         }
 
-        if error_tuple:
-            route_args[error_tuple[0]] = error_tuple[1]
+        if error:
+            flash(self.t(error), 'error')
 
         return redirect(url_for('slideshow_content_list', **route_args))
 
@@ -261,17 +263,17 @@ class ContentController(ObController):
 
         for id in entity_ids:
             if id:
-                error_tuple = self.delete_content_by_id(id)
+                error = self.delete_content_by_id(id)
 
-                if error_tuple:
-                    route_args_dict[error_tuple[0]] = error_tuple[1]
+                if error:
+                    flash(error, 'error')
 
         for id in folder_ids:
             if id:
-                error_tuple = self.delete_folder_by_id(id)
+                error = self.delete_folder_by_id(id)
 
-                if error_tuple:
-                    route_args_dict[error_tuple[0]] = error_tuple[1]
+                if error:
+                    flash(error, 'error')
 
         return redirect(url_for('slideshow_content_list', **route_args_dict))
 
@@ -282,7 +284,7 @@ class ContentController(ObController):
             return None
 
         if self._model_store.slide().count_slides_for_content(content.id) > 0:
-            return 'referenced_in_slide_error', content.name
+            return 'slideshow_content_referenced_in_slide_error'.replace('%contentName%', content.name)
 
         self._model_store.content().delete(content.id)
         self._post_update()
@@ -298,7 +300,7 @@ class ContentController(ObController):
         folder_counter = self._model_store.folder().count_subfolders_for_folder(folder.id)
 
         if content_counter > 0 or folder_counter:
-            return 'folder_not_empty_error', folder.name
+            return self.t('common_folder_not_empty_error').replace('%folderName%', folder.name)
 
         self._model_store.folder().delete(id=folder.id)
         self._post_update()

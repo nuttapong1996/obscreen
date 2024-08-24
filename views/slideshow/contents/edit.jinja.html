@@ -20,7 +20,7 @@
 
 {% block body_class %}view-content-edit edit-page{% endblock %}
 
-{% block page %}
+{% block top_page %}
     <div class="top-content">
         <h1>
             {{ l.slideshow_content_form_edit_title }}
@@ -35,14 +35,9 @@
             </span>
         </h3>
     </div>
+{% endblock %}
 
-    {% if request.args.get('saved') %}
-        <div class="alert alert-success alert-timeout">
-            <i class="fa fa-check icon-left"></i>
-            {{ l.common_saved }}
-        </div>
-    {% endif %}
-
+{% block main_page %}
     <div class="bottom-content">
         <div class="page-content">
             <div class="inner dirview">

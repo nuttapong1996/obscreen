@@ -2,7 +2,7 @@ import time
 import json
 import threading
 
-from flask import Flask, render_template, redirect, request, url_for
+from flask import Flask, render_template, redirect, request, url_for, flash
 from typing import Optional
 
 from src.service.ModelStore import ModelStore
@@ -40,7 +40,8 @@ class SettingsController(ObController):
         error = self._pre_update(request.form['id'])
 
         if error:
-            return redirect(url_for('settings_variable_list', error=error))
+            flash(error, 'error')
+            return redirect(url_for('settings_variable_list'))
 
         self._model_store.variable().update_form(request.form['id'], request.form['value'])
         redirect_response = self._post_update(request.form['id'])
@@ -54,7 +55,8 @@ class SettingsController(ObController):
         error = self._pre_update(request.form['id'])
 
         if error:
-            return redirect(url_for('settings_variable_plugin_list', error=error))
+            flash(error, 'error')
+            return redirect(url_for('settings_variable_plugin_list'))
 
         self._model_store.variable().update_form(request.form['id'], request.form['value'])
         redirect_response = self._post_update(request.form['id'])
@@ -79,7 +81,8 @@ class SettingsController(ObController):
 
         if variable.name == 'slide_upload_limit':
             self.reload_web_server()
-            return redirect(url_for('settings_variable_list', warning='common_restart_needed'))
+            flash(self.t('common_restart_needed'), 'warning')
+            return redirect(url_for('settings_variable_list'))
 
         if variable.name == 'fleet_player_enabled':
             self.reload_web_server()
@@ -98,7 +101,10 @@ class SettingsController(ObController):
             thread = threading.Thread(target=self.plugin_update)
             thread.daemon = True
             thread.start()
-            return redirect(url_for('settings_variable_plugin_list', warning='common_restart_needed'))
+            flash(self.t('common_restart_needed'), 'warning')
+            return redirect(url_for('settings_variable_plugin_list'))
+
+        flash(self.t('common_saved'), 'success')
 
     def plugin_update(self) -> None:
         restart()

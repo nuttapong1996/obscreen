@@ -19,7 +19,7 @@
 
 {% block body_class %}view-player-group-list{% endblock %}
 
-{% block page %}
+{% block top_page %}
     <div class="top-content">
         <div class="top-actions">
             {{ HOOK(H_FLEET_NODE_PLAYER_GROUP_TOOLBAR_ACTIONS_START) }}
@@ -46,13 +46,9 @@
             ('<a href="javascript:void(0);" class="item-add node-player-group-add">'~l.fleet_node_player_group_button_add~'</a>')|safe
         ) }}
     </div>
+{% endblock %}
 
-    {% if error %}
-        <div class="alert alert-danger">
-            {{ l[error] }}
-        </div>
-    {% endif %}
-
+{% block main_page %}
     <div class="bottom-content">
         <div class="page-panel left-panel">
             {% with node_player_groups=node_player_groups %}

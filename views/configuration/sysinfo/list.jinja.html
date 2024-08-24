@@ -14,7 +14,7 @@
 
 {% block body_class %}view-sysinfo-list{% endblock %}
 
-{% block page %}
+{% block top_page %}
     <div class="top-content">
         <div class="top-actions align-right">
             {{ HOOK(H_SYSINFO_TOOLBAR_ACTIONS_START) }}
@@ -24,7 +24,9 @@
             {{ HOOK(H_SYSINFO_TOOLBAR_ACTIONS_END) }}
         </div>
     </div>
+{% endblock %}
 
+{% block main_page %}
     <div class="bottom-content">
         <div class="page-content">
             <div class="inner">

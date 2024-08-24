@@ -1,6 +1,6 @@
 import json
 
-from flask import Flask, render_template, redirect, request, url_for, jsonify, abort
+from flask import Flask, render_template, redirect, request, url_for, jsonify, abort, flash
 from src.service.ModelStore import ModelStore
 from src.model.entity.Playlist import Playlist
 from src.model.enum.FolderEntity import FolderEntity
@@ -35,7 +35,6 @@ class PlaylistController(ObController):
 
         return render_template(
             'playlist/list.jinja.html',
-            error=request.args.get('error', None),
             current_playlist=current_playlist,
             playlists=playlists,
             durations=durations,
@@ -83,10 +82,12 @@ class PlaylistController(ObController):
             abort(404)
 
         if self._model_store.slide().count_slides_for_playlist(playlist_id) > 0:
-            return redirect(url_for('playlist_list', playlist_id=playlist_id, error='playlist_delete_has_slides'))
+            flash(self.t('playlist_delete_has_slides'), 'error')
+            return redirect(url_for('playlist_list', playlist_id=playlist_id))
 
         if self._model_store.node_player_group().count_node_player_groups_for_playlist(playlist_id) > 0:
-            return redirect(url_for('playlist_list', playlist_id=playlist_id, error='playlist_delete_has_node_player_groups'))
+            flash(self.t('playlist_delete_has_node_player_groups'), 'error')
+            return redirect(url_for('playlist_list', playlist_id=playlist_id))
 
         self._model_store.playlist().delete(playlist_id)
         return redirect(url_for('playlist'))

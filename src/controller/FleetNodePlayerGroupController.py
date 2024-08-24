@@ -1,6 +1,6 @@
 import json
 
-from flask import Flask, render_template, redirect, request, url_for, jsonify
+from flask import Flask, render_template, redirect, request, url_for, jsonify, flash
 from src.service.ModelStore import ModelStore
 from src.model.entity.NodePlayerGroup import NodePlayerGroup
 from src.model.enum.FolderEntity import FolderEntity
@@ -43,7 +43,6 @@ class FleetNodePlayerGroupController(ObController):
 
         return render_template(
             'fleet/player-group/list.jinja.html',
-            error=request.args.get('error', None),
             current_player_group=current_player_group,
             node_player_groups=node_player_groups,
             pcounters=pcounters,
@@ -86,7 +85,8 @@ class FleetNodePlayerGroupController(ObController):
 
     def fleet_node_player_group_delete(self, player_group_id: int):
         if self._model_store.node_player().count_node_players_for_group(player_group_id) > 0:
-            return redirect(url_for('fleet_node_player_group_list', player_group_id=player_group_id, error='node_player_group_delete_has_node_player'))
+            flash(self.t('node_player_group_delete_has_node_player'), 'error')
+            return redirect(url_for('fleet_node_player_group_list', player_group_id=player_group_id))
 
         self._model_store.node_player_group().delete(player_group_id)
         return redirect(url_for('fleet_node_player_group'))
