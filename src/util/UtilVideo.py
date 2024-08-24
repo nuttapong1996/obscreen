@@ -18,4 +18,4 @@ def get_video_metadata(filename):
 
     width = fields.get('width', 0)
     height = fields.get('height', 0)
-    return duration, width, height
+    return width, height, duration

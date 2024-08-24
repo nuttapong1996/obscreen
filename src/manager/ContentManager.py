@@ -219,7 +219,7 @@ class ContentManager(ModelManager):
 
     def set_metadata(self, content: Content) -> str:
         if content.type == ContentType.VIDEO:
-            duration, width, height = get_video_metadata(content.location)
+            width, height, duration = get_video_metadata(content.location)
             content.duration = duration
             content.set_metadata(ContentMetadata.DURATION, duration)
             content.set_metadata(ContentMetadata.WIDTH, width)
