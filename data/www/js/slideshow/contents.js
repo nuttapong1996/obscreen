@@ -21,7 +21,11 @@ jQuery(document).ready(function ($) {
         $form.find('.object-label:visible').html(optionAttributes['data-object-label'].value);
         $('.type-icon').attr('class', 'type-icon fa ' + optionAttributes['data-icon'].value);
         $('.tab-select .widget').attr('class', 'widget ' + ('border-' + color) + ' ' + color);
-        $form.find('button[type=submit]').attr('class', 'btn ' + ('btn-' + color));
+        $form.find('button[type=submit]').attr('class', [
+            'btn',
+            `btn-${color}`,
+            color === 'gscaleF' ? 'gscale0' : ''
+        ].join(' '));
     };
 
     const main = function () {

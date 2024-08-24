@@ -15,6 +15,7 @@
         .slide, iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; padding-top: 0; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; }
         .slide iframe { background: white; }
         .slide img, .slide video { {% if force_cover %}width: 100%;{% endif %} height: 100%; }
+        .slide .text { width: 100%; height: 100%; color: white; font-family: 'Arial', 'sans-serif'; font-size: 20px; display: flex; flex-direction: row; justify-content: center; align-items: center; }
         .slide video { width: 100%; height: 100%; }
     </style>
     <script type="application/javascript" src="{{ STATIC_PREFIX }}js/utils.js"></script>
@@ -341,6 +342,9 @@
             case 'picture':
                 loadPicture(element, callbackReady, item);
                 break;
+            case 'text':
+                loadText(element, callbackReady, item);
+                break;
             case 'video':
                 loadVideo(element, callbackReady, item);
                 break;
@@ -363,6 +367,11 @@
 
     const loadPicture = function(element, callbackReady, item) {
         element.innerHTML = `<img src="${item.location}" alt="" />`;
+        callbackReady(function() {});
+    };
+
+    const loadText = function(element, callbackReady, item) {
+        element.innerHTML = `<div class="text">${item.location}</div>`;
         callbackReady(function() {});
     };
 

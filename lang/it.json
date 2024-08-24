@@ -308,6 +308,8 @@
   "enum_content_type_external_storage_object_label": "Specificare una directory esistente relativi al seguente percorso",
   "enum_content_type_external_storage_flashdrive_label": "Percorso relativo ad un dispositivo rimovibile",
   "enum_content_type_composition": "Composizione",
+  "enum_content_type_text": "Testo",
+  "enum_content_type_text_object_label": "Testo visualizzato",
   "enum_content_type_url": "URL",
   "enum_content_type_video": "Video",
   "enum_content_type_picture": "Immagine",

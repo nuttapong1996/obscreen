@@ -31,6 +31,7 @@ class ContentType(Enum):
     VIDEO = 'video'
     EXTERNAL_STORAGE = 'external_storage'
     COMPOSITION = 'composition'
+    TEXT = 'text'
 
     @staticmethod
     def guess_content_type_file(filename: str):
@@ -65,6 +66,8 @@ class ContentType(Enum):
             return ContentInputType.STORAGE
         elif value == ContentType.COMPOSITION:
             return ContentInputType.HIDDEN
+        elif value == ContentType.TEXT:
+            return ContentInputType.TEXT
 
     @staticmethod
     def get_fa_icon(value: Union[Enum, str]) -> str:
@@ -83,6 +86,8 @@ class ContentType(Enum):
             return 'fa-brands fa-usb'
         elif value == ContentType.COMPOSITION:
             return 'fa-solid fa-clone'
+        elif value == ContentType.TEXT:
+            return 'fa-solid fa-font'
 
         return 'fa-file'
 
@@ -103,5 +108,7 @@ class ContentType(Enum):
             return 'other'
         elif value == ContentType.COMPOSITION:
             return 'purple'
+        elif value == ContentType.TEXT:
+            return 'gscaleF'
 
         return 'neutral'
