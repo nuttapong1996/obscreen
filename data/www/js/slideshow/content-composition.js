@@ -293,6 +293,28 @@ jQuery(document).ready(function ($) {
         });
     });
 
+     $(document).keydown(function (e) {
+        if (e.key === "Escape") {
+            unfocusElements();
+        }
+
+        if (!currentElement) {
+            return;
+        }
+
+        if (e.key === "ArrowLeft") {
+            $('#elem-x').val(parseInt($('#elem-x').val()) - (e.shiftKey ? 10 : 1)).trigger('input');
+        } else if (e.key === "ArrowRight") {
+            $('#elem-x').val(parseInt($('#elem-x').val()) + (e.shiftKey ? 10 : 1)).trigger('input');
+        } else if (e.key === "ArrowUp") {
+            $('#elem-y').val(parseInt($('#elem-y').val()) - (e.shiftKey ? 10 : 1)).trigger('input');
+        } else if (e.key === "ArrowDown") {
+            $('#elem-y').val(parseInt($('#elem-y').val()) + (e.shiftKey ? 10 : 1)).trigger('input');
+        } else if (e.key === "Backspace" && confirm(l.js_common_are_you_sure)) {
+            removeElementById(currentElement.attr('data-id'));
+        }
+    });
+
     $(document).on('click', '.content-explr-picker', function () {
         const elementId = $(this).attr('data-id');
         const isNew = !elementId;
