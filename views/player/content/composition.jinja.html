@@ -35,7 +35,8 @@
         <div id="screen"></div>
         <script src="{{ STATIC_PREFIX }}js/lib/jquery.min.js"></script>
         <script>
-            const base_iframe_route = '{{ url_for('player', preview_content_id='!c!', autoplay=1, cover=1) }}';
+            const contentData = JSON.parse({{ json_dumps(content.location) | safe }});
+            const baseIframeRoute = '{{ url_for('player', preview_content_id='!c!', autoplay=1, cover=1) }}';
 
             jQuery(function($) {
                 function setOptimalSize() {
@@ -78,7 +79,7 @@
                     //x = Math.round(Math.max(0, Math.min(x, screenWidth - elementWidth)));
                     //y = Math.round(Math.max(0, Math.min(y, screenHeight - elementHeight)));
 
-                    const element = $('<iframe class="element" id="element-' + zIndex + '" data-id="' + zIndex + '" src="'+base_iframe_route.replace('!c!', config.contentId)+'" frameborder="0"></iframe>');
+                    const element = $('<iframe class="element" id="element-' + zIndex + '" data-id="' + zIndex + '" src="'+baseIframeRoute.replace('!c!', config.contentId)+'" frameborder="0"></iframe>');
 
                     element.css({
                         left: x,
@@ -97,10 +98,9 @@
                 const applyElementsFromContent = function() {
                     $('#screen').html('');
 
-                    const contentData = JSON.parse({{ json_dumps(content.location) | safe }});
-                    for (let i = 0; i < contentData.length; i++) {
-                        if (contentData[i].contentId !== null) {
-                            createElement(contentData[i]);
+                    for (let i = 0; i < contentData.layers.length; i++) {
+                        if (contentData.layers[i].contentId !== null) {
+                            createElement(contentData.layers[i]);
                         }
                     }
                 };

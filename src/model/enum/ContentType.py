@@ -102,6 +102,6 @@ class ContentType(Enum):
         elif value == ContentType.EXTERNAL_STORAGE:
             return 'other'
         elif value == ContentType.COMPOSITION:
-            return 'warning'
+            return 'purple'
 
         return 'neutral'

@@ -1,6 +1,16 @@
+
 jQuery(document).ready(function ($) {
+    const contentData = JSON.parse($('#content-edit-location').val());
+    const screenRatio = 16/9;
+
     let currentElement = null;
     let elementCounter = 0;
+
+    $('.screen-holder').css({
+        'padding-top': ( 1/ ( screenRatio ) * 100) + '%'
+    });
+
+    $('.ratio-value').val(screenRatio);
 
     $('#screen').css({
         width: $('#screen').width(),
@@ -348,7 +358,7 @@ jQuery(document).ready(function ($) {
 
     $(document).on('submit', 'form.form', function (e) {
         unfocusElements();
-        const layers = getLayersPayload();
+        const layers = getLocationPayload();
         $('#content-edit-location').val(JSON.stringify(layers));
     });
 
@@ -367,16 +377,15 @@ jQuery(document).ready(function ($) {
     });
 
     const applyElementsFromContent = function() {
-        const contentData = JSON.parse($('#content-edit-location').val());
-        for (let i = 0; i < contentData.length; i++) {
-            createElement(contentData[i]);
+        for (let i = 0; i < contentData.layers.length; i++) {
+            createElement(contentData.layers[i]);
         }
     };
 
     applyElementsFromContent();
 });
 
-const getLayersPayload = function() {
+const getLocationPayload = function() {
     const screen = $('#screen');
     const screenWidth = screen.width();
     const screenHeight = screen.height();
@@ -418,5 +427,7 @@ const getLayersPayload = function() {
         return parseInt(b.zIndex) - parseInt(a.zIndex);
     });
 
-    return layers;
+    return {
+        layers: layers
+    };
 };
