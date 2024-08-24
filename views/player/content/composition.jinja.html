@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+        {% set preview_mode = request.args.get('preview') == '1' %}
         <style>
             html, body, #screen {
                 margin: 0;
@@ -12,31 +13,72 @@
             }
             iframe {
                 border: none;
+                outline: none;
             }
+
+            {% if preview_mode %}
+                html, body, #screen {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center
+                }
+
+                #screen {
+                    width: 1280px;
+                    height: 720px;
+                    outline: 5px solid white;
+                }
+            {% endif %}
         </style>
     </head>
     <body>
         <div id="screen"></div>
         <script src="{{ STATIC_PREFIX }}js/lib/jquery.min.js"></script>
         <script>
-            const base_iframe_route = '{{ url_for('player', preview_content_id='!c!', autoplay=1) }}';
+            const base_iframe_route = '{{ url_for('player', preview_content_id='!c!', autoplay=1, cover=1) }}';
 
             jQuery(function($) {
+                function setOptimalSize() {
+                    const ratio = 16 / 9;
+                    const bodyWidth = $('body').width() - 100;
+                    const bodyHeight = $('body').height() - 100;
+
+                    let width = bodyWidth;
+                    let height = bodyWidth / ratio;
+
+                    if (height > bodyHeight) {
+                        height = bodyHeight;
+                        width = bodyHeight * ratio;
+                    }
+
+                    const screenSizes = {
+                        width: Math.floor(width),
+                        height: Math.floor(height)
+                    };
+
+                    $('#screen').css({
+                        'width': screenSizes.width,
+                        'height': screenSizes.height,
+                    });
+                }
+
                 function createElement(config = null) {
                     const screen = $('#screen');
+                    const offsetX = screen.position().left;
+                    const offsetY = screen.position().top;
                     const screenWidth = screen.width();
                     const screenHeight = screen.height();
 
                     const elementWidth = (config.widthPercent / 100) * screenWidth
                     const elementHeight = (config.heightPercent / 100) * screenHeight;
-                    let x = (config.xPercent / 100) * screenWidth;
-                    let y = (config.yPercent / 100) * screenHeight;
+                    let x = offsetX + (config.xPercent / 100) * screenWidth;
+                    let y = offsetY + (config.yPercent / 100) * screenHeight;
                     const zIndex = config.zIndex;
 
                     //x = Math.round(Math.max(0, Math.min(x, screenWidth - elementWidth)));
                     //y = Math.round(Math.max(0, Math.min(y, screenHeight - elementHeight)));
 
-                    const element = $('<iframe class="element" id="element-' + zIndex + '" data-id="' + zIndex + '" src="'+base_iframe_route.replace('!c!', config.contentId)+'"></iframe>');
+                    const element = $('<iframe class="element" id="element-' + zIndex + '" data-id="' + zIndex + '" src="'+base_iframe_route.replace('!c!', config.contentId)+'" frameborder="0"></iframe>');
 
                     element.css({
                         left: x,
@@ -64,6 +106,10 @@
                 };
 
                 const main = function() {
+                    {% if preview_mode %}
+                        setOptimalSize();
+                    {% endif %}
+
                     applyElementsFromContent();
                 };
 

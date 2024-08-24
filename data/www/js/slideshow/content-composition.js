@@ -103,6 +103,7 @@ jQuery(document).ready(function ($) {
         const metadata = currentElement.data('content-metadata');
         const ratio = metadata.height / metadata.width;
         $('#elem-height').val($('#elem-width').val() * ratio).trigger('input');
+        $('#elem-width').val($('#elem-width').val()).trigger('input');
     });
 
     $(document).on('click', '.element-list-item', function(){
@@ -266,13 +267,17 @@ jQuery(document).ready(function ($) {
     $(document).on('click', '#presetGrid2x2', function () {
         const screenWidth = $('#screen').width();
         const screenHeight = $('#screen').height();
+
         let elements = $('.element');
         if (elements.length < 4) {
             while (elements.length < 4) {
                 createElement();
-                elements = $('.element');
             }
         }
+
+        elements = $('.element-list-item').map(function() {
+            return $('.element[data-id='+$(this).attr('data-id')+']');
+        }).slice(0, 4);
 
         const gridPositions = [
             {x: 0, y: 0},
