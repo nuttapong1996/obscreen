@@ -1,0 +1,21 @@
+.alert {
+	padding: 20px 20px;
+	align-self: stretch;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	border-radius: $baseRadius;
+
+	i {
+		margin-right: 13px;
+	}
+
+	a {
+		color: inherit;
+		margin-left: 4px;
+		margin-right: 4px;
+		text-decoration: underline;
+	}
+}
+

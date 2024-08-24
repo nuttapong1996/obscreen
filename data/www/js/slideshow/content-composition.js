@@ -163,7 +163,7 @@ jQuery(document).ready(function ($) {
             if (contentType === 'picture' || contentType === 'video') {
                 const contentMetadata = $element.data('content-metadata');
                 if (contentMetadata.width && contentMetadata.height) {
-                    //$('.element-tool.adjust-aspect-ratio-container').removeClass('hidden');
+                    $('.element-tool.adjust-aspect-ratio-container').removeClass('hidden');
                 }
             }
         }
@@ -310,8 +310,10 @@ jQuery(document).ready(function ($) {
             $('#elem-y').val(parseInt($('#elem-y').val()) - (e.shiftKey ? 10 : 1)).trigger('input');
         } else if (e.key === "ArrowDown") {
             $('#elem-y').val(parseInt($('#elem-y').val()) + (e.shiftKey ? 10 : 1)).trigger('input');
-        } else if (e.key === "Backspace" && confirm(l.js_common_are_you_sure)) {
-            removeElementById(currentElement.attr('data-id'));
+        } else if (e.key === "Backspace" && !$('input,textarea').is(':focus')) {
+            if (confirm(l.js_common_are_you_sure)) {
+                removeElementById(currentElement.attr('data-id'));
+            }
         }
     });
 

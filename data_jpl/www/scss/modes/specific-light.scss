@@ -1,0 +1,197 @@
+
+menu h1.logo a {
+	color: $gkscale6;
+}
+
+menu:hover h1.logo a {
+	color: transparent;
+}
+
+ul.explr-dirview li a {
+	&.with-thumbnail {
+		.img-holder {
+			background: $gkscaleD;
+		}
+	}
+
+	i {
+		color: $seaBlue;
+	}
+}
+
+button,
+.btn {
+	&.btn-pixel {
+		background: $white;
+		color: $gkscale4;
+
+		@include pixel-box(4, $gkscaleC);
+
+		&:hover {
+			@include pixel-box(6, $gkscaleC);
+		}
+	}
+
+	&.btn-naked {
+		color: $gkscale7;
+
+		&:hover {
+			box-shadow: 0 2px 0 1px $gkscale6 inset;
+		}
+	}
+
+	&.btn-neutral:hover {
+		box-shadow: 0 2px 0 1px $gkscale6 inset;
+	}
+}
+
+.tiles .tiles-inner .tile-item {
+	border-top: 2px solid transparent;
+	border-right: 2px solid transparent;
+	border-bottom: 2px solid transparent;
+
+	&:hover,
+	&.active {
+		border-left: 2px solid $gscale17;
+		border-top: 2px solid $gscale17;
+		border-right: 2px solid $gscale17;
+		border-bottom: 2px solid $gscale17;
+		background: $white;
+	}
+
+	&:hover,
+	&.active {
+		border-color: $seaBlue;
+	}
+
+	&:hover.starred,
+	&.active.starred {
+		border-color: $yellow;
+	}
+
+	&:hover.disabled,
+	&.active.disabled {
+		border-color: $gscale4;
+	}
+}
+
+.panes {
+	.pane-section,
+	tbody {
+
+		.pane-item,
+		tr {
+			&:nth-child(odd) {
+				background-color: $gkscaleF;
+			}
+
+			&:nth-child(even) {
+				background-color: $gkscaleF7;
+			}
+		}
+	}
+}
+
+.form-group .widget select, .form-group .widget input, .form-group .widget textarea {
+	box-shadow: 0 2px 1px $gkscaleD, 0 4px 2px $gkscaleD inset;
+	color: $gkscale5;
+	background: $gkscaleE;
+}
+
+.toggle {
+	label {
+		box-shadow: 0 2px 2px $gkscaleC inset;
+
+		&::after {
+			box-shadow: 0 2px rgba($gkscaleC, 0.9);
+		}
+	}
+
+	input:checked + label {
+		box-shadow: 0 2px 2px rgba($gkscale0, .3) inset;
+	}
+}
+
+ul.pills {
+	box-shadow: 1px 1px .5px .5px inset rgba($gkscaleA, 0.2);
+	background: #EEE;
+
+	li {
+		a {
+			color: $gkscale4;
+			background: $white;
+		}
+
+		&.active {
+			a {
+				color: $white;
+				background: $seaBlue;
+			}
+		}
+	}
+}
+
+.breadcrumb-container ul.breadcrumb {
+	box-shadow: 1px 1px .5px .5px inset rgba($gkscaleA, 0.2);
+	background: #EEE;
+
+	li a,
+	li span,
+	li {
+		color: $gkscale4;
+	}
+
+	li:hover a {
+		color: $white;
+	}
+
+	li.divider i {
+		color: $gkscaleB;
+	}
+}
+
+
+.dropdown ul.dropdown-menu li.danger:hover a {
+	color: $white;
+}
+
+.inner-empty i {
+	color: $gkscaleD;
+	text-shadow: 0 -1px $gkscale9, 0 0px .5px $gkscale6;
+}
+
+.view-player-group-list main .main-container .players-holder ul.players li.player-item .tail a,
+.view-playlist-list main .main-container .slides-holder ul.slides li.slide-item .tail a {
+	color: $gkscale8;
+
+	&:hover {
+		color: $white;
+	}
+}
+
+
+.form-group {
+	.widget {
+		select,
+		input,
+		textarea {
+
+			&.disabled,
+			&[disabled] {
+				border: none;
+				background: $gkscaleE;
+				border-radius: $baseRadius;
+				padding-left: 10px;
+				padding-right: 10px;
+			}
+		}
+	}
+}
+
+.modal-explr-picker {
+	.explr-tree {
+		background: $gkscaleF7;
+	}
+}
+
+

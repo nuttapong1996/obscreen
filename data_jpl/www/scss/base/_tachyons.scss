@@ -1,0 +1,35 @@
+
+.invisible {
+    visibility: hidden !important;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.tac {
+    text-align: center !important;
+}
+
+.tar {
+    text-align: right !important;
+}
+
+a {
+    text-decoration: none;
+}
+
+.normal {
+    font-weight: normal !important;
+}
+
+.bold {
+    font-weight: bold !important;
+}
+
+.col {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-self: stretch;
+}

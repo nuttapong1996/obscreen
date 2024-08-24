@@ -1,0 +1,144 @@
+button,
+.btn {
+	$shadowOffset: 2px;
+
+	position: relative;
+	padding: 10px 10px 8px 10px;
+	font-size: 14px;
+	color: $white;
+	cursor: pointer;
+	border: none;
+	border-radius: $baseRadius;
+	background: $seaBlue;
+	box-shadow: 0 $shadowOffset 0 0 darken($seaBlue, 20%);
+	font-weight: bold;
+	letter-spacing: -0.5px;
+	margin-top: -$shadowOffset;
+	min-width: 38px;
+	min-height: 34px;
+	text-align: center;
+	justify-content: center;
+
+	i.icon-left {
+		margin-right: 5px;
+	}
+
+	&:hover {
+		box-shadow: 0 $shadowOffset 0 1px darken($seaBlue, 20%) inset;
+		color: rgba(white, .8);
+	}
+
+	&:focus {
+		background: darken($seaBlue, 20%);
+		color: rgba(white, .5);
+		box-shadow: none;
+	}
+
+	&.btn-pixel {
+		background: $gscaleC;
+		border: 1px solid transparent;
+		transition: all 550ms cubic-bezier(0.19, 1, 0.22, 1);
+		text-transform: uppercase;
+		font-size: 12px;
+		@include pixel-box(4);
+		color: $gscale2;
+		overflow: hidden;
+
+		&:hover {
+			@include pixel-box(6);
+			@include pixel-text(4);
+		}
+	}
+
+	&.btn-neutral {
+		color: $white;
+		background: $gscale5;
+		box-shadow: 0 $shadowOffset 0 0 darken($gscale5, 10%);
+		border: 1px solid transparent;
+
+		&:hover {
+			box-shadow: 0 $shadowOffset 0 1px $gkscale2 inset;
+			background: darken($gscale5, 10%);
+		}
+
+		&:focus {
+			background: darken($gscale5, 20%);
+			border: 1px solid $gscaleA;
+		}
+	}
+
+	.btn-wire-neutral {
+		background: transparent;
+		border: 2px solid $gscale5;
+		color: rgba($white, .8);
+		box-shadow: none;
+
+		&:hover {
+			background: rgba($gscale5, 0.05);
+			border-color: darken($gscale5, 10%);
+			color: darken($gscale5, 10%);
+			box-shadow: none;
+		}
+
+		&:focus {
+			border-color: darken($gscale5, 20%);
+			background: transparent;
+		}
+	}
+
+	&.btn-naked {
+		background: transparent;
+		box-shadow: none;
+		border: 1px solid transparent;
+		color: $gscaleF;
+
+		&:hover {
+			box-shadow: 0 $shadowOffset 0 1px $gkscale2 inset;
+			background: darken($gscale5, 10%);
+			color: $white;
+		}
+
+		&:focus {
+			background: darken($gscale5, 20%);
+			border: 1px solid $gscaleA;
+		}
+	}
+
+
+	i.main {
+		font-size: 18px;
+	}
+
+	sup,
+	sub {
+		position: absolute;
+		top: -4px;
+		right: -4px;
+		background: $gscale7;
+		border-bottom: 2px solid $gscale5;
+		color: red;
+		border-radius: $baseRadius;
+		width: 16px;
+		height: 16px;
+		text-align: center;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		padding-top: 2px;
+		padding-bottom: 1px;
+
+		i {
+			color: $white;
+			font-size: 10px;
+		}
+	}
+
+	&.btn-double-icon {
+		margin-right: 5px;
+	}
+
+	&.disabled {
+		cursor: default;
+	}
+}
+
