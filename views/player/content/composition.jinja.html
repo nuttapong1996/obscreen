@@ -33,8 +33,8 @@
                     let y = (config.yPercent / 100) * screenHeight;
                     const zIndex = config.zIndex;
 
-                    x = Math.round(Math.max(0, Math.min(x, screenWidth - elementWidth)));
-                    y = Math.round(Math.max(0, Math.min(y, screenHeight - elementHeight)));
+                    //x = Math.round(Math.max(0, Math.min(x, screenWidth - elementWidth)));
+                    //y = Math.round(Math.max(0, Math.min(y, screenHeight - elementHeight)));
 
                     const element = $('<iframe class="element" id="element-' + zIndex + '" data-id="' + zIndex + '" src="'+base_iframe_route.replace('!c!', config.contentId)+'"></iframe>');
 

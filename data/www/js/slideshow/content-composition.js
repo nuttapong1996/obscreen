@@ -22,8 +22,8 @@ jQuery(document).ready(function ($) {
         let y = config ? (config.yPercent / 100) * screenHeight : Math.round(Math.random() * (screenHeight - elementHeight));
         const zIndex = config ? config.zIndex : elementCounter++;
 
-        x = Math.round(Math.max(0, Math.min(x, screenWidth - elementWidth)));
-        y = Math.round(Math.max(0, Math.min(y, screenHeight - elementHeight)));
+        //x = Math.round(Math.max(0, Math.min(x, screenWidth - elementWidth)));
+        //y = Math.round(Math.max(0, Math.min(y, screenHeight - elementHeight)));
 
         const elementId = zIndex;
         const element = $('<div class="element" id="element-' + zIndex + '" data-id="' + zIndex + '"><i class="fa fa-cog"></i></div>');
@@ -39,7 +39,7 @@ jQuery(document).ready(function ($) {
         });
 
         element.draggable({
-            containment: "#screen",
+            // containment: "#screen",
             start: function (event, ui) {
                 focusElement(ui.helper);
             },
@@ -49,7 +49,7 @@ jQuery(document).ready(function ($) {
         });
 
         element.resizable({
-            containment: "#screen",
+            // containment: "#screen",
             handles: 'nw, ne, sw, se',
             start: function (event, ui) {
                 focusElement(ui.element);
@@ -326,26 +326,27 @@ const getLayersPayload = function() {
     const layers = [];
 
     $('.element').each(function () {
-        const offset = $(this).position();
+        const $element = $(this);
+        const offset = $element.position();
         const x = offset.left;
         const y = offset.top;
-        const width = $(this).width();
-        const height = $(this).height();
+        const width = $element.width();
+        const height = $element.height();
 
         const xPercent = (x / screenWidth) * 100;
         const yPercent = (y / screenHeight) * 100;
         const widthPercent = (width / screenWidth) * 100;
         const heightPercent = (height / screenHeight) * 100;
-        const contentId = $(this).attr('data-content-id');
-        const contentName = $(this).attr('data-content-name');
-        const contentType = $(this).attr('data-content-type');
+        const contentId = $element.attr('data-content-id');
+        const contentName = $element.attr('data-content-name');
+        const contentType = $element.attr('data-content-type');
 
         layers.push({
             xPercent: xPercent,
             yPercent: yPercent,
             widthPercent: widthPercent,
             heightPercent: heightPercent,
-            zIndex: parseInt($(this).css('zIndex')),
+            zIndex: parseInt($element.css('zIndex')),
             contentId: contentId ? parseInt(contentId) : null,
             contentName: contentName ? contentName : null,
             contentType: contentType ? contentType : null
