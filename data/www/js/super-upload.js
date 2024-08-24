@@ -42,9 +42,9 @@ jQuery(function ($) {
                     if (statusCode !== 200) {
                         const $alert = $('.alert-upload').removeClass('hidden');
                         if (statusCode === 413) {
-                            $alert.text(l.js_common_http_error_413);
+                            $alert.html(`<i class="fa fa-warning"></i>${l.js_common_http_error_413}`);
                         } else {
-                            $alert.text(l.js_common_http_error_occured.replace('%code%', statusCode));
+                            $alert.html(`<i class="fa fa-warning"></i>${l.js_common_http_error_occured.replace('%code%', statusCode)}`);
                         }
                     } else {
                         document.location.reload();
