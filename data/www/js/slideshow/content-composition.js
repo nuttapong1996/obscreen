@@ -214,8 +214,8 @@ jQuery(document).ready(function ($) {
         // let rotation = parseInt($('#elem-rotate').val());
 
         // Constrain x and y
-        x = Math.max(0, Math.min(x, screenWidth - width));
-        y = Math.max(0, Math.min(y, screenHeight - height));
+        // x = Math.max(0, Math.min(x, screenWidth - width));
+        // y = Math.max(0, Math.min(y, screenHeight - height));
 
         // Constrain width and height
         width = Math.min(width, screenWidth - x);
@@ -296,6 +296,8 @@ jQuery(document).ready(function ($) {
             });
             updateForm($(this));
         });
+
+        unfocusElements();
     });
 
      $(document).keydown(function (e) {
