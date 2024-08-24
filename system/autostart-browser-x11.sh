@@ -11,6 +11,11 @@ mkdir -p /home/pi/.config/chromium/Default 2>/dev/null
 touch /home/pi/.config/chromium/Default/Preferences
 sed -i 's/"exited_cleanly": false/"exited_cleanly": true/' /home/pi/.config/chromium/Default/Preferences
 
+# Force specific resolution (supported list available with command `DISPLAY=:0 xrandr`)
+#FIRST_CONNECTED_SCREEN=$(xrandr | grep " connected" | awk '{print $1}' | head -n 1)
+#xrandr --output $FIRST_CONNECTED_SCREEN --mode 800x600
+
+# Get screen resolution
 RESOLUTION=$(DISPLAY=:0 xrandr | grep '*' | awk '{print $1}')
 WIDTH=$(echo $RESOLUTION | cut -d 'x' -f 1)
 HEIGHT=$(echo $RESOLUTION | cut -d 'x' -f 2)
