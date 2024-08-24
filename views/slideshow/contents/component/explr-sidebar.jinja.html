@@ -17,7 +17,7 @@
                     {% set slides = slides_with_content[content.id]|default([]) if slides_with_content else [] %}
                     {% set icon = enum_content_type.get_fa_icon(content.type) %}
                     {% set color = enum_content_type.get_color_icon(content.type) %}
-                    <li class="explr-item" data-entity-json="{{ content.to_json({'classIcon': icon, 'classColor': color}) }}">
+                    <li class="explr-item" data-entity-json="{{ content.to_json({'classIcon': icon, 'classColor': color, 'metadata': json_loads(content.metadata)}) }}">
                         <i class="fa {{ icon }} {{ color }}"></i>
                         {% if slides|length > 0 %}
                             <sub>

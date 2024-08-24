@@ -98,6 +98,23 @@
                                 </div>
                             </div>
 
+                            {% if content.type == enum_content_type.VIDEO or content.type == enum_content_type.PICTURE %}
+                                <div class="horizontal">
+                                    <div class="form-group">
+                                        <label for="">{{ l.common_width }}</label>
+                                        <div class="widget">
+                                            <input type="text" value="{{ content.get_metadata(enum_content_metadata.WIDTH) }}" disabled="disabled" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">{{ l.common_height }}</label>
+                                        <div class="widget">
+                                            <input type="text" value="{{ content.get_metadata(enum_content_metadata.HEIGHT) }}" disabled="disabled" />
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+
                             <div class="actions actions-right">
                                 <button type="submit" class="btn btn-info">
                                     <i class="fa fa-save icon-left"></i>

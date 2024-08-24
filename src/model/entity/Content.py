@@ -4,15 +4,17 @@ import uuid
 
 from typing import Optional, Union
 from src.model.enum.ContentType import ContentType, ContentInputType
+from src.model.enum.ContentMetadata import ContentMetadata
 from src.util.utils import str_to_enum
 
 
 class Content:
 
-    def __init__(self, uuid: str = '', location: str = '', type: Union[ContentType, str] = ContentType.URL, name: str = 'Untitled', id: Optional[int] = None, duration: Optional[float] = None, created_by: Optional[str] = None, updated_by: Optional[str] = None, created_at: Optional[int] = None, updated_at: Optional[int] = None, folder_id: Optional[int] = None):
+    def __init__(self, uuid: str = '', location: str = '', metadata: str = '', type: Union[ContentType, str] = ContentType.URL, name: str = 'Untitled', id: Optional[int] = None, duration: Optional[float] = None, created_by: Optional[str] = None, updated_by: Optional[str] = None, created_at: Optional[int] = None, updated_at: Optional[int] = None, folder_id: Optional[int] = None):
         self._uuid = uuid if uuid else self.generate_and_set_uuid()
         self._id = id if id else None
         self._location = location
+        self._metadata = metadata if metadata else self.init_metadata()
         self._type = str_to_enum(type, ContentType) if isinstance(type, str) else type
         self._name = name
         self._folder_id = folder_id
@@ -38,6 +40,14 @@ class Content:
     @uuid.setter
     def uuid(self, value: str):
         self._uuid = value
+
+    @property
+    def metadata(self) -> str:
+        return self._metadata
+
+    @metadata.setter
+    def metadata(self, value: str):
+        self._metadata = value
 
     @property
     def location(self) -> str:
@@ -124,6 +134,7 @@ class Content:
                f"updated_at='{self.updated_at}',\n" \
                f"folder_id='{self.folder_id}',\n" \
                f"duration='{self.duration}',\n" \
+               f"metadata='{self.metadata}',\n" \
                f")"
 
     def to_json(self, edits: dict = {}) -> str:
@@ -147,6 +158,7 @@ class Content:
             "updated_at": self.updated_at,
             "folder_id": self.folder_id,
             "duration": self.duration,
+            "metadata": self.metadata,
         }
 
         if with_virtual:
@@ -165,3 +177,32 @@ class Content:
 
     def is_editable(self) -> bool:
         return ContentInputType.is_editable(self.get_input_type())
+
+    def init_metadata(self):
+        self.metadata = '{}'
+        return self.metadata
+
+    def get_metadata(self, key: ContentMetadata, default=''):
+        if not self.metadata:
+            self.init_metadata()
+
+        metadata_obj = json.loads(self.metadata)
+        return metadata_obj.get(key.value, default)
+
+    def set_metadata(self, key: ContentMetadata, value=None):
+        if not self.metadata:
+            self.init_metadata()
+
+        metadata_obj = json.loads(self.metadata)
+        metadata_obj[key.value] = value
+        self.metadata = json.dumps(metadata_obj)
+
+    def clear_metadata(self, key: ContentMetadata):
+        if not self.metadata:
+            self.init_metadata()
+
+        metadata_obj = json.loads(self.metadata)
+
+        if key.value in metadata_obj:
+            del metadata_obj[key.value]
+            self.metadata = json.dumps(metadata_obj)

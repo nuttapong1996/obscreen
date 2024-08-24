@@ -149,6 +149,7 @@ class VariableManager:
             {"name": "last_restart", "value": time.time(), "type": VariableType.TIMESTAMP, "editable": False, "description": self.t('settings_variable_desc_ro_editable')},
             {"name": "last_slide_update", "value": time.time(), "type": VariableType.TIMESTAMP, "editable": False, "description": self.t('settings_variable_desc_ro_last_slide_update')},
             {"name": "refresh_player_request", "value": time.time(), "type": VariableType.TIMESTAMP, "editable": False, "description": self.t('settings_variable_desc_ro_refresh_player_request')},
+            {"name": "refresh_all_metadata", "value": False, "type": VariableType.BOOL, "editable": False, "description": None},
         ]
 
         for default_var in default_vars:

@@ -1,6 +1,10 @@
+try:
+    import psutil
+except:
+    pass
+
 import os
 import platform
-import psutil
 import socket
 
 from src.util.utils import get_working_directory

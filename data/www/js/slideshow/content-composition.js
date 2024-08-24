@@ -79,14 +79,17 @@ jQuery(document).ready(function ($) {
             element.attr('data-content-id', config.contentId);
             element.attr('data-content-name', config.contentName);
             element.attr('data-content-type', config.contentType);
+            element.attr('data-content-metadata', config.contentMetadata);
 
             applyContentToElement({
                 id: config.contentId,
                 name: config.contentName,
                 type: config.contentType,
+                metadata: config.contentMetadata,
             }, element);
 
             updateForm(element);
+            unfocusElements();
         } else {
             setTimeout(function () {
                 focusElement(element);
@@ -96,15 +99,21 @@ jQuery(document).ready(function ($) {
         return element;
     }
 
+    $(document).on('click', '.adjust-aspect-ratio', function(){
+        const metadata = currentElement.data('content-metadata');
+        const ratio = metadata.height / metadata.width;
+        $('#elem-height').val($('#elem-width').val() * ratio).trigger('input');
+    });
+
     $(document).on('click', '.element-list-item', function(){
         focusElement($('#element-' + $(this).attr('data-id')));
-    })
+    });
 
     $(document).on('click', '.remove-element', function(){
         if (confirm(l.js_common_are_you_sure)) {
             removeElementById($(this).attr('data-id'));
         }
-    })
+    });
 
     function removeElementById(elementId) {
         $('.element[data-id='+elementId+'], .element-list-item[data-id='+elementId+']').remove();
@@ -139,17 +148,29 @@ jQuery(document).ready(function ($) {
         updateForm(null);
     }
 
-    function focusElement(element) {
+    function focusElement($element) {
         unfocusElements();
-        currentElement = element;
-        currentElement.addClass('focused');
-        const listElement = $('.element-list-item[data-id="' + currentElement.attr('data-id') + '"]');
+        currentElement = $element;
+        $element.addClass('focused');
+        const listElement = $('.element-list-item[data-id="' + $element.attr('data-id') + '"]');
         listElement.addClass('focused');
-        updateForm(currentElement);
+        updateForm($element);
+
+        const contentType = $element.attr('data-content-type');
+        $('.element-tool').addClass('hidden');
+
+        if (contentType) {
+            if (contentType === 'picture' || contentType === 'video') {
+                const contentMetadata = $element.data('content-metadata');
+                if (contentMetadata.width && contentMetadata.height) {
+                    //$('.element-tool.adjust-aspect-ratio-container').removeClass('hidden');
+                }
+            }
+        }
     }
 
-    function updateForm(element) {
-        if (!element) {
+    function updateForm($element) {
+        if (!$element) {
             $('form#elementForm input').val('').prop('disabled', true);
             $('.form-element-properties').addClass('hidden');
             return;
@@ -158,18 +179,19 @@ jQuery(document).ready(function ($) {
         $('.form-element-properties').removeClass('hidden');
         $('form#elementForm input').prop('disabled', false);
 
-        const offset = element.position();
+        const offset = $element.position();
 
         if (offset !== undefined) {
             $('#elem-x').val(offset.left);
             $('#elem-y').val(offset.top);
-            $('#elem-width').val(element.width());
-            $('#elem-height').val(element.height());
+            $('#elem-width').val($element.width());
+            $('#elem-height').val($element.height());
         }
 
-        $(element).find('i').css('font-size', Math.min(element.width(), element.height()) / 3);
+        $element.find('i').css('font-size', Math.min($element.width(), $element.height()) / 3);
+
         /*
-        const rotation = element.css('transform');
+        const rotation = $element.css('transform');
         const values = rotation.split('(')[1].split(')')[0].split(',');
         const angle = Math.round(Math.atan2(values[1], values[0]) * (180/Math.PI));
         $('#elem-rotate').val(angle);
@@ -177,38 +199,40 @@ jQuery(document).ready(function ($) {
     }
 
     $(document).on('input', '#elementForm input', function () {
-        if (currentElement) {
-            const screenWidth = $('#screen').width();
-            const screenHeight = $('#screen').height();
-
-            let x = Math.round(parseInt($('#elem-x').val()));
-            let y = Math.round(parseInt($('#elem-y').val()));
-            let width = Math.round(parseInt($('#elem-width').val()));
-            let height = Math.round(parseInt($('#elem-height').val()));
-            // let rotation = parseInt($('#elem-rotate').val());
-
-            // Constrain x and y
-            x = Math.max(0, Math.min(x, screenWidth - width));
-            y = Math.max(0, Math.min(y, screenHeight - height));
-
-            // Constrain width and height
-            width = Math.min(width, screenWidth - x);
-            height = Math.min(height, screenHeight - y);
-
-            currentElement.css({
-                left: x,
-                top: y,
-                width: width,
-                height: height
-                // transform: `rotate(${rotation}deg)`
-            });
-
-            // Update form values to reflect clamped values
-            $('#elem-x').val(x);
-            $('#elem-y').val(y);
-            $('#elem-width').val(width);
-            $('#elem-height').val(height);
+        if (!currentElement) {
+            return;
         }
+
+        const screenWidth = $('#screen').width();
+        const screenHeight = $('#screen').height();
+
+        let x = Math.round(parseInt($('#elem-x').val()));
+        let y = Math.round(parseInt($('#elem-y').val()));
+        let width = Math.round(parseInt($('#elem-width').val()));
+        let height = Math.round(parseInt($('#elem-height').val()));
+        // let rotation = parseInt($('#elem-rotate').val());
+
+        // Constrain x and y
+        x = Math.max(0, Math.min(x, screenWidth - width));
+        y = Math.max(0, Math.min(y, screenHeight - height));
+
+        // Constrain width and height
+        width = Math.min(width, screenWidth - x);
+        height = Math.min(height, screenHeight - y);
+
+        currentElement.css({
+            left: x,
+            top: y,
+            width: width,
+            height: height
+            // transform: `rotate(${rotation}deg)`
+        });
+
+        // Update form values to reflect clamped values
+        $('#elem-x').val(x);
+        $('#elem-y').val(y);
+        $('#elem-width').val(width);
+        $('#elem-height').val(height);
     });
 
     // $(document).on('click', '#addElement', function () {
@@ -232,6 +256,7 @@ jQuery(document).ready(function ($) {
             || $(e.target).parents('.element:eq(0)').length !== 0
             || $(e.target).parents('.element-list-item:eq(0)').length !== 0
             || $(e.target).is('input,select,textarea')
+            || $(e.target).is('.page-panel.right-panel button,a,.btn')
 
         if (!keepFocusedElement) {
             unfocusElements();
@@ -282,6 +307,7 @@ jQuery(document).ready(function ($) {
         $element.attr('data-content-id', content.id);
         $element.attr('data-content-name', content.name);
         $element.attr('data-content-type', content.type);
+        $element.data('content-metadata', content.metadata);
         const $elementList = $('.element-list-item[data-id='+$element.attr('data-id')+']');
         const iconClasses = ['fa', content_type_icon_classes[content.type]].join(' ');
         $element.find('i').get(0).classList = iconClasses;
@@ -340,8 +366,9 @@ const getLayersPayload = function() {
         const contentId = $element.attr('data-content-id');
         const contentName = $element.attr('data-content-name');
         const contentType = $element.attr('data-content-type');
+        const contentMetadata = $element.data('content-metadata');
 
-        layers.push({
+        const layer = {
             xPercent: xPercent,
             yPercent: yPercent,
             widthPercent: widthPercent,
@@ -349,8 +376,11 @@ const getLayersPayload = function() {
             zIndex: parseInt($element.css('zIndex')),
             contentId: contentId ? parseInt(contentId) : null,
             contentName: contentName ? contentName : null,
-            contentType: contentType ? contentType : null
-        });
+            contentType: contentType ? contentType : null,
+            contentMetadata: contentMetadata && contentMetadata !== "null" ? contentMetadata : null,
+        };
+
+        layers.push(layer);
     });
 
     layers.sort(function(a, b) {

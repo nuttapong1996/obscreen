@@ -1,5 +1,9 @@
+try:
+    import psutil
+except:
+    pass
+
 import os
-import psutil
 import platform
 import logging
 import os

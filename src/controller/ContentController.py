@@ -7,6 +7,7 @@ from werkzeug.utils import secure_filename
 from src.service.ModelStore import ModelStore
 from src.model.entity.Content import Content
 from src.model.enum.ContentType import ContentType
+from src.model.enum.ContentMetadata import ContentMetadata
 from src.model.enum.FolderEntity import FolderEntity, FOLDER_ROOT_PATH
 from src.interface.ObController import ObController
 from src.util.utils import str_to_enum, get_optional_string
@@ -125,6 +126,7 @@ class ContentController(ObController):
             working_folder_path=working_folder_path,
             working_folder=working_folder,
             enum_content_type=ContentType,
+            enum_content_metadata=ContentMetadata,
             external_storage_mountpoint=self._model_store.config().map().get('external_storage_mountpoint'),
             **vargs
         )

@@ -96,7 +96,7 @@
                             <input type="hidden" name="location" id="content-edit-location" value="{{ content.location }}" />
 
                             <div class="elements-holder">
-                                <h3 class="divide">Elements</h3>
+                                <h3 class="divide">{{ l.composition_elements_heading }}</h3>
                                 <div class="form-elements-list" id="elementList">
 
                                 </div>
@@ -122,19 +122,19 @@
         <div class="page-content">
             <div class="inner">
                 <h3 class="main">
-                    Monitor
+                    {{ l.composition_monitor }}
                 </h3>
 
                 <div class="toolbar">
-                    <button id="addElement" class="content-explr-picker"><i class="fa fa-plus icon-left"></i>Add element</button>
-                    <button id="removeAllElements" class="btn btn-danger"><i class="fa fa-trash icon-left"></i> Delete all</button>
+                    <button id="addElement" class="content-explr-picker"><i class="fa fa-plus icon-left"></i>{{ l.composition_element_add }}</button>
+                    <button id="removeAllElements" class="btn btn-danger"><i class="fa fa-trash icon-left"></i> {{ l.composition_elements_delete_all }}</button>
                 </div>
 
                 <div class="presets">
                     <h4 class="divide">
-                        Presets:
+                        {{ l.composition_presets }}:
                     </h4>
-                    <button type="button" id="presetGrid2x2" class="btn btn-wire-neutral">Grid 2x2</button>
+                    <button type="button" id="presetGrid2x2" class="btn btn-wire-neutral">{{ l.composition_presets_grid_2x2 }}</button>
                 </div>
                 <div class="screen-holder">
                     <div class="screen" id="screen">
@@ -148,38 +148,50 @@
         <div class="page-panel right-panel">
             <div class="form-element-properties hidden">
                 <form id="elementForm">
-                    <h3>Element Properties</h3>
+                    <h3>
+                        {{ l.common_position }}
+                    </h3>
 
                     <div class="form-group">
-                        <label for="elem-x">Position X</label>
+                        <label for="elem-x">{{ l.composition_element_x_axis }}</label>
                         <div class="widget">
                             <input type="number" id="elem-x" name="elem-x">
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="elem-y">Position Y</label>
+                        <label for="elem-y">{{ l.composition_element_y_axis }}</label>
                         <div class="widget">
                             <input type="number" id="elem-y" name="elem-y">
                         </div>
                     </div>
 
+                    <h3 class="divide">
+                        {{ l.common_size }}
+                    </h3>
+
                     <div class="form-group">
-                        <label for="elem-width">Width</label>
+                        <label for="elem-width">{{ l.common_width }}</label>
                         <div class="widget">
                             <input type="number" id="elem-width" name="elem-width">
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="elem-height">Height</label>
+                        <label for="elem-height">{{ l.common_height }}</label>
                         <div class="widget">
                             <input type="number" id="elem-height" name="elem-height">
                         </div>
                     </div>
 
+                    <div class="horizontal fx-end element-tool adjust-aspect-ratio-container hidden">
+                        <button type="button" class="btn btn-wire-neutral adjust-aspect-ratio">
+                            <i class="fa fa-solid fa-down-left-and-up-right-to-center icon-left"></i> {{ l.composition_element_match_content_aspect_ratio }}
+                        </button>
+                    </div>
+
 {#                    <div class="form-group">#}
-{#                        <label for="elem-rotate">Rotate (deg)</label>#}
+{#                        <label for="elem-rotate">{{ l.common_angle }} (deg)</label>#}
 {#                        <div class="widget">#}
 {#                            <input type="number" id="elem-rotate" name="elem-rotate">#}
 {#                        </div>#}

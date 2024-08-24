@@ -26,6 +26,10 @@ body, html {
 	align-items: flex-start;
 	flex: 1;
 	align-self: stretch;
+
+	&.fx-end {
+		justify-content: flex-end;
+	}
 }
 
 .vertical {

@@ -54,6 +54,7 @@ class TemplateRenderer:
             is_cron_in_datetime_moment=is_cron_in_datetime_moment,
             is_cron_in_week_moment=is_cron_in_week_moment,
             json_dumps=json.dumps,
+            json_loads=json.loads,
             merge_dicts=merge_dicts,
             dictsort=dictsort,
             truncate=truncate,
