@@ -272,7 +272,7 @@ jQuery(document).ready(function ($) {
         if (!keepFocusedElement) {
             unfocusElements();
         }
-    })
+    });
 
     $(document).on('click', '#presetGrid2x2', function () {
         const screenWidth = $('#screen').width();
@@ -307,6 +307,30 @@ jQuery(document).ready(function ($) {
             updateForm($(this));
         });
 
+        unfocusElements();
+    });
+
+    $(document).on('click', '#presetTvNews1x1', function () {
+        const screenWidth = $('#screen').width();
+        const screenHeight = $('#screen').height();
+
+        let elements = $('.element');
+        if (elements.length === 0) {
+            createElement();
+        }
+
+        if (!currentElement) {
+            return;
+        }
+
+        const height = (screenHeight / 7);
+        currentElement.css({
+            left: 0,
+            top: screenHeight - height,
+            width: screenWidth,
+            height: height
+        });
+        updateForm(currentElement);
         unfocusElements();
     });
 
