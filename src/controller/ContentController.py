@@ -119,6 +119,8 @@ class ContentController(ObController):
             edit_view = 'slideshow/contents/edit-composition.jinja.html'
             vargs['folders_tree'] = self._model_store.folder().get_folder_tree(FolderEntity.CONTENT)
             vargs['foldered_contents'] = self._model_store.content().get_all_indexed('folder_id', multiple=True)
+        elif content.type == ContentType.TEXT:
+            edit_view = 'slideshow/contents/edit-text.jinja.html'
 
         return render_template(
             edit_view,

@@ -67,7 +67,7 @@ class ContentType(Enum):
         elif value == ContentType.COMPOSITION:
             return ContentInputType.HIDDEN
         elif value == ContentType.TEXT:
-            return ContentInputType.TEXT
+            return ContentInputType.HIDDEN
 
     @staticmethod
     def get_fa_icon(value: Union[Enum, str]) -> str:

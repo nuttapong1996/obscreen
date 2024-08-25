@@ -6,33 +6,16 @@
 {% endblock %}
 
 {% block add_css %}
-    <link rel="stylesheet" href="{{ STATIC_PREFIX }}css/lib/jquery-explr-1.4.css"/>
     {{ HOOK(H_SLIDESHOW_CONTENT_CSS) }}
 {% endblock %}
 
 {% block add_js %}
-    <script>
-        const content_type_icon_classes = {
-           {% for type in enum_content_type %}
-               '{{ type.value }}': '{{ enum_content_type.get_fa_icon(type) }}',
-            {% endfor %}
-        };
-        const content_type_color_classes = {
-           {% for type in enum_content_type %}
-               '{{ type.value }}': '{{ enum_content_type.get_color_icon(type) }}',
-            {% endfor %}
-        };
-    </script>
-    <script src="{{ STATIC_PREFIX }}js/lib/jquery-explr-1.4.js"></script>
     <script src="{{ STATIC_PREFIX }}js/slideshow/contents.js"></script>
-    <script src="{{ STATIC_PREFIX }}js/lib/jquery-ui.min.js"></script>
-    {# <script src="{{ STATIC_PREFIX }} js/lib/jquery-ui-rotatable.min.js"></script> #}
-    <script src="{{ STATIC_PREFIX }}js/slideshow/content-composition.js"></script>
-    <script src="{{ STATIC_PREFIX }}js/explorer.js"></script>
+    <script src="{{ STATIC_PREFIX }}js/slideshow/content-text.js"></script>
     {{ HOOK(H_SLIDESHOW_CONTENT_JAVASCRIPT) }}
 {% endblock %}
 
-{% block body_class %}view-content-edit view-content-edit-composition edit-page{% endblock %}
+{% block body_class %}view-content-edit view-content-edit-text edit-page{% endblock %}
 
 {% block top_page %}
     <div class="top-content">
@@ -49,7 +32,7 @@
             </span>
         </h3>
 
-        <a href="{{ url_for('serve_content_composition', content_id=content.id, autoplay=1, preview=1) }}" target="_blank" class="btn btn-naked">
+        <a href="{{ url_for('player', preview_content_id=content.id) }}" target="_blank" class="btn btn-naked">
             <i class="fa fa-external-link"></i>
         </a>
     </div>
@@ -92,29 +75,7 @@
                                 </div>
                             </div>
 
-{#                            <div class="form-group">#}
-{#                                <label for="">Ratio</label>#}
-{#                                <div class="horizontal">#}
-{#                                    <div class="widget">#}
-{#                                        <input type="text" value="16" />#}
-{#                                    </div>#}
-{#                                    <div>#}
-{#                                        /#}
-{#                                    </div>#}
-{#                                    <div class="widget">#}
-{#                                        <input type="text" value="9" />#}
-{#                                    </div>#}
-{#                                </div>#}
-{#                            </div>#}
-
                             <input type="hidden" name="location" id="content-edit-location" value="{{ content.location }}" />
-
-                            <div class="elements-holder">
-                                <h3 class="divide">{{ l.composition_elements_heading }}</h3>
-                                <div class="form-elements-list" id="elementList">
-
-                                </div>
-                            </div>
 
                             <div class="actions actions-right">
                                 <button type="submit" class="btn btn-info">
@@ -136,21 +97,8 @@
         <div class="page-content">
             <div class="inner">
                 <h3 class="main">
-                    {{ l.composition_monitor }} <span class="ratio-value badge-inset">16 / 9</span>
+                    {{ l.composition_monitor }}
                 </h3>
-
-                <div class="toolbar">
-                    <button id="addElement" class="content-explr-picker"><i class="fa fa-plus icon-left"></i>{{ l.composition_element_add }}</button>
-                    <button id="removeAllElements" class="btn btn-danger"><i class="fa fa-trash icon-left"></i> {{ l.composition_elements_delete_all }}</button>
-                </div>
-
-                <div class="presets">
-                    <h4 class="divide">
-                        {{ l.composition_presets }}:
-                    </h4>
-                    <button type="button" id="presetGrid2x2" class="btn btn-wire-neutral">{{ l.composition_presets_grid_2x2 }}</button>
-                    <button type="button" id="presetTvNews1x1" class="btn btn-wire-neutral">{{ l.composition_presets_tvnews_1x1 }}</button>
-                </div>
                 <div class="screen-holder">
                     <div class="screen" id="screen">
                         <!-- Elements will be dynamically added here -->
@@ -161,23 +109,28 @@
 
 
         <div class="page-panel right-panel">
-            <div class="form-element-properties hidden">
+            <div class="form-element-properties">
                 <form id="elementForm">
                     <h3>
-                        {{ l.common_position }}
+                        Text
                     </h3>
 
                     <div class="form-group">
-                        <label for="elem-x">{{ l.composition_element_x_axis }}</label>
+                        <label for="elem-x">Texte à afficher</label>
                         <div class="widget">
                             <input type="number" id="elem-x" name="elem-x">
                         </div>
                     </div>
 
+                    <h3 class="divide">
+                        Style
+                    </h3>
+
                     <div class="form-group">
-                        <label for="elem-y">{{ l.composition_element_y_axis }}</label>
-                        <div class="widget">
-                            <input type="number" id="elem-y" name="elem-y">
+                        <label for="elem-font-size">Font size</label>
+                        <div class="widget widget-unit">
+                            <input type="text" id="elem-font-size" name="elem-font-size" maxlength="3" class="numeric-input">
+                            <span>pt</span>
                         </div>
                     </div>
 
@@ -199,29 +152,10 @@
                         </div>
                     </div>
 
-                    <div class="horizontal fx-end element-tool adjust-aspect-ratio-container hidden">
-                        <button type="button" class="btn btn-wire-neutral adjust-aspect-ratio">
-                            <i class="fa fa-solid fa-down-left-and-up-right-to-center icon-left"></i> {{ l.composition_element_match_content_aspect_ratio }}
-                        </button>
-                    </div>
-
-{#                    <div class="form-group">#}
-{#                        <label for="elem-rotate">{{ l.common_angle }} (deg)</label>#}
-{#                        <div class="widget">#}
-{#                            <input type="number" id="elem-rotate" name="elem-rotate">#}
-{#                        </div>#}
-{#                    </div>#}
                 </form>
             </div>
         </div>
     </div>
 
-    <div class="pickers hidden">
-        <div class="modals-outer">
-            <div class="modals-inner">
-                {% include 'slideshow/contents/modal/explr-picker.jinja.html' %}
-            </div>
-        </div>
-    </div>
 
 {% endblock %}
