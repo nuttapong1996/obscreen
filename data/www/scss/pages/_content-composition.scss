@@ -121,36 +121,66 @@
 				}
 
 				.ui-resizable-handle {
+					$size: 10px;
+					$sizeOffset: -1*calc($size/2);
 					background: $gkscaleA;
 					border: 1px solid $gkscale5;
-					width: 10px;
-					height: 10px;
+					width: $size;
+					height: $size;
 					z-index: 90;
 					display: none;
 					position: absolute;
 
+					&.ui-resizable-n {
+						cursor: n-resize;
+						top: $sizeOffset;
+						left: 50%;
+						margin-left: $sizeOffset;
+					}
+
+					&.ui-resizable-s {
+						cursor: s-resize;
+						bottom: $sizeOffset;
+						left: 50%;
+						margin-left: $sizeOffset;
+					}
+
+					&.ui-resizable-w {
+						cursor: w-resize;
+						left: $sizeOffset;
+						top: 50%;
+						margin-top: $sizeOffset;
+					}
+
+					&.ui-resizable-e {
+						cursor: e-resize;
+						right: $sizeOffset;
+						top: 50%;
+						margin-top: $sizeOffset;
+					}
+
 					&.ui-resizable-nw {
 						cursor: nw-resize;
-						top: -5px;
-						left: -5px;
+						top: $sizeOffset;
+						left: $sizeOffset;
 					}
 
 					&.ui-resizable-ne {
 						cursor: ne-resize;
-						top: -5px;
-						right: -5px;
+						top: $sizeOffset;
+						right: $sizeOffset;
 					}
 
 					&.ui-resizable-sw {
 						cursor: sw-resize;
-						bottom: -5px;
-						left: -5px;
+						bottom: $sizeOffset;
+						left: $sizeOffset;
 					}
 
 					&.ui-resizable-se {
 						cursor: se-resize;
-						bottom: -5px;
-						right: -5px;
+						bottom: $sizeOffset;
+						right: $sizeOffset;
 					}
 				}
 			}

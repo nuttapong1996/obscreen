@@ -30,6 +30,10 @@ const hideDropdowns = function () {
     $('.dropdown').removeClass('dropdown-show');
 };
 
+const classColorXor = function(color, fallback) {
+    return color === 'gscaleF' ? 'gscale0' : (color === 'gscale0' ? 'gscaleF' : fallback);
+};
+
 const showToast = function (text) {
     const $toast = $(".toast");
     $toast.addClass('show');

@@ -24,7 +24,7 @@ jQuery(document).ready(function ($) {
         $form.find('button[type=submit]').attr('class', [
             'btn',
             `btn-${color}`,
-            color === 'gscaleF' ? 'gscale0' : ''
+            classColorXor(color, '')
         ].join(' '));
     };
 

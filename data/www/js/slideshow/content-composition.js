@@ -60,7 +60,7 @@ jQuery(document).ready(function ($) {
 
         element.resizable({
             // containment: "#screen",
-            handles: 'nw, ne, sw, se',
+            handles: 'n, s, e, w, nw, ne, sw, se',
             start: function (event, ui) {
                 focusElement(ui.element);
             },
@@ -315,7 +315,9 @@ jQuery(document).ready(function ($) {
             unfocusElements();
         }
 
-        if (!currentElement) {
+        const hasFocusInInput = $('input,textarea').is(':focus');
+
+        if (!currentElement || hasFocusInInput) {
             return;
         }
 
@@ -327,7 +329,7 @@ jQuery(document).ready(function ($) {
             $('#elem-y').val(parseInt($('#elem-y').val()) - (e.shiftKey ? 10 : 1)).trigger('input');
         } else if (e.key === "ArrowDown") {
             $('#elem-y').val(parseInt($('#elem-y').val()) + (e.shiftKey ? 10 : 1)).trigger('input');
-        } else if (e.key === "Backspace" && !$('input,textarea').is(':focus')) {
+        } else if (e.key === "Backspace") {
             if (confirm(l.js_common_are_you_sure)) {
                 removeElementById(currentElement.attr('data-id'));
             }
@@ -350,10 +352,17 @@ jQuery(document).ready(function ($) {
         $element.attr('data-content-type', content.type);
         $element.data('content-metadata', content.metadata);
         const $elementList = $('.element-list-item[data-id='+$element.attr('data-id')+']');
-        const iconClasses = ['fa', content_type_icon_classes[content.type]].join(' ');
-        $element.find('i').get(0).classList = iconClasses;
+        $element.find('i').get(0).classList = [
+            'fa',
+            content_type_icon_classes[content.type],
+            classColorXor(content_type_color_classes[content.type], content_type_color_classes[content.type])
+        ].join(' ');
         $elementList.find('label').text(content.name);
-        $elementList.find('i:eq(0)').get(0).classList = iconClasses;
+        $elementList.find('i:eq(0)').get(0).classList = [
+            'fa',
+            content_type_icon_classes[content.type],
+            content_type_color_classes[content.type]
+        ].join(' ');
     };
 
     $(document).on('submit', 'form.form', function (e) {

@@ -15,7 +15,12 @@
     <script>
         const content_type_icon_classes = {
            {% for type in enum_content_type %}
-               '{{ type.value }}': '{{ enum_content_type.get_fa_icon(type) ~ ' ' ~ enum_content_type.get_color_icon(type) }}',
+               '{{ type.value }}': '{{ enum_content_type.get_fa_icon(type) }}',
+            {% endfor %}
+        };
+        const content_type_color_classes = {
+           {% for type in enum_content_type %}
+               '{{ type.value }}': '{{ enum_content_type.get_color_icon(type) }}',
             {% endfor %}
         };
     </script>
