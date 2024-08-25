@@ -352,17 +352,14 @@ jQuery(document).ready(function ($) {
         $element.attr('data-content-type', content.type);
         $element.data('content-metadata', content.metadata);
         const $elementList = $('.element-list-item[data-id='+$element.attr('data-id')+']');
-        $element.find('i').get(0).classList = [
-            'fa',
-            content_type_icon_classes[content.type],
-            classColorXor(content_type_color_classes[content.type], content_type_color_classes[content.type])
-        ].join(' ');
-        $elementList.find('label').text(content.name);
-        $elementList.find('i:eq(0)').get(0).classList = [
+        const iconClasses = [
             'fa',
             content_type_icon_classes[content.type],
             content_type_color_classes[content.type]
         ].join(' ');
+        $element.find('i').get(0).classList = iconClasses;
+        $elementList.find('label').text(content.name);
+        $elementList.find('i:eq(0)').get(0).classList = iconClasses;
     };
 
     $(document).on('submit', 'form.form', function (e) {
