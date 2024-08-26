@@ -47,7 +47,6 @@
 		outline: 4px solid rgba($gscaleF, .1);
 
 		.screen {
-			background-color: #ddd;
 			position: absolute;
 			top: 0;
 			left: 0;
@@ -55,6 +54,7 @@
 			height: 100%;
 			border: none;
 			display: flex;
+  			background: repeating-conic-gradient(#EEE 0% 25%, white 0% 50%) 50% / 20px 20px;
 
 			.text {
 				display: flex;
