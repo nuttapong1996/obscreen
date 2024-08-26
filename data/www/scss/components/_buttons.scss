@@ -57,6 +57,7 @@ button,
 		box-shadow: 0 $shadowOffset 0 0 darken($gscale5, 10%);
 		border: 1px solid transparent;
 
+		&.active,
 		&:hover {
 			box-shadow: 0 $shadowOffset 0 1px $gkscale2 inset;
 			background: darken($gscale5, 10%);

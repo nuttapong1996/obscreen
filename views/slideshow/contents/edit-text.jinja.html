@@ -10,6 +10,7 @@
 {% endblock %}
 
 {% block add_js %}
+    <script src="{{ STATIC_PREFIX }}js/lib/jscolor.min.js"></script>
     <script src="{{ STATIC_PREFIX }}js/slideshow/contents.js"></script>
     <script src="{{ STATIC_PREFIX }}js/slideshow/content-text.js"></script>
     {{ HOOK(H_SLIDESHOW_CONTENT_JAVASCRIPT) }}
@@ -116,9 +117,9 @@
                     </h3>
 
                     <div class="form-group">
-                        <label for="elem-x">Texte à afficher</label>
+                        <label for="elem-text">Text Label</label>
                         <div class="widget">
-                            <input type="number" id="elem-x" name="elem-x">
+                            <input type="text" id="elem-text" name="elem-text" value="Hello World !Hello World !Hello World !Hello World !Hello World !Hello World !Hello World !Hello World !Hello World !Hello World !Hello World !Hello World !Hello World !222">
                         </div>
                     </div>
 
@@ -127,30 +128,117 @@
                     </h3>
 
                     <div class="form-group">
-                        <label for="elem-font-size">Font size</label>
+                        <label for="elem-font-size">Font Size</label>
                         <div class="widget widget-unit">
-                            <input type="text" id="elem-font-size" name="elem-font-size" maxlength="3" class="numeric-input">
+                            <input type="text" id="elem-font-size" name="elem-font-size" maxlength="3" class="numeric-input chars-3" value="20">
                             <span>pt</span>
                         </div>
                     </div>
 
+                    <div class="form-group">
+                        <label for="elem-fg-color">Text Color</label>
+                        <div class="widget">
+                            <input type="text" id="elem-fg-color" name="elem-fg-color" class="color-picker" data-jscolor="{ value: '#FFFFFFFF', backgroundColor: '#333333', shadowColor: '#000000', width: 120, height: 120 }" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="elem-fg-color">Text Alignment</label>
+                        <div class="widget">
+                            <div class="radio-group">
+                                  <input type="radio" id="elem-text-align-left" name="elem-text-align" value="left">
+                                  <label for="elem-text-align-left" class="btn btn-neutral">
+                                      <i class="fa fa-align-left"></i>
+                                  </label>
+                                  <input type="radio" id="elem-text-align-center" name="elem-text-align" value="center" checked="checked">
+                                  <label for="elem-text-align-center" class="btn btn-neutral">
+                                      <i class="fa fa-align-center"></i>
+                                  </label>
+                                  <input type="radio" id="elem-text-align-right" name="elem-text-align" value="right">
+                                  <label for="elem-text-align-right" class="btn btn-neutral">
+                                      <i class="fa fa-align-right"></i>
+                                  </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="elem-fg-color">Text Style</label>
+                        <div class="widget">
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="elem-font-bold" name="elem-font-bold" value="bold">
+                                <label for="elem-font-bold" class="btn btn-neutral">
+                                    <i class="fa fa-bold"></i>
+                                </label>
+                                <input type="checkbox" id="elem-font-italic" name="elem-font-italic" value="italic">
+                                <label for="elem-font-italic" class="btn btn-neutral">
+                                    <i class="fa fa-italic"></i>
+                                </label>
+                                <input type="checkbox" id="elem-text-underline" name="elem-text-underline" value="underline">
+                                <label for="elem-text-underline" class="btn btn-neutral">
+                                    <i class="fa fa-underline"></i>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="elem-font-family">Text Font Type</label>
+                        <div class="widget">
+                            <select name="elem-font-family" id="elem-font-family" class="size-m">
+                                <option value="Arial">Arial</option>
+                                <option value="Arial Black">Arial Black</option>
+                                <option value="Verdana">Verdana</option>
+                                <option value="Trebuchet MS">Trebuchet MS</option>
+                                <option value="Georgia">Georgia</option>
+                                <option value="Times New Roman">Times New Roman</option>
+                                <option value="Courier New">Courier New</option>
+                                <option value="Comic Sans MS">Comic Sans MS</option>
+                                <option value="Impact">Impact</option>
+                                <option value="Tahoma">Tahoma</option>
+                                <option value="Gill Sans">Gill Sans</option>
+                                <option value="Helvetica">Helvetica</option>
+                                <option value="Optima">Optima</option>
+                                <option value="Garamond">Garamond</option>
+                                <option value="Baskerville">Baskerville</option>
+                                <option value="Copperplate">Copperplate</option>
+                                <option value="Futura">Futura</option>
+                                <option value="Monaco">Monaco</option>
+                                <option value="Andale Mono">Andale Mono</option>
+                            </select>
+                        </div>
+                    </div>
+
+
                     <h3 class="divide">
-                        {{ l.common_size }}
+                        Layout
                     </h3>
 
                     <div class="form-group">
-                        <label for="elem-width">{{ l.common_width }}</label>
-                        <div class="widget">
-                            <input type="number" id="elem-width" name="elem-width">
+                        <label for="elem-container-margin">Container Margin</label>
+                        <div class="widget widget-unit">
+                            <input type="text" id="elem-container-margin" name="elem-container-margin" maxlength="3" class="numeric-input chars-3" value="20">
+                            <span>pt</span>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="elem-height">{{ l.common_height }}</label>
+                        <label for="elem-bg-color">Background Color</label>
                         <div class="widget">
-                            <input type="number" id="elem-height" name="elem-height">
+                            <input type="text" id="elem-bg-color" name="elem-bg-color" class="color-picker" data-jscolor="{ value: '#000000FF', backgroundColor: '#333333', shadowColor: '#000000', width: 120, height: 120 }" />
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label for="elem-single-line">Single Line Only</label>
+                        <div class="widget">
+                            <div class="toggle">
+                                <input type="checkbox" name="elem-single-line" id="elem-single-line" value="1" />
+                                <label for="elem-single-line"></label>
+                            </div>
+                        </div>
+                    </div>
+
+
 
                 </form>
             </div>

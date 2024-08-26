@@ -1,3 +1,4 @@
+import json
 import mimetypes
 
 from enum import Enum
@@ -112,3 +113,23 @@ class ContentType(Enum):
             return 'gscaleF'
 
         return 'neutral'
+
+    @staticmethod
+    def get_empty_location(value: Enum) -> str:
+        if isinstance(value, str):
+            value = str_to_enum(value, ContentType)
+
+        if value == ContentType.COMPOSITION:
+            return json.dumps({
+                "ratio": '16/9',
+                "layers": {}
+            })
+        elif value == ContentType.TEXT:
+            return json.dumps({
+                "text": 'Hello',
+                "fontSize": 12,
+                "color": '#FFFFFF',
+                "backgroundColor": '#000000',
+            })
+
+        return ''

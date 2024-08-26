@@ -1,6 +1,6 @@
 
 jQuery(document).ready(function ($) {
-    const contentData = JSON.parse($('#content-edit-location').val());
+    const contentData = JSON.parse($('#content-edit-location').val() || '{"layers":{}}');
     const screenRatio = 16/9;
 
     let currentElement = null;
