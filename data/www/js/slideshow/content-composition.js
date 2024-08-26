@@ -282,6 +282,7 @@ jQuery(document).ready(function ($) {
         if (elements.length < 4) {
             while (elements.length < 4) {
                 createElement();
+                elements = $('.element');
             }
         }
 

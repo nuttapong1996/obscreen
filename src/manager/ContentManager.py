@@ -212,7 +212,7 @@ class ContentManager(ModelManager):
                 content.location = object_path
                 self.set_metadata(content)
         else:
-            content.location = location if location else ContentType.get_empty_location(content.type)
+            content.location = ContentType.get_initial_location(content.type, location)
 
         self.add_form(content)
         return self.get_one_by(query="uuid = '{}'".format(content.uuid))

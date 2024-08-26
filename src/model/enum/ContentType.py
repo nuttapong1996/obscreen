@@ -68,7 +68,7 @@ class ContentType(Enum):
         elif value == ContentType.COMPOSITION:
             return ContentInputType.HIDDEN
         elif value == ContentType.TEXT:
-            return ContentInputType.HIDDEN
+            return ContentInputType.TEXT
 
     @staticmethod
     def get_fa_icon(value: Union[Enum, str]) -> str:
@@ -115,21 +115,21 @@ class ContentType(Enum):
         return 'neutral'
 
     @staticmethod
-    def get_empty_location(value: Enum) -> str:
+    def get_initial_location(value: Enum, location: Optional[str] = None) -> str:
         if isinstance(value, str):
             value = str_to_enum(value, ContentType)
 
         if value == ContentType.COMPOSITION:
             return json.dumps({
-                "ratio": '16/9',
+                "ratio": location if location else '16/9',
                 "layers": {}
             })
         elif value == ContentType.TEXT:
             return json.dumps({
-                "text": 'Hello',
+                "textLabel": location if location else 'Hello',
                 "fontSize": 12,
                 "color": '#FFFFFF',
                 "backgroundColor": '#000000',
             })
 
-        return ''
+        return location
