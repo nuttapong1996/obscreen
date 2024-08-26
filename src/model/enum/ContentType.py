@@ -127,9 +127,19 @@ class ContentType(Enum):
         elif value == ContentType.TEXT:
             return json.dumps({
                 "textLabel": location if location else 'Hello',
-                "fontSize": 12,
-                "color": '#FFFFFF',
-                "backgroundColor": '#000000',
+                "fontSize": 20,
+                "color": '#FFFFFFFF',
+                "fontFamily": "Arial",
+                "fontBold": None,
+                "fontItalic": None,
+                "fontUnderline": None,
+                "textAlign": "center",
+                "backgroundColor": '#000000FF',
+                "scrollEnable": False,
+                "scrollDirection": "left",
+                "scrollSpeed": "10",
+                "singleLine": False,
+                "margin": 0
             })
 
         return location
