@@ -25,3 +25,6 @@ tmp.py
 !/data/www/plugins/.gitkeep
 /var/run/storage/*
 !/var/run/storage/.gitkeep
+*.egg-info
+/build/
+/dist/
