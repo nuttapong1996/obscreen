@@ -76,7 +76,8 @@
                                 </div>
                             </div>
 
-                            <input type="hidden" name="location" id="content-edit-location" value="{{ content.location }}" />
+                            <input type="hidden" name="location" id="content-edit-location"
+                                   value="{{ content.location }}"/>
 
                             <div class="actions actions-right">
                                 <button type="submit" class="btn btn-info">
@@ -119,7 +120,8 @@
                     <div class="form-group">
                         <label for="elem-text">Text Label</label>
                         <div class="widget">
-                            <input type="text" id="elem-text" name="elem-text" value="Hello World !Hello World !Hello World !Hello World !Hello World !Hello World !Hello World !Hello World !Hello World !Hello World !Hello World !Hello World !Hello World !222">
+                            <input type="text" id="elem-text" name="elem-text"
+                                   value="Hello World !Hello World !Hello World !Hello World !Hello World !Hello World !Hello World !Hello World !Hello World !Hello World !Hello World !Hello World !Hello World !222">
                         </div>
                     </div>
 
@@ -127,57 +129,22 @@
                         Style
                     </h3>
 
-                    <div class="form-group">
-                        <label for="elem-font-size">Font Size</label>
-                        <div class="widget widget-unit">
-                            <input type="text" id="elem-font-size" name="elem-font-size" maxlength="3" class="numeric-input chars-3" value="20">
-                            <span>pt</span>
-                        </div>
-                    </div>
+                    <div class="horizontal">
 
-                    <div class="form-group">
-                        <label for="elem-fg-color">Text Color</label>
-                        <div class="widget">
-                            <input type="text" id="elem-fg-color" name="elem-fg-color" class="color-picker" data-jscolor="{ value: '#FFFFFFFF', backgroundColor: '#333333', shadowColor: '#000000', width: 120, height: 120 }" />
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="elem-fg-color">Text Alignment</label>
-                        <div class="widget">
-                            <div class="radio-group">
-                                  <input type="radio" id="elem-text-align-left" name="elem-text-align" value="left">
-                                  <label for="elem-text-align-left" class="btn btn-neutral">
-                                      <i class="fa fa-align-left"></i>
-                                  </label>
-                                  <input type="radio" id="elem-text-align-center" name="elem-text-align" value="center" checked="checked">
-                                  <label for="elem-text-align-center" class="btn btn-neutral">
-                                      <i class="fa fa-align-center"></i>
-                                  </label>
-                                  <input type="radio" id="elem-text-align-right" name="elem-text-align" value="right">
-                                  <label for="elem-text-align-right" class="btn btn-neutral">
-                                      <i class="fa fa-align-right"></i>
-                                  </label>
+                        <div class="form-group">
+                            <label for="elem-font-size">Font Size</label>
+                            <div class="widget widget-unit">
+                                <input type="text" id="elem-font-size" name="elem-font-size" maxlength="3"
+                                       class="numeric-input chars-3" value="20">
+                                <span>pt</span>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label for="elem-fg-color">Text Style</label>
-                        <div class="widget">
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="elem-font-bold" name="elem-font-bold" value="bold">
-                                <label for="elem-font-bold" class="btn btn-neutral">
-                                    <i class="fa fa-bold"></i>
-                                </label>
-                                <input type="checkbox" id="elem-font-italic" name="elem-font-italic" value="italic">
-                                <label for="elem-font-italic" class="btn btn-neutral">
-                                    <i class="fa fa-italic"></i>
-                                </label>
-                                <input type="checkbox" id="elem-text-underline" name="elem-text-underline" value="underline">
-                                <label for="elem-text-underline" class="btn btn-neutral">
-                                    <i class="fa fa-underline"></i>
-                                </label>
+                        <div class="form-group">
+                            <label for="elem-fg-color">Text Color</label>
+                            <div class="widget">
+                                <input type="text" id="elem-fg-color" name="elem-fg-color" class="color-picker"
+                                       data-jscolor="{ value: '#FFFFFFFF', backgroundColor: '#333333', shadowColor: '#000000', width: 120, height: 120 }"/>
                             </div>
                         </div>
                     </div>
@@ -210,34 +177,88 @@
                     </div>
 
 
-                    <h3 class="divide">
-                        Layout
-                    </h3>
-
-                    <div class="form-group">
-                        <label for="elem-container-margin">Container Margin</label>
-                        <div class="widget widget-unit">
-                            <input type="text" id="elem-container-margin" name="elem-container-margin" maxlength="3" class="numeric-input chars-3" value="20">
-                            <span>pt</span>
+                    <div class="horizontal">
+                        <div class="form-group">
+                            <label for="elem-fg-color">Text Alignment</label>
+                            <div class="widget">
+                                <div class="radio-group">
+                                    <input type="radio" id="elem-text-align-left" name="elem-text-align" value="left">
+                                    <label for="elem-text-align-left" class="btn btn-neutral">
+                                        <i class="fa fa-align-left"></i>
+                                    </label>
+                                    <input type="radio" id="elem-text-align-center" name="elem-text-align"
+                                           value="center"
+                                           checked="checked">
+                                    <label for="elem-text-align-center" class="btn btn-neutral">
+                                        <i class="fa fa-align-center"></i>
+                                    </label>
+                                    <input type="radio" id="elem-text-align-right" name="elem-text-align" value="right">
+                                    <label for="elem-text-align-right" class="btn btn-neutral">
+                                        <i class="fa fa-align-right"></i>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="elem-bg-color">Background Color</label>
-                        <div class="widget">
-                            <input type="text" id="elem-bg-color" name="elem-bg-color" class="color-picker" data-jscolor="{ value: '#000000FF', backgroundColor: '#333333', shadowColor: '#000000', width: 120, height: 120 }" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="elem-single-line">Single Line Only</label>
-                        <div class="widget">
-                            <div class="toggle">
-                                <input type="checkbox" name="elem-single-line" id="elem-single-line" value="1" />
-                                <label for="elem-single-line"></label>
+                        <div class="form-group">
+                            <label for="elem-fg-color">Text Style</label>
+                            <div class="widget">
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="elem-font-bold" name="elem-font-bold" value="bold">
+                                    <label for="elem-font-bold" class="btn btn-neutral">
+                                        <i class="fa fa-bold"></i>
+                                    </label>
+                                    <input type="checkbox" id="elem-font-italic" name="elem-font-italic" value="italic">
+                                    <label for="elem-font-italic" class="btn btn-neutral">
+                                        <i class="fa fa-italic"></i>
+                                    </label>
+                                    <input type="checkbox" id="elem-text-underline" name="elem-text-underline"
+                                           value="underline">
+                                    <label for="elem-text-underline" class="btn btn-neutral">
+                                        <i class="fa fa-underline"></i>
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>
 
+                    <h3 class="divide">
+                        Background
+                    </h3>
+
+
+                    <div class="form-group">
+                        <label for="elem-bg-color">Background Color</label>
+                        <div class="widget">
+                            <input type="text" id="elem-bg-color" name="elem-bg-color" class="color-picker"
+                                   data-jscolor="{ value: '#000000FF', backgroundColor: '#333333', shadowColor: '#000000', width: 120, height: 120 }"/>
+                        </div>
+                    </div>
+
+                    <h3 class="divide">
+                        Layout
+                    </h3>
+
+                    <div class="horizontal">
+                        <div class="form-group">
+                            <label for="elem-container-margin">Container Margin</label>
+                            <div class="widget widget-unit">
+                                <input type="text" id="elem-container-margin" name="elem-container-margin" maxlength="3"
+                                       class="numeric-input chars-3" value="0">
+                                <span>pt</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="elem-single-line">Single Line Only</label>
+                            <div class="widget">
+                                <div class="toggle">
+                                    <input type="checkbox" name="elem-single-line" id="elem-single-line" value="1"/>
+                                    <label for="elem-single-line"></label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
 
 
                 </form>
