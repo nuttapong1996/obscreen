@@ -62,9 +62,19 @@ docker compose up --detach --pull=always
 #### Install
 - Install studio by executing following script
 
+##### Linux
 ```bash
 curl -fsSL https://raw.githubusercontent.com/jr-k/obscreen/master/system/install-studio.sh -o /tmp/install-studio.sh && chmod +x /tmp/install-studio.sh && sudo /bin/bash /tmp/install-studio.sh $USER $HOME
 sudo reboot
+```
+##### Windows & MacOS
+```bash
+git clone https://github.com/jr-k/obscreen.git
+cd obscreen
+python3 -m venv venv
+source ./venv/bin/activate
+pip install .
+cp .env.dist .env
 ```
 
 #### Configure
