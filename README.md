@@ -76,7 +76,7 @@ If you value this project, please think about awarding it a ⭐. Thanks ! 🙏
 - New `Text` Content Type: Display text with customizable styles, including options for scrolling effects.
 - New `HTML` Content Type: Display HTML snippets for more powerful text customization, giving you full control over the content.
 - Fleet Studio Management: Reviving a legacy feature
-- Remote Player Server: An new way to manage a player from the studio without needing SSH access to player
+- Remote Player Server: A new way to manage a player from the studio without needing SSH access to player
 
 ## 🛟 Discussion / Need help ?
 
