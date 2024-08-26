@@ -20,6 +20,7 @@ common_dependencies = [
     'waitress',
     'flask-login',
     'psutil',
+    'pymediainfo',
     'pysqlite3',
 ]
 
