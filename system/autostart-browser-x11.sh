@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Configuration
 STUDIO_URL=http://localhost:5000    # Main Obscreen Studio instance URL (could be a specific playlist /use/[playlist-id] or let obscreen manage playlist routing with /)
 TARGET_RESOLUTION=auto              # e.g. 1920x1080 - Force specific resolution (supported list available with command `DISPLAY=:0 xrandr`)
@@ -11,17 +13,15 @@ xset s noblank
 unclutter -display :0 -noevents -grab &
 
 # Modify Chromium preferences to avoid restore messages
-mkdir -p /home/pi/.config/chromium/Default 2>/dev/null
-touch /home/pi/.config/chromium/Default/Preferences
-sed -i 's/"exited_cleanly": false/"exited_cleanly": true/' /home/pi/.config/chromium/Default/Preferences
+mkdir -p /tmp/obscreen/chromium/Default 2>/dev/null
+touch /tmp/obscreen/chromium/Default/Preferences
+sed -i 's/"exited_cleanly": false/"exited_cleanly": true/' /tmp/obscreen/chromium/Default/Preferences
 
 # Resolution setup
 if [ "$TARGET_RESOLUTION" != "auto" ]; then
     FIRST_CONNECTED_SCREEN=$(xrandr | grep " connected" | awk '{print $1}' | head -n 1)
     xrandr --output $FIRST_CONNECTED_SCREEN --mode $TARGET_RESOLUTION
 fi
-
-# Get screen resolution
 RESOLUTION=$(DISPLAY=:0 xrandr | grep '*' | awk '{print $1}')
 WIDTH=$(echo $RESOLUTION | cut -d 'x' -f 1)
 HEIGHT=$(echo $RESOLUTION | cut -d 'x' -f 2)
@@ -40,7 +40,7 @@ chromium-browser \
   --noerrdialogs \
   --kiosk \
   --incognito \
-  --user-data-dir=/home/pi/.config/chromium \
+  --user-data-dir=/tmp/obscreen/chromium \
   --no-sandbox \
   --window-position=0,0 \
   --window-size=${WIDTH},${HEIGHT} \
