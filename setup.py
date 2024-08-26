@@ -6,6 +6,7 @@
 #  Website: https://github.com/jr-k/obscreen
 #  License: GPLv2 (see LICENSE file)
 
+import os
 import sys
 import logging
 
@@ -27,6 +28,9 @@ if sys.platform == "win32":
 
 if sys.platform == "darwin":
     common_dependencies.remove('pysqlite3')
+
+os.environ['PYTHONUTF8'] = '1'
+os.environ['PYTHONIOENCODING'] = 'utf-8'
 
 setup(
     name='obscreen',
