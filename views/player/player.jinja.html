@@ -16,7 +16,11 @@
         .slide, iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; padding-top: 0; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; }
         .slide iframe { background: white; }
         .slide img, .slide video { {% if force_cover %}width: 100%;{% endif %} height: 100%; }
-        .slide .text { width: 100%; height: 100%; color: white; font-family: 'Arial', 'sans-serif'; font-size: 20px; display: flex; flex-direction: row; justify-content: center; align-items: center; }
+        .slide .text-holder { width: 100%; height: 100%; display: flex; flex-direction: row; justify-content: center; align-items: center; box-sizing: border-box; }
+        .slide .text {
+            width: 100%; height: 100%; color: white; font-family: 'Arial', 'sans-serif'; font-size: 20px; display: flex; flex-direction: row; justify-content: center; align-items: center;
+            word-break: break-all; flex: 1; align-self: stretch; text-align: center; max-width: 100%; box-sizing: border-box;
+        }
         .slide video { width: 100%; height: 100%; }
         @keyframes blink{50%{opacity:0;}}
         .cfx-blink{animation:1.5s linear infinite blinker;}
@@ -31,6 +35,7 @@
         .cfx-ssss-speed {animation-delay: 2s;}
         .cfx-sssss-speed {animation-delay: 3s;}
     </style>
+    <script type="application/javascript" src="{{ STATIC_PREFIX }}js/lib/jquery.min.js"></script>
     <script type="application/javascript" src="{{ STATIC_PREFIX }}js/utils.js"></script>
     <script type="application/javascript" src="{{ STATIC_PREFIX }}js/lib/is-cron-now.js"></script>
 </head>
@@ -384,7 +389,41 @@
     };
 
     const loadText = function(element, callbackReady, item) {
-        element.innerHTML = `<div class="text">${item.location}</div>`;
+        const contentData = JSON.parse(item.location);
+        const $textHolder = $('<div class="text-holder">');
+        const $text = $('<div class="text">');
+        let insideText = contentData.textLabel;
+
+        if (contentData.scrollEnable) {
+            const $wrapper = $('<marquee>');
+            $wrapper.attr({ scrollamount: contentData.scrollSpeed, direction: contentData.scrollDirection, behavior: 'scroll', loop: -1 });
+            $wrapper.append(insideText);
+            insideText = $wrapper;
+        }
+
+        $text.append(insideText);
+
+        let justifyContent = 'center';
+        switch(contentData.textAlign) {
+            case 'left': justifyContent = 'flex-start'; break;
+            case 'right': justifyContent = 'flex-end'; break;
+        }
+
+        $text.css({
+            padding: contentData.margin + 'px',
+            color: contentData.color,
+            textAlign: contentData.textAlign,
+            textDecoration: contentData.textUnderline ? 'underline' : 'normal',
+            fontSize: contentData.fontSize + 'px',
+            fontWeight: contentData.fontBold ? 'bold' : 'normal',
+            fontStyle: contentData.fontItalic ? 'italic' : 'normal',
+            fontFamily: contentData.fontFamily + ", 'Arial', 'sans-serif'",
+            whiteSpace: contentData.singleLine ? 'nowrap' : 'normal',
+            justifyContent: justifyContent
+        });
+
+        $textHolder.css({ backgroundColor: contentData.backgroundColor }).html($text);
+        element.innerHTML = $('<div>').html($textHolder).html();
         callbackReady(function() {});
     };
 

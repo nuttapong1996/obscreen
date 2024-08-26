@@ -36,7 +36,7 @@
         <script src="{{ STATIC_PREFIX }}js/lib/jquery.min.js"></script>
         <script>
             const contentData = JSON.parse({{ json_dumps(content.location) | safe }});
-            const baseIframeRoute = '{{ url_for('player', preview_content_id='!c!', autoplay=1, cover=1) }}';
+            const baseIframeRoute = '{{ url_for('player', preview_content_id='!c!', autoplay=1, cover=1, transparent=1) }}';
 
             jQuery(function($) {
                 function setOptimalSize() {
@@ -79,7 +79,7 @@
                     //x = Math.round(Math.max(0, Math.min(x, screenWidth - elementWidth)));
                     //y = Math.round(Math.max(0, Math.min(y, screenHeight - elementHeight)));
 
-                    const element = $('<iframe class="element" id="element-' + zIndex + '" data-id="' + zIndex + '" src="'+baseIframeRoute.replace('!c!', config.contentId)+'" frameborder="0"></iframe>');
+                    const element = $('<iframe class="element" id="element-' + zIndex + '" data-id="' + zIndex + '" src="'+baseIframeRoute.replace('!c!', config.contentId)+'" frameborder="0" allowtransparency="1"></iframe>');
 
                     element.css({
                         left: x,
