@@ -21,15 +21,21 @@ jQuery(document).ready(function ($) {
     const draw = function() {
         const $screen = $('#screen');
         const $text = $('<div class="text">');
-        let inside = $('#elem-text').val();
+        let insideText = $('#elem-text').val();
 
         if ($('#elem-scroll-enable').is(':checked')) {
             const $wrapper = $('<marquee>');
-            inside = $wrapper;
-            $wrapper.html(inside);
+            $wrapper.attr({
+                scrollamount: $('#elem-scroll-speed').val(),
+                direction: $('[name=elem-scroll-direction]:checked').val(),
+                behavior: 'scroll',
+                loop: -1
+            });
+            $wrapper.append(insideText);
+            insideText = $wrapper;
         }
 
-        $text.html(inside);
+        $text.append(insideText);
 
         let justifyContent = 'center';
         switch($('[name=elem-text-align]:checked').val()) {
@@ -39,7 +45,6 @@ jQuery(document).ready(function ($) {
 
         $text.css({
             padding: $('#elem-container-margin').val() + 'px',
-            backgroundColor: $('#elem-bg-color').val(),
             color: $('#elem-fg-color').val(),
             textAlign: $('[name=elem-text-align]:checked').val(),
             textDecoration: $('#elem-text-underline').is(':checked') ? 'underline' : 'normal',
@@ -49,6 +54,10 @@ jQuery(document).ready(function ($) {
             fontFamily: $('#elem-font-family').val() + ", 'Arial', 'sans-serif'",
             whiteSpace: $('#elem-single-line').is(':checked') ? 'nowrap' : 'normal',
             justifyContent: justifyContent
+        });
+
+        $screen.css({
+             backgroundColor: $('#elem-bg-color').val(),
         });
 
         $screen.html($text);

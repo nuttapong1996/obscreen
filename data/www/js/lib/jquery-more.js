@@ -3,8 +3,10 @@ jQuery(function () {
         function adjustValue(inputElement, delta) {
             const currentValue = parseInt(inputElement.value) || 0;
             const newValue = currentValue + delta;
-            inputElement.value = newValue >= 0 ? newValue : 0;
-            $(inputElement).trigger('input');
+            if (("" + newValue).length <= inputElement.maxLength) {
+                inputElement.value = newValue >= 0 ? newValue : 0;
+                $(inputElement).trigger('input');
+            }
         }
 
         $('.numeric-input').on('input', function () {
