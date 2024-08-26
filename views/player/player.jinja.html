@@ -18,6 +18,18 @@
         .slide img, .slide video { {% if force_cover %}width: 100%;{% endif %} height: 100%; }
         .slide .text { width: 100%; height: 100%; color: white; font-family: 'Arial', 'sans-serif'; font-size: 20px; display: flex; flex-direction: row; justify-content: center; align-items: center; }
         .slide video { width: 100%; height: 100%; }
+        @keyframes blink{50%{opacity:0;}}
+        .cfx-blink{animation:1.5s linear infinite blinker;}
+        .cfx-ffff-speed {animation-delay: 0.1s;}
+        .cfx-fff-speed {animation-delay: 0.3s;}
+        .cfx-ff-speed {animation-delay: 0.5s;}
+        .cfx-f-speed {animation-delay: 0.8s;}
+        .cfx-m-speed {animation-delay: 1s;}
+        .cfx-s-speed {animation-delay: 1.3s;}
+        .cfx-ss-speed {animation-delay: 1.5s;}
+        .cfx-sss-speed {animation-delay: 1.8s;}
+        .cfx-ssss-speed {animation-delay: 2s;}
+        .cfx-sssss-speed {animation-delay: 3s;}
     </style>
     <script type="application/javascript" src="{{ STATIC_PREFIX }}js/utils.js"></script>
     <script type="application/javascript" src="{{ STATIC_PREFIX }}js/lib/is-cron-now.js"></script>

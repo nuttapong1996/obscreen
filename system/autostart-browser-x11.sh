@@ -1,3 +1,7 @@
+# Configuration
+STUDIO_URL=http://localhost:5000    # Main Obscreen Studio instance URL (could be a specific playlist /use/[playlist-id] or let obscreen manage playlist routing with /)
+TARGET_RESOLUTION=auto              # e.g. 1920x1080 - Force specific resolution (supported list available with command `DISPLAY=:0 xrandr`)
+
 # Disable screensaver and DPMS
 xset s off
 xset -dpms
@@ -11,9 +15,11 @@ mkdir -p /home/pi/.config/chromium/Default 2>/dev/null
 touch /home/pi/.config/chromium/Default/Preferences
 sed -i 's/"exited_cleanly": false/"exited_cleanly": true/' /home/pi/.config/chromium/Default/Preferences
 
-# Force specific resolution (supported list available with command `DISPLAY=:0 xrandr`)
-#FIRST_CONNECTED_SCREEN=$(xrandr | grep " connected" | awk '{print $1}' | head -n 1)
-#xrandr --output $FIRST_CONNECTED_SCREEN --mode 800x600
+# Resolution setup
+if [ "$TARGET_RESOLUTION" != "auto" ]; then
+    FIRST_CONNECTED_SCREEN=$(xrandr | grep " connected" | awk '{print $1}' | head -n 1)
+    xrandr --output $FIRST_CONNECTED_SCREEN --mode $TARGET_RESOLUTION
+fi
 
 # Get screen resolution
 RESOLUTION=$(DISPLAY=:0 xrandr | grep '*' | awk '{print $1}')
@@ -39,4 +45,4 @@ chromium-browser \
   --window-position=0,0 \
   --window-size=${WIDTH},${HEIGHT} \
   --display=:0 \
-  http://localhost:5000
+  ${STUDIO_URL}

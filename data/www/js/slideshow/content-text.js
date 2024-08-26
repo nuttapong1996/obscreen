@@ -21,7 +21,15 @@ jQuery(document).ready(function ($) {
     const draw = function() {
         const $screen = $('#screen');
         const $text = $('<div class="text">');
-        $text.html($('#elem-text').val());
+        let inside = $('#elem-text').val();
+
+        if ($('#elem-scroll-enable').is(':checked')) {
+            const $wrapper = $('<marquee>');
+            inside = $wrapper;
+            $wrapper.html(inside);
+        }
+
+        $text.html(inside);
 
         let justifyContent = 'center';
         switch($('[name=elem-text-align]:checked').val()) {

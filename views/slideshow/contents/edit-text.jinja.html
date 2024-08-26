@@ -235,6 +235,55 @@
                     </div>
 
                     <h3 class="divide">
+                        Scrolling Effect
+                    </h3>
+
+
+                    <div class="form-group">
+                        <label for="elem-scroll-enable">Enable</label>
+                        <div class="widget">
+                            <div class="toggle">
+                                <input type="checkbox" name="elem-scroll-enable" id="elem-scroll-enable" />
+                                <label for="elem-scroll-enable"></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="horizontal">
+                        <div class="form-group">
+                            <label for="elem-scroll-speed">Speed</label>
+                            <div class="widget widget-unit">
+                                <input type="text" id="elem-scroll-speed" name="elem-scroll-speed" maxlength="3" class="numeric-input chars-3" value="10">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="elem-scroll-direction">Direction</label>
+                            <div class="widget">
+                                <div class="radio-group">
+                                    <input type="radio" id="elem-scroll-direction-left" name="elem-scroll-direction-left" value="left">
+                                    <label for="elem-scroll-direction-left" class="btn btn-neutral">
+                                        <i class="fa fa-arrow-left"></i>
+                                    </label>
+                                    <input type="radio" id="elem-scroll-direction-right" name="elem-scroll-direction-right" value="right">
+                                    <label for="elem-scroll-direction-right" class="btn btn-neutral">
+                                        <i class="fa fa-arrow-right"></i>
+                                    </label>
+                                    <input type="radio" id="elem-scroll-direction-down" name="elem-scroll-direction-down" value="down">
+                                    <label for="elem-scroll-direction-down" class="btn btn-neutral">
+                                        <i class="fa fa-arrow-down"></i>
+                                    </label>
+                                    <input type="radio" id="elem-scroll-direction-up" name="elem-scroll-direction-up" value="up">
+                                    <label for="elem-scroll-direction-up" class="btn btn-neutral">
+                                        <i class="fa fa-arrow-up"></i>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <h3 class="divide">
                         Layout
                     </h3>
 
@@ -252,7 +301,7 @@
                             <label for="elem-single-line">Single Line Only</label>
                             <div class="widget">
                                 <div class="toggle">
-                                    <input type="checkbox" name="elem-single-line" id="elem-single-line" value="1"/>
+                                    <input type="checkbox" name="elem-single-line" id="elem-single-line" />
                                     <label for="elem-single-line"></label>
                                 </div>
                             </div>

@@ -88,6 +88,19 @@
 				align-self: stretch;
 			}
 
+			.divide {
+				margin-top: 30px;
+				margin-bottom: 10px;
+			}
+
+
+			.bar {
+				width: 100%;
+				height: 1px;
+				background: #333;
+				margin-bottom: 20px;
+			}
+
 			.form-group {
 				label {
 					flex-grow: 1;
