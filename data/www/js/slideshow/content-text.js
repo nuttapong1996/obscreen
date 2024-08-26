@@ -27,7 +27,7 @@ jQuery(document).ready(function ($) {
             const $wrapper = $('<marquee>');
             $wrapper.attr({
                 scrollamount: $('#elem-scroll-speed').val(),
-                direction: $('[name=elem-scroll-direction]:checked').val(),
+                direction: $('[name=scrollDirection]:checked').val(),
                 behavior: 'scroll',
                 loop: -1
             });
@@ -38,7 +38,7 @@ jQuery(document).ready(function ($) {
         $text.append(insideText);
 
         let justifyContent = 'center';
-        switch($('[name=elem-text-align]:checked').val()) {
+        switch($('[name=textAlign]:checked').val()) {
             case 'left': justifyContent = 'flex-start'; break;
             case 'right': justifyContent = 'flex-end'; break;
         }
@@ -46,7 +46,7 @@ jQuery(document).ready(function ($) {
         $text.css({
             padding: $('#elem-container-margin').val() + 'px',
             color: $('#elem-fg-color').val(),
-            textAlign: $('[name=elem-text-align]:checked').val(),
+            textAlign: $('[name=textAlign]:checked').val(),
             textDecoration: $('#elem-text-underline').is(':checked') ? 'underline' : 'normal',
             fontSize: $('#elem-font-size').val() + 'px',
             fontWeight: $('#elem-font-bold').is(':checked') ? 'bold' : 'normal',
