@@ -388,8 +388,8 @@ jQuery(document).ready(function ($) {
 
     $(document).on('submit', 'form.form', function (e) {
         unfocusElements();
-        const layers = getLocationPayload();
-        $('#content-edit-location').val(JSON.stringify(layers));
+        const location = getLocationPayload();
+        $('#content-edit-location').val(JSON.stringify(location));
     });
 
     function updateZIndexes() {

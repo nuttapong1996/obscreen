@@ -1,0 +1,12 @@
+@keyframes blink{50%{opacity:0;}}
+.cfx-blink{animation:1.5s linear infinite blink;}
+.cfx-ffff-speed {animation-delay: 0.1s;}
+.cfx-fff-speed {animation-delay: 0.3s;}
+.cfx-ff-speed {animation-delay: 0.5s;}
+.cfx-f-speed {animation-delay: 0.8s;}
+.cfx-m-speed {animation-delay: 1s;}
+.cfx-s-speed {animation-delay: 1.3s;}
+.cfx-ss-speed {animation-delay: 1.5s;}
+.cfx-sss-speed {animation-delay: 1.8s;}
+.cfx-ssss-speed {animation-delay: 2s;}
+.cfx-sssss-speed {animation-delay: 3s;}

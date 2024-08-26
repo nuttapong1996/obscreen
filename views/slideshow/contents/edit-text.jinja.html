@@ -117,11 +117,13 @@
                         Text
                     </h3>
 
+                    {% set contentStyles = json_loads(content.location) %}
+
                     <div class="form-group">
                         <label for="elem-text">Text Label</label>
                         <div class="widget">
                             <input type="text" id="elem-text" name="textLabel"
-                                   value="Hello World !Hello World !Hello World !Hello World !Hello World !Hello World !Hello World !Hello World !Hello World !Hello World !Hello World !Hello World !Hello World !222">
+                                   value="{{ contentStyles.textLabel }}">
                         </div>
                     </div>
 
@@ -135,7 +137,7 @@
                             <label for="elem-font-size">Font Size</label>
                             <div class="widget widget-unit">
                                 <input type="text" id="elem-font-size" name="fontSize" maxlength="3"
-                                       class="numeric-input chars-3" value="20">
+                                       class="numeric-input chars-3" value="{{ contentStyles.fontSize }}">
                                 <span>pt</span>
                             </div>
                         </div>
@@ -144,7 +146,7 @@
                             <label for="elem-fg-color">Text Color</label>
                             <div class="widget">
                                 <input type="text" id="elem-fg-color" name="color" class="color-picker"
-                                       data-jscolor="{ value: '#FFFFFFFF', backgroundColor: '#333333', shadowColor: '#000000', width: 120, height: 120 }"/>
+                                       data-jscolor="{ value: '#{{ contentStyles.color }}', backgroundColor: '#333333', shadowColor: '#000000', width: 120, height: 120 }"/>
                             </div>
                         </div>
                     </div>
@@ -152,26 +154,33 @@
                     <div class="form-group">
                         <label for="elem-font-family">Text Font Type</label>
                         <div class="widget">
+                            {% set fonts = [
+                                {"value": "Arial", "name": "Arial"},
+                                {"value": "Arial Black", "name": "Arial Black"},
+                                {"value": "Verdana", "name": "Verdana"},
+                                {"value": "Trebuchet MS", "name": "Trebuchet MS"},
+                                {"value": "Georgia", "name": "Georgia"},
+                                {"value": "Times New Roman", "name": "Times New Roman"},
+                                {"value": "Courier New", "name": "Courier New"},
+                                {"value": "Comic Sans MS", "name": "Comic Sans MS"},
+                                {"value": "Impact", "name": "Impact"},
+                                {"value": "Tahoma", "name": "Tahoma"},
+                                {"value": "Gill Sans", "name": "Gill Sans"},
+                                {"value": "Helvetica", "name": "Helvetica"},
+                                {"value": "Optima", "name": "Optima"},
+                                {"value": "Garamond", "name": "Garamond"},
+                                {"value": "Baskerville", "name": "Baskerville"},
+                                {"value": "Copperplate", "name": "Copperplate"},
+                                {"value": "Futura", "name": "Futura"},
+                                {"value": "Monaco", "name": "Monaco"},
+                                {"value": "Andale Mono", "name": "Andale Mono"}
+                            ] %}
                             <select name="fontFamily" id="elem-font-family" class="size-m">
-                                <option value="Arial">Arial</option>
-                                <option value="Arial Black">Arial Black</option>
-                                <option value="Verdana">Verdana</option>
-                                <option value="Trebuchet MS">Trebuchet MS</option>
-                                <option value="Georgia">Georgia</option>
-                                <option value="Times New Roman">Times New Roman</option>
-                                <option value="Courier New">Courier New</option>
-                                <option value="Comic Sans MS">Comic Sans MS</option>
-                                <option value="Impact">Impact</option>
-                                <option value="Tahoma">Tahoma</option>
-                                <option value="Gill Sans">Gill Sans</option>
-                                <option value="Helvetica">Helvetica</option>
-                                <option value="Optima">Optima</option>
-                                <option value="Garamond">Garamond</option>
-                                <option value="Baskerville">Baskerville</option>
-                                <option value="Copperplate">Copperplate</option>
-                                <option value="Futura">Futura</option>
-                                <option value="Monaco">Monaco</option>
-                                <option value="Andale Mono">Andale Mono</option>
+                                {% for font in fonts %}
+                                    <option value="{{ font.value }}" {% if font.value == contentStyles.fontFamily %}selected="selected"{% endif %}>
+                                        {{ font.name }}
+                                    </option>
+                                {% endfor %}
                             </select>
                         </div>
                     </div>
@@ -182,16 +191,15 @@
                             <label for="elem-fg-color">Text Style</label>
                             <div class="widget">
                                 <div class="checkbox-group">
-                                    <input type="checkbox" id="elem-font-bold" name="fontBold" value="bold">
+                                    <input type="checkbox" id="elem-font-bold" name="fontBold" value="bold" {{ 'checked' if contentStyles.fontBold }}>
                                     <label for="elem-font-bold" class="btn btn-neutral">
                                         <i class="fa fa-bold"></i>
                                     </label>
-                                    <input type="checkbox" id="elem-font-italic" name="fontItalic" value="italic">
+                                    <input type="checkbox" id="elem-font-italic" name="fontItalic" value="italic" {{ 'checked' if contentStyles.fontItalic }}>
                                     <label for="elem-font-italic" class="btn btn-neutral">
                                         <i class="fa fa-italic"></i>
                                     </label>
-                                    <input type="checkbox" id="elem-text-underline" name="textUnderline"
-                                           value="underline">
+                                    <input type="checkbox" id="elem-text-underline" name="textUnderline" value="underline" {{ 'checked' if contentStyles.textUnderline }}>
                                     <label for="elem-text-underline" class="btn btn-neutral">
                                         <i class="fa fa-underline"></i>
                                     </label>
@@ -202,17 +210,15 @@
                             <label for="elem-fg-color">Text Alignment</label>
                             <div class="widget">
                                 <div class="radio-group">
-                                    <input type="radio" id="elem-text-align-left" name="textAlign" value="left">
+                                    <input type="radio" id="elem-text-align-left" name="textAlign" value="left" {{ 'checked' if contentStyles.textAlign == 'left' }}>
                                     <label for="elem-text-align-left" class="btn btn-neutral">
                                         <i class="fa fa-align-left"></i>
                                     </label>
-                                    <input type="radio" id="elem-text-align-center" name="textAlign"
-                                           value="center"
-                                           checked="checked">
+                                    <input type="radio" id="elem-text-align-center" name="textAlign" value="center" {{ 'checked' if contentStyles.textAlign == 'center' }}>
                                     <label for="elem-text-align-center" class="btn btn-neutral">
                                         <i class="fa fa-align-center"></i>
                                     </label>
-                                    <input type="radio" id="elem-text-align-right" name="textAlign" value="right">
+                                    <input type="radio" id="elem-text-align-right" name="textAlign" value="right" {{ 'checked' if contentStyles.textAlign == 'right' }}>
                                     <label for="elem-text-align-right" class="btn btn-neutral">
                                         <i class="fa fa-align-right"></i>
                                     </label>
@@ -230,7 +236,7 @@
                         <label for="elem-bg-color">Background Color</label>
                         <div class="widget">
                             <input type="text" id="elem-bg-color" name="backgroundColor" class="color-picker"
-                                   data-jscolor="{ value: '#000000FF', backgroundColor: '#333333', shadowColor: '#000000', width: 120, height: 120 }"/>
+                                   data-jscolor="{ value: '#{{ contentStyles.backgroundColor }}', backgroundColor: '#333333', shadowColor: '#000000', width: 120, height: 120 }"/>
                         </div>
                     </div>
 
@@ -243,7 +249,7 @@
                             <label for="elem-scroll-enable">Enable</label>
                             <div class="widget">
                                 <div class="toggle">
-                                    <input type="checkbox" name="scrollEnable" id="elem-scroll-enable" />
+                                    <input type="checkbox" name="scrollEnable" id="elem-scroll-enable" {{ 'checked' if contentStyles.scrollEnable }} />
                                     <label for="elem-scroll-enable"></label>
                                 </div>
                             </div>
@@ -252,11 +258,11 @@
                             <label for="elem-scroll-direction">Direction</label>
                             <div class="widget">
                                 <div class="radio-group">
-                                    <input type="radio" id="elem-scroll-direction-left" name="scrollDirection" value="left" checked>
+                                    <input type="radio" id="elem-scroll-direction-left" name="scrollDirection" value="left" {{ 'checked' if contentStyles.scrollDirection == 'left' }}>
                                     <label for="elem-scroll-direction-left" class="btn btn-neutral">
                                         <i class="fa fa-arrow-left"></i>
                                     </label>
-                                    <input type="radio" id="elem-scroll-direction-right" name="scrollDirection" value="right">
+                                    <input type="radio" id="elem-scroll-direction-right" name="scrollDirection" value="right" {{ 'checked' if contentStyles.scrollDirection == 'right' }}>
                                     <label for="elem-scroll-direction-right" class="btn btn-neutral">
                                         <i class="fa fa-arrow-right"></i>
                                     </label>
@@ -266,7 +272,7 @@
                         <div class="form-group">
                             <label for="elem-scroll-speed">Speed</label>
                             <div class="widget widget-unit">
-                                <input type="text" id="elem-scroll-speed" name="scrollSpeed" maxlength="3" class="numeric-input chars-3" value="10">
+                                <input type="text" id="elem-scroll-speed" name="scrollSpeed" maxlength="3" class="numeric-input chars-3" value="{{ contentStyles.scrollSpeed }}">
                             </div>
                         </div>
                     </div>
@@ -282,7 +288,7 @@
                             <label for="elem-single-line">Single Line Only</label>
                             <div class="widget">
                                 <div class="toggle">
-                                    <input type="checkbox" name="singleLine" id="elem-single-line" />
+                                    <input type="checkbox" name="singleLine" id="elem-single-line" {{ 'checked' if contentStyles.singleLine }} />
                                     <label for="elem-single-line"></label>
                                 </div>
                             </div>
@@ -291,8 +297,7 @@
                         <div class="form-group">
                             <label for="elem-container-margin">Container Margin</label>
                             <div class="widget widget-unit">
-                                <input type="text" id="elem-container-margin" name="margin" maxlength="3"
-                                       class="numeric-input chars-3" value="0">
+                                <input type="text" id="elem-container-margin" name="margin" maxlength="3" class="numeric-input chars-3" value="{{ contentStyles.margin }}">
                                 <span>pt</span>
                             </div>
                         </div>

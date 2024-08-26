@@ -53,5 +53,32 @@ jQuery(function () {
             updateCheckboxActiveClass();
         });
 
+        $.fn.serializeObject = function() {
+            const obj = {};
+
+            this.find('input, select, textarea').each(function() {
+                const field = $(this);
+                const name = field.attr('name');
+
+                if (!name) return; // Ignore fields without a name
+
+                if (field.is(':checkbox')) {
+                    const isOnOff = field.val() === 'on' || field.val() === '1';
+                    obj[name] = field.is(':checked') ? field.val() : (isOnOff ? false : null);
+                } else if (field.is(':radio')) {
+                    if (field.is(':checked')) {
+                        obj[name] = field.val();
+                    } else if (!(name in obj)) {
+                        obj[name] = false;
+                    }
+                } else {
+                    const tryInt = parseInt(field.val());
+                    obj[name] = isNaN(tryInt) ? field.val() : tryInt;
+                }
+            });
+
+            return obj;
+        };
+
     });
 });

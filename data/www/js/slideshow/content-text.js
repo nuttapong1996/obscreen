@@ -70,6 +70,13 @@ jQuery(document).ready(function ($) {
     draw();
 
 
-
-
+    $(document).on('submit', 'form.form', function (e) {
+        const location = getLocationPayload();
+        $('#content-edit-location').val(JSON.stringify(location));
+    });
 });
+
+
+const getLocationPayload = function() {
+    return $('form#elementForm').serializeObject();
+};
