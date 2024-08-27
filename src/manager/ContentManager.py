@@ -262,6 +262,8 @@ class ContentManager(ModelManager):
 
         if content.type == ContentType.YOUTUBE:
             location = content.location
+        elif content.type == ContentType.TEXT:
+            pass
         elif content.type == ContentType.COMPOSITION:
             location = "{}/{}".format(
                 var_external_url if len(var_external_url) > 0 else "",

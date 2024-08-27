@@ -28,7 +28,6 @@ class ContentController(ObController):
         self._app.add_url_rule('/slideshow/content/move-folder', 'slideshow_content_folder_move', self._auth(self.slideshow_content_folder_move), methods=['POST'])
         self._app.add_url_rule('/slideshow/content/rename-folder', 'slideshow_content_folder_rename', self._auth(self.slideshow_content_folder_rename), methods=['POST'])
         self._app.add_url_rule('/slideshow/content/delete-folder', 'slideshow_content_folder_delete', self._auth(self.slideshow_content_folder_delete), methods=['GET'])
-        self._app.add_url_rule('/slideshow/content/show/<content_id>', 'slideshow_content_show', self._auth(self.slideshow_content_show), methods=['GET'])
         self._app.add_url_rule('/slideshow/content/upload-bulk', 'slideshow_content_upload_bulk', self._auth(self.slideshow_content_upload_bulk), methods=['POST'])
         self._app.add_url_rule('/slideshow/content/delete-bulk-explr', 'slideshow_content_delete_bulk_explr', self._auth(self.slideshow_content_delete_bulk_explr), methods=['GET'])
 
@@ -248,14 +247,6 @@ class ContentController(ObController):
             flash(self.t(error), 'error')
 
         return redirect(url_for('slideshow_content_list', **route_args))
-
-    def slideshow_content_show(self, content_id: int = 0):
-        content = self._model_store.content().get(content_id)
-
-        if not content:
-            return abort(404)
-
-        return redirect(self._model_store.content().resolve_content_location(content))
 
     def slideshow_content_delete_bulk_explr(self):
         working_folder_path, working_folder = self.get_folder_context()
