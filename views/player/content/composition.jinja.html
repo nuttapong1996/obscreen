@@ -34,13 +34,14 @@
     <body>
         <div id="screen"></div>
         <script src="{{ STATIC_PREFIX }}js/lib/jquery.min.js"></script>
+        <script src="{{ STATIC_PREFIX }}js/utils.js"></script>
         <script>
             const contentData = JSON.parse({{ json_dumps(content.location) | safe }});
             const baseIframeRoute = '{{ url_for('player', preview_content_id='!c!', autoplay=1, cover=1, transparent=1) }}';
 
             jQuery(function($) {
                 function setOptimalSize() {
-                    const ratio = 16 / 9;
+                    const ratio = evalStringRatio(contentData.ratio);
                     const bodyWidth = $('body').width() - 100;
                     const bodyHeight = $('body').height() - 100;
 

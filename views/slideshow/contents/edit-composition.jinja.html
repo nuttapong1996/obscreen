@@ -79,6 +79,7 @@
                     </ul>
                 </div>
 
+                {% set contentData = json_loads(content.location) %}
                 <div class="horizontal">
                     <div class="form-holder">
                         <form class="form"
@@ -89,6 +90,26 @@
                                 <div class="widget">
                                     <input type="text" name="name" id="content-edit-name" required="required"
                                            value="{{ content.name }}"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="elem-screen-ratio">{{ l.enum_content_type_composition_object_label }}</label>
+                                <div class="widget">
+                                    {% set ratios = [
+                                        "4/3",
+                                        "16/9",
+                                        "16/10",
+                                        "3/4",
+                                        "9/16",
+                                        "10/16",
+                                    ] %}
+                                    <select name="name" id="elem-screen-ratio" required="required">
+                                        {% for ratio in ratios %}
+                                            <option value="{{ ratio }}" {% if ratio == contentData.ratio %}selected="selected"{% endif %}>
+                                                {{ ratio }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
                                 </div>
                             </div>
 
@@ -136,7 +157,7 @@
         <div class="page-content">
             <div class="inner">
                 <h3 class="main">
-                    {{ l.composition_monitor }} <span class="ratio-value badge-inset">16 / 9</span>
+                    {{ l.composition_monitor }} <span class="ratio-value badge-inset"></span>
                 </h3>
 
                 <div class="toolbar">
@@ -199,8 +220,8 @@
                         </div>
                     </div>
 
-                    <div class="horizontal fx-end element-tool adjust-aspect-ratio-container hidden">
-                        <button type="button" class="btn btn-wire-neutral adjust-aspect-ratio">
+                    <div class="horizontal fx-end element-tool element-adjust-aspect-ratio-container hidden">
+                        <button type="button" class="btn btn-wire-neutral element-adjust-aspect-ratio">
                             <i class="fa fa-solid fa-down-left-and-up-right-to-center icon-left"></i> {{ l.composition_element_match_content_aspect_ratio }}
                         </button>
                     </div>

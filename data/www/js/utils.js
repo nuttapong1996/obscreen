@@ -81,3 +81,9 @@ const secondsToHHMMSS = function (seconds) {
     const secs = seconds % 60;
     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 };
+
+const evalStringRatio = function(str) {
+    return str.replace(/(\d+)\/(\d+)/g, function(match, p1, p2) {
+        return (parseInt(p1) / parseInt(p2)).toString();
+    });
+};

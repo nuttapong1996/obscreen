@@ -71,12 +71,9 @@ jQuery(document).ready(function ($) {
 
 
     $(document).on('submit', 'form.form', function (e) {
-        const location = getLocationPayload();
+        const location = $('form#elementForm').serializeObject();
         $('#content-edit-location').val(JSON.stringify(location));
     });
 });
 
 
-const getLocationPayload = function() {
-    return $('form#elementForm').serializeObject();
-};

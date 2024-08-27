@@ -1,24 +1,30 @@
 
 jQuery(document).ready(function ($) {
-    const contentData = JSON.parse($('#content-edit-location').val() || '{"layers":{}}');
-    const screenRatio = 16/9;
-
+    const DEFAULT_RATIO = "16/9";
+    const contentData = JSON.parse($('#content-edit-location').val() || `{"ratio":"${DEFAULT_RATIO}", "layers":{}}`);
     let currentElement = null;
     let elementCounter = 0;
+    let screenRatio = 16/9;
 
-    $('.screen-holder').css({
-        'padding-top': ( 1/ ( screenRatio ) * 100) + '%'
-    });
+    const setRatio = function () {
+        const ratioString = $('#elem-screen-ratio').val() || DEFAULT_RATIO;
+        $('.ratio-value').text(ratioString.replace('/', ' / '));
+        screenRatio = evalStringRatio(ratioString);
+        $('.screen-holder').css({ 'padding-top': ( 1/ ( screenRatio ) * 100) + '%' });
+        $('.ratio-value').val(screenRatio);
+        $('#screen').css({
+            width: $('#screen').width(),
+            height: $('#screen').width() * (1/screenRatio),
+            position: 'relative',
+        }).parents('.screen-holder:eq(0)').css({
+            width: 'auto',
+            'padding-top': '0px'
+        });
+    };
+    setRatio();
 
-    $('.ratio-value').val(screenRatio);
-
-    $('#screen').css({
-        width: $('#screen').width(),
-        height: $('#screen').height(),
-        position: 'relative',
-    }).parents('.screen-holder:eq(0)').css({
-        width: 'auto',
-        'padding-top': '0px'
+    $(document).on('input', '#elem-screen-ratio', function() {
+        setRatio();
     });
 
     function createElement(config = null) {
@@ -109,7 +115,7 @@ jQuery(document).ready(function ($) {
         return element;
     }
 
-    $(document).on('click', '.adjust-aspect-ratio', function(){
+    $(document).on('click', '.element-adjust-aspect-ratio', function(){
         const metadata = currentElement.data('content-metadata');
         const ratio = metadata.height / metadata.width;
         $('#elem-height').val($('#elem-width').val() * ratio).trigger('input');
@@ -174,7 +180,7 @@ jQuery(document).ready(function ($) {
             if (contentType === 'picture' || contentType === 'video') {
                 const contentMetadata = $element.data('content-metadata');
                 if (contentMetadata.width && contentMetadata.height) {
-                    $('.element-tool.adjust-aspect-ratio-container').removeClass('hidden');
+                    $('.element-tool.element-adjust-aspect-ratio-container').removeClass('hidden');
                 }
             }
         }
@@ -414,51 +420,52 @@ jQuery(document).ready(function ($) {
     };
 
     applyElementsFromContent();
-});
 
-const getLocationPayload = function() {
-    const screen = $('#screen');
-    const screenWidth = screen.width();
-    const screenHeight = screen.height();
-    const layers = [];
+    const getLocationPayload = function() {
+        const screen = $('#screen');
+        const screenWidth = screen.width();
+        const screenHeight = screen.height();
+        const layers = [];
 
-    $('.element').each(function () {
-        const $element = $(this);
-        const offset = $element.position();
-        const x = offset.left;
-        const y = offset.top;
-        const width = $element.width();
-        const height = $element.height();
+        $('.element').each(function () {
+            const $element = $(this);
+            const offset = $element.position();
+            const x = offset.left;
+            const y = offset.top;
+            const width = $element.width();
+            const height = $element.height();
 
-        const xPercent = (x / screenWidth) * 100;
-        const yPercent = (y / screenHeight) * 100;
-        const widthPercent = (width / screenWidth) * 100;
-        const heightPercent = (height / screenHeight) * 100;
-        const contentId = $element.attr('data-content-id');
-        const contentName = $element.attr('data-content-name');
-        const contentType = $element.attr('data-content-type');
-        const contentMetadata = $element.data('content-metadata');
+            const xPercent = (x / screenWidth) * 100;
+            const yPercent = (y / screenHeight) * 100;
+            const widthPercent = (width / screenWidth) * 100;
+            const heightPercent = (height / screenHeight) * 100;
+            const contentId = $element.attr('data-content-id');
+            const contentName = $element.attr('data-content-name');
+            const contentType = $element.attr('data-content-type');
+            const contentMetadata = $element.data('content-metadata');
 
-        const layer = {
-            xPercent: xPercent,
-            yPercent: yPercent,
-            widthPercent: widthPercent,
-            heightPercent: heightPercent,
-            zIndex: parseInt($element.css('zIndex')),
-            contentId: contentId ? parseInt(contentId) : null,
-            contentName: contentName ? contentName : null,
-            contentType: contentType ? contentType : null,
-            contentMetadata: contentMetadata && contentMetadata !== "null" ? contentMetadata : null,
+            const layer = {
+                xPercent: xPercent,
+                yPercent: yPercent,
+                widthPercent: widthPercent,
+                heightPercent: heightPercent,
+                zIndex: parseInt($element.css('zIndex')),
+                contentId: contentId ? parseInt(contentId) : null,
+                contentName: contentName ? contentName : null,
+                contentType: contentType ? contentType : null,
+                contentMetadata: contentMetadata && contentMetadata !== "null" ? contentMetadata : null,
+            };
+
+            layers.push(layer);
+        });
+
+        layers.sort(function(a, b) {
+            return parseInt(b.zIndex) - parseInt(a.zIndex);
+        });
+
+        return {
+            ratio: $('#elem-screen-ratio').val(),
+            layers: layers
         };
-
-        layers.push(layer);
-    });
-
-    layers.sort(function(a, b) {
-        return parseInt(b.zIndex) - parseInt(a.zIndex);
-    });
-
-    return {
-        layers: layers
     };
-};
+});
