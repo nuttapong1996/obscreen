@@ -1,22 +1,27 @@
 
 jQuery(document).ready(function ($) {
-    const contentData = JSON.parse($('#content-edit-location').val() || '{}');
-    const screenRatio = 16/9;
-
-    $('.screen-holder').css({
+    const setRatio = function(screenRatio) {
+        $('.screen-holder').css({
         'padding-top': ( 1/ ( screenRatio ) * 100) + '%'
-    });
+        });
 
-    $('.ratio-value').val(screenRatio);
+        $('.ratio-value').val(screenRatio);
 
-    $('#screen').css({
-        width: $('#screen').width(),
-        height: $('#screen').height(),
-        position: 'relative',
-    }).parents('.screen-holder:eq(0)').css({
-        width: 'auto',
-        'padding-top': '0px'
-    });
+        $('#screen').css({
+            width: $('#screen').width(),
+            height: $('#screen').height(),
+            position: 'relative',
+        }).parents('.screen-holder:eq(0)').css({
+            width: 'auto',
+            'padding-top': '0px'
+        });
+    };
+    setRatio(16/9);
+
+    const relativeSize = function(baseFontSize, divider) {
+        const screenVW = $('#screen').width() / $(document).width() * 100;
+        return (parseFloat(baseFontSize)/divider) * screenVW / 100;
+    };
 
     const draw = function() {
         const $screen = $('#screen');
@@ -44,11 +49,11 @@ jQuery(document).ready(function ($) {
         }
 
         $text.css({
-            padding: $('#elem-container-margin').val() + 'px',
+            padding: relativeSize($('#elem-container-margin').val(), 10) + 'vw',
             color: $('#elem-fg-color').val(),
             textAlign: $('[name=textAlign]:checked').val(),
             textDecoration: $('#elem-text-underline').is(':checked') ? 'underline' : 'normal',
-            fontSize: $('#elem-font-size').val() + 'px',
+            fontSize: relativeSize($('#elem-font-size').val(), 10) + 'vw',
             fontWeight: $('#elem-font-bold').is(':checked') ? 'bold' : 'normal',
             fontStyle: $('#elem-font-italic').is(':checked') ? 'italic' : 'normal',
             fontFamily: $('#elem-font-family').val() + ", 'Arial', 'sans-serif'",

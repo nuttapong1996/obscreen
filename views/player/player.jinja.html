@@ -409,12 +409,16 @@
             case 'right': justifyContent = 'flex-end'; break;
         }
 
+        const relativeSize = function(baseFontSize, divider) {
+            return parseFloat(baseFontSize) / divider;
+        };
+
         $text.css({
-            padding: contentData.margin + 'px',
+            padding: relativeSize(contentData.margin, 10) + 'vw',
             color: contentData.color,
             textAlign: contentData.textAlign,
             textDecoration: contentData.textUnderline ? 'underline' : 'normal',
-            fontSize: contentData.fontSize + 'px',
+            fontSize: relativeSize(contentData.fontSize, 10) + 'vw',
             fontWeight: contentData.fontBold ? 'bold' : 'normal',
             fontStyle: contentData.fontItalic ? 'italic' : 'normal',
             fontFamily: contentData.fontFamily + ", 'Arial', 'sans-serif'",
