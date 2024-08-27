@@ -44,6 +44,12 @@ It is a temporary live demo, all data will be deleted after 30 minutes (~30secs 
 ### 🔴 [I want to power a RaspberryPi and automatically see my slideshow on a screen connected to it and manage the slideshow](docs/setup-run-on-rpi.md)
 ### 🔵 [I just want a slideshow manager and I'll deal with screen and browser myself](docs/setup-run-headless.md)
 
+## ❤️ Sponsors
+
+Thank you so much! (GitHub Sponsors will be updated manually. The list will be cached by GitHub though. It may need some time to be updated)
+
+<img src="https://demo.obscreen.io/data/uploads/sponsors.svg?d=100" alt />
+
 ## 📸 More Screenshots
 
 Light Mode:
