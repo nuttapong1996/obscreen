@@ -37,7 +37,7 @@ class CoreUpdaterController(ObController):
 
         if os_name == "linux":
             logging.warn('Git Updater supports linux dependency manager, using apt...')
-            sudo_run_system_command(['apt', 'install'] + 'git python3-pip python3-venv libsqlite3-dev'.split(' '))
+            sudo_run_system_command(['apt', 'install'] + 'git build-essential gcc python3-dev python3-pip python3-venv libsqlite3-dev ntfs-3g ffmpeg'.split(' '))
         elif os_name == "windows":
             logging.warn('Git Updater doesn\'t supports windows dependency manager, install system dependencies manually')
         elif os_name == "darwin":
