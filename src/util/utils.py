@@ -285,7 +285,7 @@ def clamp(x: float, minimum: float, maximum: float) -> float:
 def restart(debug=False) -> None:
     time.sleep(1)
 
-    if platform.system().lower() == 'darwin':
+    if platform.system().lower() == 'darwin' or platform.system().lower() == 'windows':
         python = sys.executable
         os.execl(python, python, *sys.argv)
     elif am_i_in_docker():
