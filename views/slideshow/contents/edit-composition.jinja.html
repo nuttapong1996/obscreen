@@ -103,7 +103,7 @@
                                         "9/16",
                                         "10/16",
                                     ] %}
-                                    <select name="name" id="elem-screen-ratio" required="required">
+                                    <select name="name" id="elem-screen-ratio" required="required" class="size-m">
                                         {% for ratio in ratios %}
                                             <option value="{{ ratio }}" {% if ratio == contentData.ratio %}selected="selected"{% endif %}>
                                                 {{ ratio }}
