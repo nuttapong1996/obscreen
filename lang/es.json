@@ -309,6 +309,7 @@
   "enum_content_type_external_storage_object_label": "Especifique un directorio existente relativo a la siguiente ruta",
   "enum_content_type_external_storage_flashdrive_label": "Ruta relativa a un dispositivo extraíble",
   "enum_content_type_composition": "Composición",
+  "enum_content_type_composition_object_label": "Relación de aspecto de la pantalla",
   "enum_content_type_text": "Texto",
   "enum_content_type_text_object_label": "Texto mostrado",
   "enum_content_type_url": "URL",

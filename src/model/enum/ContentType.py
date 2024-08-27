@@ -11,8 +11,9 @@ class ContentInputType(Enum):
 
     UPLOAD = 'upload'
     TEXT = 'text'
-    STORAGE = 'storage'
     HIDDEN = 'hidden'
+    STORAGE = 'storage'
+    COMPOSITION = 'composition'
 
     @staticmethod
     def is_editable(value: Enum) -> bool:
@@ -21,6 +22,8 @@ class ContentInputType(Enum):
         elif value == ContentInputType.TEXT:
             return True
         elif value == ContentInputType.STORAGE:
+            return True
+        elif value == ContentInputType.COMPOSITION:
             return True
 
 
@@ -66,7 +69,7 @@ class ContentType(Enum):
         elif value == ContentType.EXTERNAL_STORAGE:
             return ContentInputType.STORAGE
         elif value == ContentType.COMPOSITION:
-            return ContentInputType.HIDDEN
+            return ContentInputType.COMPOSITION
         elif value == ContentType.TEXT:
             return ContentInputType.TEXT
 

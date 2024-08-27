@@ -310,6 +310,7 @@
   "enum_content_type_external_storage_object_label": "Spécifiez un répertoire existant par rapport au chemin suivant",
   "enum_content_type_external_storage_flashdrive_label": "Chemin relatif à un périphérique amovible",
   "enum_content_type_composition": "Composition",
+  "enum_content_type_composition_object_label": "Rapport hauteur/largeur de l'écran",
   "enum_content_type_text": "Texte",
   "enum_content_type_text_object_label": "Texte affiché",
   "enum_content_type_url": "URL",
