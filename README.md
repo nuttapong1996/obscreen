@@ -48,7 +48,7 @@ It is a temporary live demo, all data will be deleted after 30 minutes (~30secs 
 
 Thank you so much! (GitHub Sponsors will be updated manually. The list will be cached by GitHub though. It may need some time to be updated)
 
-<img src="https://demo.obscreen.io/data/uploads/sponsors.svg?d=100" alt />
+<img src="https://demo.obscreen.io/data/uploads/sponsors.svg?d=101" alt />
 
 ## 📸 More Screenshots
 
