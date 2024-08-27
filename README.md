@@ -33,8 +33,9 @@ It is a temporary live demo, all data will be deleted after 30 minutes (~30secs 
 - Playlist management
 - Authentication management
 - Plays content from flashdrive in offline mode
+- Composition content type [(short video demo)](https://demo.obscreen.io/data/uploads/compositions.mp4)
 - Core API & Plugin system to extend capabilities
-- [Multi Languages](https://github.com/jr-k/obscreen/tree/master/lang)
+- [Multi Languages](https://github.com/jr-k/obscreen/tree/master/lang) (English, French, Italian, Spanish, German, Greek, Arabic, Hindi, Japanese, Korean, Polish, Portuguese, Russian, Vietnamese, Chinese)
 - Cast pictures and iframes to Chromecast
 - No costly monthly pricing plan per screen or whatever, no cloud, no telemetry
 
