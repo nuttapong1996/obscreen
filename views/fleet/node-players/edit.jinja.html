@@ -6,13 +6,10 @@
 {% endblock %}
 
 {% block add_css %}
-    <link rel="stylesheet" href="{{ STATIC_PREFIX }}css/lib/flatpickr.min.css"/>
-    <link rel="stylesheet" href="{{ STATIC_PREFIX }}css/lib/jquery-explr-1.4.css"/>
     {{ HOOK(H_SLIDESHOW_CONTENT_CSS) }}
 {% endblock %}
 
 {% block add_js %}
-    <script src="{{ STATIC_PREFIX }}js/lib/jquery-explr-1.4.js"></script>
     <script src="{{ STATIC_PREFIX }}js/fleet/node-players.js"></script>
 
     {{ HOOK(H_SLIDESHOW_CONTENT_JAVASCRIPT) }}
@@ -20,20 +17,15 @@
 
 {% block body_class %}view-node-player-edit edit-page{% endblock %}
 
-{% block page %}
+{% block top_page %}
     <div class="top-content">
         <h1>
             {{ l.fleet_node_player_form_edit_title }}
         </h1>
     </div>
+{% endblock %}
 
-    {% if request.args.get('saved') %}
-        <div class="alert alert-success alert-timeout">
-            <i class="fa fa-check icon-left"></i>
-            {{ l.common_saved }}
-        </div>
-    {% endif %}
-
+{% block main_page %}
     <div class="bottom-content">
         <div class="page-content">
             <div class="inner dirview">

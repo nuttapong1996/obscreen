@@ -39,7 +39,7 @@
                 <button type="button" class="btn btn-naked content-explr-picker">
                     <i class="fa fa-crosshairs"></i>
                 </button>
-                <button type="button" class="btn btn-neutral hidden slide-content-show" data-route="{{ url_for('slideshow_content_show', content_id='__id__') }}">
+                <button type="button" class="btn btn-neutral hidden slide-content-show" data-route="{{ url_for('slideshow_content_edit', content_id='__id__') }}">
                     <i class="fa-solid fa-up-right-from-square"></i>
                 </button>
             </div>
@@ -88,21 +88,23 @@
             </div>
         </div>
 
-        <div class="form-group form-group-horizontal slide-delegate-duration-group">
-            <label for="">{{ l.slideshow_slide_form_label_delegate_duration }}</label>
-            <div class="widget">
-                <div class="toggle">
-                    <input type="checkbox" name="delegate_duration" class="slide-delegate-duration" id="{{ tclass }}-delegate-duration" value="1" disabled />
-                    <label for="{{ tclass }}-delegate-duration"></label>
+        <div class="horizontal">
+            <div class="form-group slide-delegate-duration-group">
+                <label for="">{{ l.slideshow_slide_form_label_delegate_duration }}</label>
+                <div class="widget">
+                    <div class="toggle">
+                        <input type="checkbox" name="delegate_duration" class="slide-delegate-duration" id="{{ tclass }}-delegate-duration" value="1" disabled />
+                        <label for="{{ tclass }}-delegate-duration"></label>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="form-group slide-duration-group">
-            <label for="{{ tclass }}-duration">{{ l.slideshow_slide_form_label_duration }}</label>
-            <div class="widget widget-unit">
-                <input type="number" name="duration" id="{{ tclass }}-duration" required="required" value="3" min="0" />
-                <span class="unit">{{ l.slideshow_slide_form_label_duration_unit }}</span>
+            <div class="form-group slide-duration-group">
+                <label for="{{ tclass }}-duration">{{ l.slideshow_slide_form_label_duration }}</label>
+                <div class="widget widget-unit">
+                    <input type="text" name="duration" id="{{ tclass }}-duration" required="required" value="3" min="0" class="numeric-input" />
+                    <span class="unit">{{ l.slideshow_slide_form_label_duration_unit }}</span>
+                </div>
             </div>
         </div>
 

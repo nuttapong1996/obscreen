@@ -6,6 +6,7 @@ from flask import url_for
 
 from src.model.entity.Content import Content
 from src.model.entity.Playlist import Playlist
+from src.model.enum.ContentMetadata import ContentMetadata
 from src.model.enum.ContentType import ContentType
 from src.util.utils import get_yt_video_id
 from src.manager.DatabaseManager import DatabaseManager
@@ -16,7 +17,8 @@ from src.manager.VariableManager import VariableManager
 from src.service.ModelManager import ModelManager
 from src.util.UtilFile import randomize_filename
 from src.util.UtilNetwork import get_preferred_ip_address
-from src.util.UtilVideo import mp4_duration_with_ffprobe
+from src.util.UtilVideo import get_video_metadata
+from src.util.UtilPicture import get_picture_metadata
 from src.util.utils import encode_uri_component
 
 
@@ -29,6 +31,7 @@ class ContentManager(ModelManager):
         "type CHAR(30)",
         "location TEXT",
         "duration FLOAT",
+        "metadata TEXT",
         "folder_id INTEGER",
         "created_by CHAR(255)",
         "updated_by CHAR(255)",
@@ -40,6 +43,12 @@ class ContentManager(ModelManager):
         super().__init__(lang_manager, database_manager, user_manager, variable_manager)
         self._config_manager = config_manager
         self._db = database_manager.open(self.TABLE_NAME, self.TABLE_MODEL)
+        self.pre_migrate()
+
+    def pre_migrate(self):
+        if not self._variable_manager.get_one_by_name('refresh_all_metadata').as_bool():
+            self.refresh_all_metadata()
+            self._variable_manager.update_by_name('refresh_all_metadata', True)
 
     def hydrate_object(self, raw_content: dict, id: int = None) -> Content:
         if id:
@@ -73,10 +82,12 @@ class ContentManager(ModelManager):
     def get_all(self, sort: Optional[str] = 'created_at', ascending=False) -> List[Content]:
         return self.hydrate_list(self._db.get_all(table_name=self.TABLE_NAME, sort=sort, ascending=ascending))
 
-    def get_all_indexed(self, attribute: str = 'id', multiple=False) -> Dict[str, Content]:
+    def get_all_indexed(self, attribute: str = 'id', multiple=False, query: str = None) -> Dict[str, Content]:
         index = {}
 
-        for item in self.get_contents():
+        items = self.get_by(query) if query else self.get_contents()
+
+        for item in items:
             id = getattr(item, attribute)
             if multiple:
                 if id not in index:
@@ -132,14 +143,15 @@ class ContentManager(ModelManager):
     def post_delete(self, content_id: str) -> str:
         return content_id
 
-    def update_form(self, id: int, name: str, location: Optional[str] = None) -> Optional[Content]:
+    def update_form(self, id: int, name: Optional[str] = None, location: Optional[str] = None, metadata: Optional[str] = None) -> Optional[Content]:
         content = self.get(id)
 
         if not content:
             return
 
         form = {
-            "name": name,
+            "name": name if isinstance(name, str) else content.name,
+            "metadata": metadata if isinstance(metadata, str) else content.metadata
         }
 
         if location is not None and location:
@@ -198,15 +210,28 @@ class ContentManager(ModelManager):
                 object_path = os.path.join(upload_dir, object_name)
                 object.save(object_path)
                 content.location = object_path
-
-                if type == ContentType.VIDEO:
-                    content.duration = mp4_duration_with_ffprobe(content.location)
-
+                self.set_metadata(content)
         else:
-            content.location = location if location else ''
+            content.location = ContentType.get_initial_location(content.type, location)
 
         self.add_form(content)
         return self.get_one_by(query="uuid = '{}'".format(content.uuid))
+
+    def set_metadata(self, content: Content) -> str:
+        if content.type == ContentType.VIDEO:
+            width, height, duration = get_video_metadata(content.location)
+            content.duration = duration
+            content.set_metadata(ContentMetadata.DURATION, duration)
+            content.set_metadata(ContentMetadata.WIDTH, width)
+            content.set_metadata(ContentMetadata.HEIGHT, height)
+        elif content.type == ContentType.PICTURE:
+            width, height = get_picture_metadata(content.location)
+            content.set_metadata(ContentMetadata.WIDTH, width)
+            content.set_metadata(ContentMetadata.HEIGHT, height)
+        else:
+            content.init_metadata()
+
+        return content.metadata
 
     def delete(self, id: int) -> None:
         content = self.get(id)
@@ -237,6 +262,16 @@ class ContentManager(ModelManager):
 
         if content.type == ContentType.YOUTUBE:
             location = content.location
+        elif content.type == ContentType.TEXT:
+            pass
+        elif content.type == ContentType.COMPOSITION:
+            location = "{}/{}".format(
+                var_external_url if len(var_external_url) > 0 else "",
+                url_for(
+                    'serve_content_composition',
+                    content_id=content.id
+                ).strip('/')
+            )
         elif content.has_file() or content.type == ContentType.EXTERNAL_STORAGE:
             location = "{}/{}".format(
                 var_external_url if len(var_external_url) > 0 else "",
@@ -248,6 +283,13 @@ class ContentManager(ModelManager):
                 ).strip('/')
             )
         elif content.type == ContentType.URL:
-            location = 'http://' + content.location if not content.location.startswith('http') else content.location
+            location = 'http://' + content.location if content.location and not content.location.startswith('http') else content.location
 
         return location
+
+    def refresh_all_metadata(self):
+        for content in self.get_all():
+            self.update_form(
+                id=content.id,
+                metadata=self.set_metadata(content)
+            )

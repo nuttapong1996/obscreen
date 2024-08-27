@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        {% set preview_mode = request.args.get('preview') == '1' %}
+        <style>
+            html, body, #screen {
+                margin: 0;
+                padding: 0;
+                background: black;
+                width: 100vw;
+                height: 100vh;
+                overflow: hidden;
+            }
+            iframe {
+                border: none;
+                outline: none;
+            }
+
+            {% if preview_mode %}
+                html, body, #screen {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center
+                }
+
+                #screen {
+                    width: 1280px;
+                    height: 720px;
+                    outline: 5px solid white;
+                }
+            {% endif %}
+        </style>
+    </head>
+    <body>
+        <div id="screen"></div>
+        <script src="{{ STATIC_PREFIX }}js/lib/jquery.min.js"></script>
+        <script src="{{ STATIC_PREFIX }}js/utils.js"></script>
+        <script>
+            const contentData = JSON.parse({{ json_dumps(content.location) | safe }});
+            const baseIframeRoute = '{{ url_for('player', preview_content_id='!c!', autoplay=1, cover=1, transparent=1) }}';
+
+            jQuery(function($) {
+                function setOptimalSize() {
+                    const ratio = evalStringRatio(contentData.ratio);
+                    const bodyWidth = $('body').width() - 100;
+                    const bodyHeight = $('body').height() - 100;
+
+                    let width = bodyWidth;
+                    let height = bodyWidth / ratio;
+
+                    if (height > bodyHeight) {
+                        height = bodyHeight;
+                        width = bodyHeight * ratio;
+                    }
+
+                    const screenSizes = {
+                        width: Math.floor(width),
+                        height: Math.floor(height)
+                    };
+
+                    $('#screen').css({
+                        'width': screenSizes.width,
+                        'height': screenSizes.height,
+                    });
+                }
+
+                function createElement(config = null) {
+                    const screen = $('#screen');
+                    const offsetX = screen.position().left;
+                    const offsetY = screen.position().top;
+                    const screenWidth = screen.width();
+                    const screenHeight = screen.height();
+
+                    const elementWidth = (config.widthPercent / 100) * screenWidth
+                    const elementHeight = (config.heightPercent / 100) * screenHeight;
+                    let x = offsetX + (config.xPercent / 100) * screenWidth;
+                    let y = offsetY + (config.yPercent / 100) * screenHeight;
+                    const zIndex = config.zIndex;
+
+                    //x = Math.round(Math.max(0, Math.min(x, screenWidth - elementWidth)));
+                    //y = Math.round(Math.max(0, Math.min(y, screenHeight - elementHeight)));
+
+                    const element = $('<iframe class="element" id="element-' + zIndex + '" data-id="' + zIndex + '" src="'+baseIframeRoute.replace('!c!', config.contentId)+'" frameborder="0" allowtransparency="1"></iframe>');
+
+                    element.css({
+                        left: x,
+                        top: y,
+                        width: elementWidth,
+                        height: elementHeight,
+                        zIndex: zIndex,
+                        display: 'block',
+                        position: 'absolute',
+                        transform: `rotate(0deg)`
+                    });
+
+                    screen.append(element);
+                }
+
+                const applyElementsFromContent = function() {
+                    $('#screen').html('');
+
+                    for (let i = 0; i < contentData.layers.length; i++) {
+                        if (contentData.layers[i].contentId !== null) {
+                            createElement(contentData.layers[i]);
+                        }
+                    }
+                };
+
+                const main = function() {
+                    {% if preview_mode %}
+                        setOptimalSize();
+                    {% endif %}
+
+                    applyElementsFromContent();
+                };
+
+                $(window).on('resize', function() {
+                    main();
+                });
+
+                main();
+            });
+        </script>
+    </body>
+</html>

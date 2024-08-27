@@ -22,16 +22,14 @@
     <script src="{{ STATIC_PREFIX }}js/lib/jquery-ui.min.js"></script>
     <script src="{{ STATIC_PREFIX }}js/lib/jquery-fileupload.js"></script>
     <script src="{{ STATIC_PREFIX }}js/lib/jquery-multidraggable.js"></script>
-    <script src="{{ STATIC_PREFIX }}js/dragdrop.js"></script>
+    <script src="{{ STATIC_PREFIX }}js/super-upload.js"></script>
 
     {{ HOOK(H_SLIDESHOW_CONTENT_JAVASCRIPT) }}
 {% endblock %}
 
 {% block body_class %}view-content-list{% endblock %}
 
-{% block page %}
-    {% set explr_limit_chars = 35 %}
-
+{% block top_page %}
     <div class="top-content">
         <div class="top-actions">
             {{ HOOK(H_SLIDESHOW_CONTENT_TOOLBAR_ACTIONS_START) }}
@@ -85,25 +83,11 @@
         </div>
     </div>
 
-    {% if request.args.get('folder_not_empty_error') %}
-        <div class="alert alert-danger">
-            <i class="fa fa-warning icon-left"></i>
-            {{ l.common_folder_not_empty_error }}
-        </div>
-    {% elif request.args.get('referenced_in_slide_error') %}
-        <div class="alert alert-danger">
-            <i class="fa fa-warning icon-left"></i>
-            {{ l.slideshow_content_referenced_in_slide_error }}
-        </div>
-    {% elif request.args.get('error') %}
-        <div class="alert alert-danger">
-            <i class="fa fa-warning icon-left"></i>
-            {{ t(request.args.get('error')) }}
-        </div>
-    {% else %}
-        <div class="alert alert-danger hidden"></div>
-    {% endif %}
+    <div class="alert alert-upload alert-danger hidden"></div>
+{% endblock %}
 
+{% block main_page %}
+    {% set explr_limit_chars = 35 %}
     <div class="bottom-content">
         <div class="page-panel left-panel explr-explorer">
             {% with use_href=True %}

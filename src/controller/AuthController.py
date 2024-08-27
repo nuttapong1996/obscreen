@@ -1,6 +1,6 @@
 import json
 
-from flask import Flask, render_template, redirect, request, url_for, jsonify
+from flask import Flask, render_template, redirect, request, url_for, jsonify, flash
 from flask_login import login_user, logout_user, current_user
 from src.service.ModelStore import ModelStore
 from src.model.entity.User import User
@@ -26,8 +26,6 @@ class AuthController(ObController):
         self._app.add_url_rule('/auth/user/delete/<user_id>', 'auth_user_delete', self.guard_auth(self._auth(self.auth_user_delete)), methods=['GET'])
 
     def login(self):
-        login_error = None
-
         if current_user.is_authenticated:
             return redirect(url_for('playlist'))
 
@@ -41,13 +39,12 @@ class AuthController(ObController):
                     login_user(user)
                     return redirect(url_for('playlist'))
                 else:
-                    login_error = 'bad_credentials'
+                    flash(self.t('login_error_bad_credentials'), 'error')
             else:
-                login_error = 'not_found'
+                flash(self.t('login_error_not_found'), 'error')
 
         return render_template(
             'auth/login.jinja.html',
-            login_error=login_error,
             last_username=request.form['username'] if 'username' in request.form else None
         )
 
@@ -67,7 +64,6 @@ class AuthController(ObController):
 
         return render_template(
             'auth/list.jinja.html',
-            error=request.args.get('error', None),
             users=self._model_store.user().get_users(exclude=User.DEFAULT_USER if demo else None),
             plugin_core_api_enabled=self._model_store.variable().map().get('plugin_core_api_enabled').as_bool()
         )
@@ -96,10 +92,12 @@ class AuthController(ObController):
             return redirect(url_for('auth_user_list'))
 
         if user.id == str(current_user.id):
-            return redirect(url_for('auth_user_list', error='auth_user_delete_cant_delete_yourself'))
+            flash(self.t('auth_user_delete_cant_delete_yourself'), 'error')
+            return redirect(url_for('auth_user_list'))
 
         if self._model_store.user().count_all_enabled() == 1:
-            return redirect(url_for('auth_user_list', error='auth_user_delete_at_least_one_account'))
+            flash(self.t('auth_user_delete_at_least_one_account'), 'error')
+            return redirect(url_for('auth_user_list'))
 
         self._model_store.user().delete(user_id)
         return redirect(url_for('auth_user_list'))

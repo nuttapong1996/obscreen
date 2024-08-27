@@ -31,13 +31,20 @@ jQuery(function ($) {
                 },
                 always: function (e, data) {
                     const response = data._response.jqXHR;
+                    let statusCode = response.status;
                     $button.removeClass('uploading').removeClass('btn-naked btn-super-upload-busy').addClass('btn-info btn-super-upload');
-                    if (response.status != 200) {
-                        const $alert = $('.alert-danger').removeClass('hidden');
-                        if (response.status == 413) {
-                            $alert.text(l.js_common_http_error_413);
+
+                    let errorComment = response.responseText.match(/<!--\s*error=(\d+);\s*-->/);
+                    if (errorComment && errorComment[1]) {
+                        statusCode = parseInt(errorComment[1], 10);
+                    }
+
+                    if (statusCode !== 200) {
+                        const $alert = $('.alert-upload').removeClass('hidden');
+                        if (statusCode === 413) {
+                            $alert.html(`<i class="fa fa-warning"></i>${l.js_common_http_error_413}`);
                         } else {
-                            $alert.text(l.js_common_http_error_occured.replace('%code%', response.status));
+                            $alert.html(`<i class="fa fa-warning"></i>${l.js_common_http_error_occured.replace('%code%', statusCode)}`);
                         }
                     } else {
                         document.location.reload();

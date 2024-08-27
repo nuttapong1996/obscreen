@@ -1,6 +1,7 @@
 import abc
 
 from typing import Optional, List, Dict, Union
+from flask import request
 from src.service.TemplateRenderer import TemplateRenderer
 from src.service.ModelStore import ModelStore
 from src.interface.ObPlugin import ObPlugin
@@ -51,3 +52,19 @@ class ObController(abc.ABC):
 
     def api(self):
         return self._web_server.api
+
+    def get_referrer_path(self):
+        referer_url = request.referrer
+        if referer_url:
+            return '/' + referer_url.replace(request.host_url, '').split('?')[0]
+        return None
+
+    def get_referrer_rule(self):
+        referer_path = self.get_referrer_path()
+
+        if referer_path:
+            for rule in self._app.url_map.iter_rules():
+                if referer_path == rule.rule.split('/<')[0]:
+                    return rule.rule
+
+        return None

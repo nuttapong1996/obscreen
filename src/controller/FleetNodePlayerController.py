@@ -1,6 +1,6 @@
 import json
 
-from flask import Flask, render_template, redirect, request, url_for, jsonify, abort
+from flask import Flask, render_template, redirect, request, url_for, jsonify, abort, flash
 from src.service.ModelStore import ModelStore
 from src.model.entity.NodePlayer import NodePlayer
 from src.interface.ObController import ObController
@@ -108,18 +108,19 @@ class FleetNodePlayerController(ObController):
         )
         self._post_update()
 
-        # return redirect(url_for('fleet_node_player_edit', node_player_id=node_player_id, saved=1))
+        flash(self.t('common_saved'), 'success')
+
         return redirect(url_for('fleet_node_player_list', path=working_folder_path))
 
     def fleet_node_player_delete(self):
         working_folder_path, working_folder = self.get_working_folder()
-        error_tuple = self.delete_node_player_by_id(request.args.get('id'))
+        error = self.delete_node_player_by_id(request.args.get('id'))
         route_args = {
             "path": working_folder_path,
         }
 
-        if error_tuple:
-            route_args[error_tuple[0]] = error_tuple[1]
+        if error:
+            flash(error, 'error')
 
         return redirect(url_for('fleet_node_player_list', **route_args))
 
@@ -200,13 +201,13 @@ class FleetNodePlayerController(ObController):
 
     def fleet_node_player_folder_delete(self):
         working_folder_path, working_folder = self.get_working_folder()
-        error_tuple = self.delete_folder_by_id(request.args.get('id'))
+        error = self.delete_folder_by_id(request.args.get('id'))
         route_args = {
             "path": working_folder_path,
         }
 
-        if error_tuple:
-            route_args[error_tuple[0]] = error_tuple[1]
+        if error:
+            flash(error, 'error')
 
         return redirect(url_for('fleet_node_player_list', **route_args))
 
@@ -218,17 +219,17 @@ class FleetNodePlayerController(ObController):
 
         for id in entity_ids:
             if id:
-                error_tuple = self.delete_node_player_by_id(id)
+                error = self.delete_node_player_by_id(id)
 
-                if error_tuple:
-                    route_args_dict[error_tuple[0]] = error_tuple[1]
+                if error:
+                    flash(error, 'error')
 
         for id in folder_ids:
             if id:
-                error_tuple = self.delete_folder_by_id(id)
+                error = self.delete_folder_by_id(id)
 
-                if error_tuple:
-                    route_args_dict[error_tuple[0]] = error_tuple[1]
+                if error:
+                    flash(error, 'error')
 
         return redirect(url_for('fleet_node_player_list', **route_args_dict))
 
@@ -252,7 +253,7 @@ class FleetNodePlayerController(ObController):
         folder_counter = self._model_store.folder().count_subfolders_for_folder(folder.id)
 
         if node_player_counter > 0 or folder_counter:
-            return 'folder_not_empty_error', folder.name
+            return self.t('common_folder_not_empty_error').replace('%folderName%', folder.name)
 
         self._model_store.folder().delete(id=folder.id)
 

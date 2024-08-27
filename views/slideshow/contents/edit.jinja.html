@@ -6,13 +6,10 @@
 {% endblock %}
 
 {% block add_css %}
-    <link rel="stylesheet" href="{{ STATIC_PREFIX }}css/lib/flatpickr.min.css"/>
-    <link rel="stylesheet" href="{{ STATIC_PREFIX }}css/lib/jquery-explr-1.4.css"/>
     {{ HOOK(H_SLIDESHOW_CONTENT_CSS) }}
 {% endblock %}
 
 {% block add_js %}
-    <script src="{{ STATIC_PREFIX }}js/lib/jquery-explr-1.4.js"></script>
     <script src="{{ STATIC_PREFIX }}js/slideshow/contents.js"></script>
 
     {{ HOOK(H_SLIDESHOW_CONTENT_JAVASCRIPT) }}
@@ -20,20 +17,24 @@
 
 {% block body_class %}view-content-edit edit-page{% endblock %}
 
-{% block page %}
+{% block top_page %}
     <div class="top-content">
         <h1>
             {{ l.slideshow_content_form_edit_title }}
         </h1>
+
+        {% set icon = enum_content_type.get_fa_icon(content.type) %}
+        {% set color = enum_content_type.get_color_icon(content.type) %}
+
+        <h3>
+            <span class="{{ color }} border-{{ color }}">
+                <i class="fa {{ icon }} {{ color }}"></i> {{ t(content.type) }}
+            </span>
+        </h3>
     </div>
+{% endblock %}
 
-    {% if request.args.get('saved') %}
-        <div class="alert alert-success alert-timeout">
-            <i class="fa fa-check icon-left"></i>
-            {{ l.common_saved }}
-        </div>
-    {% endif %}
-
+{% block main_page %}
     <div class="bottom-content">
         <div class="page-content">
             <div class="inner dirview">
@@ -80,7 +81,7 @@
                                     {% if content.type == enum_content_type.EXTERNAL_STORAGE %}
                                         <input type="text" class="disabled" disabled value="{{ external_storage_mountpoint }}/" />
                                     {% endif %}
-                                
+
                                     {% set location = content.location %}
                                     {% if content.type == enum_content_type.YOUTUBE %}
                                         {% set location = 'https://www.youtube.com/watch?v=' ~ content.location %}
@@ -89,7 +90,24 @@
                                 </div>
                             </div>
 
-                            <div class="actions actions-left">
+                            {% if content.type == enum_content_type.VIDEO or content.type == enum_content_type.PICTURE %}
+                                <div class="horizontal">
+                                    <div class="form-group">
+                                        <label for="">{{ l.common_width }}</label>
+                                        <div class="widget">
+                                            <input type="text" class="size-m" value="{{ content.get_metadata(enum_content_metadata.WIDTH) }}" disabled="disabled" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">{{ l.common_height }}</label>
+                                        <div class="widget">
+                                            <input type="text" class="size-m" value="{{ content.get_metadata(enum_content_metadata.HEIGHT) }}" disabled="disabled" />
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            <div class="actions actions-right">
                                 <button type="submit" class="btn btn-info">
                                     <i class="fa fa-save icon-left"></i>
                                     {{ l.common_save }}
@@ -107,14 +125,6 @@
 
 
         <div class="page-panel right-panel">
-            {% set icon = enum_content_type.get_fa_icon(content.type) %}
-            {% set color = enum_content_type.get_color_icon(content.type) %}
-
-            <h3>
-                <span class="{{ color }} border-{{ color }}">
-                    <i class="fa {{ icon }} {{ color }}"></i> {{ t(content.type) }}
-                </span>
-            </h3>
             <div class="iframe-wrapper">
                  <iframe src="{{ url_for('player', preview_content_id=content.id) }}"></iframe>
             </div>

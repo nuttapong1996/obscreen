@@ -43,6 +43,25 @@ button,
 	&.btn-neutral:hover {
 		box-shadow: 0 2px 0 1px $gkscale6 inset;
 	}
+
+	&.btn-neutral {
+		$shadowOffset: 2;
+		color: $gkscale5;
+		background: $white;
+		box-shadow: none !important;
+		border: 1px solid transparent;
+
+		&.active,
+		&:hover {
+			box-shadow: 0 $shadowOffset 0 1px $gkscale2 inset;
+			background: $gkscaleC;
+		}
+
+		&:focus {
+			background: darken($gscale5, 20%);
+			border: 1px solid $gscaleA;
+		}
+	}
 }
 
 .tiles .tiles-inner .tile-item {

@@ -218,13 +218,14 @@ class UserManager:
         user_id = self.get_logged_user("id")
         now = time.time()
 
-        if 'created_by' not in object or not object['created_by']:
-            object["created_by"] = user_id
-            edits['created_by'] = object['created_by']
+        if user_id:
+            if 'created_by' not in object or not object['created_by']:
+                object["created_by"] = user_id
+                edits['created_by'] = object['created_by']
 
-        if 'updated_by' not in object or not object['updated_by']:
-            object["updated_by"] = user_id
-            edits['updated_by'] = object['updated_by']
+            if 'updated_by' not in object or not object['updated_by']:
+                object["updated_by"] = user_id
+                edits['updated_by'] = object['updated_by']
 
         if 'created_at' not in object or not object['created_at']:
             object["created_at"] = now

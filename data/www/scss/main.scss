@@ -18,19 +18,20 @@
 @import 'components/modals';
 @import 'components/toast';
 @import 'components/dragdrop';
-
-// Legacy
+@import 'components/animation';
 @import 'components/panes';
 @import 'components/tiles';
 @import 'components/empty';
 @import 'components/switches';
-//@import 'components/badges';
+@import 'components/badges';
 
 // Import form styles
 @import 'forms/forms';
 
 // Import pages styles
 @import 'pages/content';
+@import 'pages/content-composition';
+@import 'pages/content-text';
 @import 'pages/logs';
 @import 'pages/node-player';
 @import 'pages/playlist';

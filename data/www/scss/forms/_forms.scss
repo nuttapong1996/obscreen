@@ -81,6 +81,24 @@ form {
 		}
 	}
 
+	.checkbox-group,
+	.radio-group {
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-start;
+		align-items: center;
+
+		input {
+			display: none;
+		}
+
+		label {
+			margin: 0 5px 0 0 !important;
+			justify-content: center !important;
+			text-align: center;
+		}
+	}
+
 	.widget {
 		margin-top: 10px;
 		align-self: stretch;
@@ -100,12 +118,11 @@ form {
 			}
 		}
 
-		.btn {
+		input + .btn + .btn {
 			margin-left: 10px;
 		}
 
 		&.widget-unit {
-
 			select,
 			input {
 				flex-grow: 0;
@@ -128,6 +145,33 @@ form {
 				align-items: center;
 				margin-left: 5px;
 				color: $gscale5;
+			}
+		}
+
+		select,
+		input {
+			&.size-m {
+				max-width: 122px;
+			}
+
+			&.color-picker {
+				max-width: 125px;
+			}
+
+			&.chars-4 {
+				max-width: 50px;
+			}
+
+			&.chars-3 {
+				max-width: 40px;
+			}
+
+			&.chars-2 {
+				max-width: 20px;
+			}
+
+			&.chars-1 {
+				max-width: 15px;
 			}
 		}
 
@@ -155,23 +199,17 @@ form {
 				color: $gscale5;
 				background: none;
 				box-shadow: none;
-				border: none;
-				border-bottom: 1px solid $gscale3;
 				border-radius: 0;
 			}
 
 			&.input-naked {
-				padding-left: 0;
 				color: $gscaleB;
 			}
 
 			&.disabled,
 			&[disabled] {
-				border: none;
 				background: $gscale0;
 				border-radius: $baseRadius;
-				padding-left: 10px;
-				padding-right: 10px;
 			}
 		}
 	}

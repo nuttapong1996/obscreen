@@ -5,7 +5,7 @@ import json
 from pymediainfo import MediaInfo
 
 
-def mp4_duration_with_ffprobe(filename):
+def get_video_metadata(filename):
     try:
         result = subprocess.check_output(f'ffprobe -v quiet -show_streams -select_streams v:0 -of json "{filename}"', shell=True).decode()
         fields = json.loads(result)['streams'][0]
@@ -16,7 +16,10 @@ def mp4_duration_with_ffprobe(filename):
         elif 'duration' in fields:
             duration = round(float(fields['duration']), 2)
 
-        return duration
+        width = fields.get('width', 0)
+        height = fields.get('height', 0)
+
+        return width, height, duration
     except (subprocess.CalledProcessError, FileNotFoundError):
         logging.warn("ffprobe not found or an error occurred. Using pymediainfo instead.")
 
@@ -25,11 +28,13 @@ def mp4_duration_with_ffprobe(filename):
             for track in media_info.tracks:
                 if track.track_type == "Video":
                     duration = round(track.duration / 1000, 2) if track.duration else None
+                    width = track.width
+                    height = track.height
 
-                    return duration
+                    return width, height, duration
         except OSError:
             logging.warn("Fail to get video metadata from pymediainfo.")
     except json.JSONDecodeError:
         logging.warn("Fail to get video metadata from ffprobe.")
 
-    return 0
+    return 0, 0, 0

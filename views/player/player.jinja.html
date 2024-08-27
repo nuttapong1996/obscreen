@@ -5,17 +5,37 @@
     <meta name="robots" content="noindex, nofollow">
     <meta name="google" content="notranslate">
     <link rel="shortcut icon" href="{{ STATIC_PREFIX }}/favicon.ico">
+    {% set force_cover = request.args.get('cover') == '1' %}
+    {% set transparent = request.args.get('transparent') == '1' %}
     {% if slide_animation_enabled %}
         <link rel="stylesheet" href="{{ STATIC_PREFIX }}css/lib/animate.min.css" />
     {% endif %}
     <style>
-        html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; background-color: white; display: flex; flex-direction: row; justify-content: center; align-items: center; }
-        .slide { display: flex; flex-direction: row; justify-content: center; align-items: center; background: black; }
+        html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; background-color: {{ 'transparent' if transparent else 'white' }}; display: flex; flex-direction: row; justify-content: center; align-items: center; }
+        .slide { display: flex; flex-direction: row; justify-content: center; align-items: center; background: {{ 'transparent' if transparent else 'black' }}; }
         .slide, iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; padding-top: 0; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; }
         .slide iframe { background: white; }
-        .slide img, .slide video { height: 100%; }
+        .slide img, .slide video { {% if force_cover %}width: 100%;{% endif %} height: 100%; }
+        .slide .text-holder { width: 100%; height: 100%; display: flex; flex-direction: row; justify-content: center; align-items: center; box-sizing: border-box; }
+        .slide .text {
+            width: 100%; height: 100%; color: white; font-family: 'Arial', 'sans-serif'; font-size: 20px; display: flex; flex-direction: row; justify-content: center; align-items: center;
+            word-break: break-all; flex: 1; align-self: stretch; text-align: center; max-width: 100%; box-sizing: border-box;
+        }
         .slide video { width: 100%; height: 100%; }
+        @keyframes blink{50%{opacity:0;}}
+        .cfx-blink{animation:1.5s linear infinite blinker;}
+        .cfx-ffff-speed {animation-delay: 0.1s;}
+        .cfx-fff-speed {animation-delay: 0.3s;}
+        .cfx-ff-speed {animation-delay: 0.5s;}
+        .cfx-f-speed {animation-delay: 0.8s;}
+        .cfx-m-speed {animation-delay: 1s;}
+        .cfx-s-speed {animation-delay: 1.3s;}
+        .cfx-ss-speed {animation-delay: 1.5s;}
+        .cfx-sss-speed {animation-delay: 1.8s;}
+        .cfx-ssss-speed {animation-delay: 2s;}
+        .cfx-sssss-speed {animation-delay: 3s;}
     </style>
+    <script type="application/javascript" src="{{ STATIC_PREFIX }}js/lib/jquery.min.js"></script>
     <script type="application/javascript" src="{{ STATIC_PREFIX }}js/utils.js"></script>
     <script type="application/javascript" src="{{ STATIC_PREFIX }}js/lib/is-cron-now.js"></script>
 </head>
@@ -47,6 +67,7 @@
     // Frontend config
     const syncWithTime = items['time_sync'];
     const previewMode = items['preview_mode'];
+    const disableAutoplay = {{ 'false' if request.args.get('autoplay') == '1' else 'previewMode' }};
     const tickRefreshResolutionMs = 100;
 
     // Frontend flag updates
@@ -339,11 +360,17 @@
             case 'picture':
                 loadPicture(element, callbackReady, item);
                 break;
+            case 'text':
+                loadText(element, callbackReady, item);
+                break;
             case 'video':
                 loadVideo(element, callbackReady, item);
                 break;
             case 'youtube':
                 loadYoutube(element, callbackReady, item);
+                break;
+            case 'composition':
+                loadComposition(element, callbackReady, item);
                 break;
             default:
                 loadUrl(element, callbackReady, item);
@@ -361,6 +388,65 @@
         callbackReady(function() {});
     };
 
+    const loadText = function(element, callbackReady, item) {
+        const contentData = JSON.parse(item.location);
+        const $textHolder = $('<div class="text-holder">');
+        const $text = $('<div class="text">');
+        let insideText = contentData.textLabel;
+
+        if (contentData.scrollEnable) {
+            const $wrapper = $('<marquee>');
+            $wrapper.attr({ scrollamount: contentData.scrollSpeed, direction: contentData.scrollDirection, behavior: 'scroll', loop: -1 });
+            $wrapper.append(insideText);
+            insideText = $wrapper;
+        }
+
+        $text.append(insideText);
+
+        let justifyContent = 'center';
+        switch(contentData.textAlign) {
+            case 'left': justifyContent = 'flex-start'; break;
+            case 'right': justifyContent = 'flex-end'; break;
+        }
+
+        $text.css({
+            padding: contentData.margin + 'px',
+            color: contentData.color,
+            textAlign: contentData.textAlign,
+            textDecoration: contentData.textUnderline ? 'underline' : 'normal',
+            fontSize: contentData.fontSize + 'px',
+            fontWeight: contentData.fontBold ? 'bold' : 'normal',
+            fontStyle: contentData.fontItalic ? 'italic' : 'normal',
+            fontFamily: contentData.fontFamily + ", 'Arial', 'sans-serif'",
+            whiteSpace: contentData.singleLine ? 'nowrap' : 'normal',
+            justifyContent: justifyContent
+        });
+
+        $textHolder.css({ backgroundColor: contentData.backgroundColor }).html($text);
+        element.innerHTML = $('<div>').html($textHolder).html();
+        callbackReady(function() {});
+    };
+
+    const loadComposition = function(element, callbackReady, item) {
+        element.innerHTML = `composition`;
+        callbackReady(function() {});
+
+        const loadingDelayMs = 1000;
+        let delayNoisyContentJIT = Math.max(100, (lookupCurrentItem().duration * 1000) - loadingDelayMs);
+        delayNoisyContentJIT = lookupCurrentItem().id !== item.id ? delayNoisyContentJIT : 0;
+
+        const autoplayLoader = function() {
+            if (secondsBeforeNext * 1000 > loadingDelayMs) {
+                return setTimeout(autoplayLoader, 500);
+            }
+
+            if (element.innerHTML === 'composition') {
+                element.innerHTML = `<iframe src="${item.location}" frameborder="0" allow="autoplay" allowfullscreen></iframe>`;
+            }
+        }
+        setTimeout(autoplayLoader, delayNoisyContentJIT);
+    };
+
     const loadYoutube = function(element, callbackReady, item) {
         element.innerHTML = `youtube`;
         callbackReady(function() {});
@@ -375,7 +461,7 @@
             }
 
             if (element.innerHTML === 'youtube') {
-                const autoplay = previewMode ? '0' : '1';
+                const autoplay = disableAutoplay ? '0' : '1';
                 element.innerHTML = `<iframe src="https://www.youtube.com/embed/${item.location}?version=3&autoplay=${autoplay}&showinfo=0&controls=0&modestbranding=1&fs=1&rel=0" frameborder="0" allow="autoplay" allowfullscreen></iframe>`;
             }
         }
@@ -383,7 +469,7 @@
     };
 
     const loadVideo = function(element, callbackReady, item) {
-        element.innerHTML = `<video ${previewMode ? 'controls' : ''}><source src=${item.location} type="video/mp4" /></video>`;
+        element.innerHTML = `<video ${disableAutoplay ? 'controls' : ''}><source src=${item.location} type="video/mp4" /></video>`;
         const video = element.querySelector('video');
         callbackReady(function() {});
 
@@ -407,7 +493,7 @@
             }
 
             if (element.innerHTML.match('<video>')) {
-                if (!previewMode) {
+                if (!disableAutoplay) {
                     setTimeout(function() {
                         video.play();
                         pausableContent = video;

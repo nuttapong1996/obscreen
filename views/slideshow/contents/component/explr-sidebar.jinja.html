@@ -14,17 +14,17 @@
                     {{ render_folder(child) }}
                 {% endfor %}
                 {% for content in content_children %}
-                    {% set slides = slides_with_content[content.id]|default([]) %}
+                    {% set slides = slides_with_content[content.id]|default([]) if slides_with_content else [] %}
                     {% set icon = enum_content_type.get_fa_icon(content.type) %}
                     {% set color = enum_content_type.get_color_icon(content.type) %}
-                    <li class="explr-item" data-entity-json="{{ content.to_json() }}">
+                    <li class="explr-item" data-entity-json="{{ content.to_json({'classIcon': icon, 'classColor': color, 'metadata': json_loads(content.metadata)}) }}">
                         <i class="fa {{ icon }} {{ color }}"></i>
                         {% if slides|length > 0 %}
                             <sub>
                                 <i class="fa fa-play"></i>
                             </sub>
                         {% endif %}
-                        <a href="{% if use_href %}{{ url_for('slideshow_content_edit', content_id=content.id) }}{% else %}javascript:void(0);{% endif %}"
+                        <a href="{% if use_href %}{{ url_for('slideshow_content_edit', content_id=content.id, path=folder.path) }}{% else %}javascript:void(0);{% endif %}"
                            class="{{ 'explr-pick-element' if not use_href }}">
                             {{ content.name }}
                         </a>

@@ -1,0 +1,248 @@
+{% set active_pill_route='slideshow_content_list' %}
+{% extends 'base.jinja.html' %}
+
+{% block page_title %}
+    {{ l.slideshow_content_page_title }}
+{% endblock %}
+
+{% block add_css %}
+    <link rel="stylesheet" href="{{ STATIC_PREFIX }}css/lib/jquery-explr-1.4.css"/>
+    {{ HOOK(H_SLIDESHOW_CONTENT_CSS) }}
+{% endblock %}
+
+{% block add_js %}
+    <script>
+        const content_type_icon_classes = {
+           {% for type in enum_content_type %}
+               '{{ type.value }}': '{{ enum_content_type.get_fa_icon(type) }}',
+            {% endfor %}
+        };
+        const content_type_color_classes = {
+           {% for type in enum_content_type %}
+               '{{ type.value }}': '{{ enum_content_type.get_color_icon(type) }}',
+            {% endfor %}
+        };
+    </script>
+    <script src="{{ STATIC_PREFIX }}js/lib/jquery-explr-1.4.js"></script>
+    <script src="{{ STATIC_PREFIX }}js/slideshow/contents.js"></script>
+    <script src="{{ STATIC_PREFIX }}js/lib/jquery-ui.min.js"></script>
+    {# <script src="{{ STATIC_PREFIX }} js/lib/jquery-ui-rotatable.min.js"></script> #}
+    <script src="{{ STATIC_PREFIX }}js/slideshow/content-composition.js"></script>
+    <script src="{{ STATIC_PREFIX }}js/explorer.js"></script>
+    {{ HOOK(H_SLIDESHOW_CONTENT_JAVASCRIPT) }}
+{% endblock %}
+
+{% block body_class %}view-content-edit view-content-edit-composition edit-page{% endblock %}
+
+{% block top_page %}
+    <div class="top-content">
+        <h1>
+            {{ l.slideshow_content_form_edit_title }}
+        </h1>
+
+        {% set icon = enum_content_type.get_fa_icon(content.type) %}
+        {% set color = enum_content_type.get_color_icon(content.type) %}
+
+        <h3>
+            <span class="{{ color }} border-{{ color }}">
+                <i class="fa {{ icon }} {{ color }}"></i> {{ t(content.type) }}
+            </span>
+        </h3>
+
+        <a href="{{ url_for('serve_content_composition', content_id=content.id, autoplay=1, preview=1) }}" target="_blank" class="btn btn-naked">
+            <i class="fa fa-external-link"></i>
+        </a>
+    </div>
+{% endblock %}
+
+{% block main_page %}
+    <div class="bottom-content">
+        <div class="page-panel left-panel">
+            <div class="inner dirview">
+                <div class="breadcrumb-container">
+                    <ul class="breadcrumb">
+                        {% set ns = namespace(breadpath='') %}
+                        {% for dir in working_folder_path[1:].split('/') %}
+                            {% set ns.breadpath = ns.breadpath ~ '/' ~ dir %}
+                            <li>
+                                <a href="{{ url_for('slideshow_content_cd', path=ns.breadpath) }}">
+                                    <i class="explr-icon explr-icon-folder"></i>
+                                    {{ truncate(dir, 25, '...') }}
+                                </a>
+                            </li>
+                            {% if not loop.last %}
+                                <li class="divider">
+                                    <i class="fa fa-chevron-right"></i>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                {% set contentData = json_loads(content.location) %}
+                <div class="horizontal">
+                    <div class="form-holder">
+                        <form class="form"
+                              action="{{ url_for('slideshow_content_save', content_id=content.id) }}?path={{ working_folder_path }}"
+                              method="POST">
+                            <div class="form-group">
+                                <label for="content-edit-name">{{ l.slideshow_content_form_label_name }}</label>
+                                <div class="widget">
+                                    <input type="text" name="name" id="content-edit-name" required="required"
+                                           value="{{ content.name }}"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="elem-screen-ratio">{{ l.enum_content_type_composition_object_label }}</label>
+                                <div class="widget">
+                                    {% set ratios = [
+                                        "4/3",
+                                        "16/9",
+                                        "16/10",
+                                        "3/4",
+                                        "9/16",
+                                        "10/16",
+                                    ] %}
+                                    <select name="name" id="elem-screen-ratio" required="required" class="size-m">
+                                        {% for ratio in ratios %}
+                                            <option value="{{ ratio }}" {% if ratio == contentData.ratio %}selected="selected"{% endif %}>
+                                                {{ ratio }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+{#                            <div class="form-group">#}
+{#                                <label for="">Ratio</label>#}
+{#                                <div class="horizontal">#}
+{#                                    <div class="widget">#}
+{#                                        <input type="text" value="16" />#}
+{#                                    </div>#}
+{#                                    <div>#}
+{#                                        /#}
+{#                                    </div>#}
+{#                                    <div class="widget">#}
+{#                                        <input type="text" value="9" />#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
+
+                            <input type="hidden" name="location" id="content-edit-location" value="{{ content.location }}" />
+
+                            <div class="elements-holder">
+                                <h3 class="divide">{{ l.composition_elements_heading }}</h3>
+                                <div class="form-elements-list" id="elementList">
+
+                                </div>
+                            </div>
+
+                            <div class="actions actions-right">
+                                <button type="submit" class="btn btn-info">
+                                    <i class="fa fa-save icon-left"></i>
+                                    {{ l.common_save }}
+                                </button>
+                                <a href="{{ url_for('slideshow_content_list') }}" class="btn btn-naked">
+                                    <i class="fa fa-rectangle-xmark icon-left"></i>
+                                    {{ l.common_cancel }}
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="page-content">
+            <div class="inner">
+                <h3 class="main">
+                    {{ l.composition_monitor }} <span class="ratio-value badge-inset"></span>
+                </h3>
+
+                <div class="toolbar">
+                    <button id="addElement" class="content-explr-picker"><i class="fa fa-plus icon-left"></i>{{ l.composition_element_add }}</button>
+                    <button id="removeAllElements" class="btn btn-danger"><i class="fa fa-trash icon-left"></i> {{ l.composition_elements_delete_all }}</button>
+                </div>
+
+                <div class="presets">
+                    <h4 class="divide">
+                        {{ l.composition_presets }}:
+                    </h4>
+                    <button type="button" id="presetGrid2x2" class="btn btn-wire-neutral">{{ l.composition_presets_grid_2x2 }}</button>
+                    <button type="button" id="presetTvNews1x1" class="btn btn-wire-neutral">{{ l.composition_presets_tvnews_1x1 }}</button>
+                </div>
+                <div class="screen-holder">
+                    <div class="screen" id="screen">
+                        <!-- Elements will be dynamically added here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="page-panel right-panel">
+            <div class="form-element-properties hidden">
+                <form id="elementForm">
+                    <h3>
+                        {{ l.common_position }}
+                    </h3>
+
+                    <div class="form-group">
+                        <label for="elem-x">{{ l.composition_element_x_axis }}</label>
+                        <div class="widget">
+                            <input type="number" id="elem-x" name="elem-x">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="elem-y">{{ l.composition_element_y_axis }}</label>
+                        <div class="widget">
+                            <input type="number" id="elem-y" name="elem-y">
+                        </div>
+                    </div>
+
+                    <h3 class="divide">
+                        {{ l.common_size }}
+                    </h3>
+
+                    <div class="form-group">
+                        <label for="elem-width">{{ l.common_width }}</label>
+                        <div class="widget">
+                            <input type="number" id="elem-width" name="elem-width">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="elem-height">{{ l.common_height }}</label>
+                        <div class="widget">
+                            <input type="number" id="elem-height" name="elem-height">
+                        </div>
+                    </div>
+
+                    <div class="horizontal fx-end element-tool element-adjust-aspect-ratio-container hidden">
+                        <button type="button" class="btn btn-wire-neutral element-adjust-aspect-ratio">
+                            <i class="fa fa-solid fa-down-left-and-up-right-to-center icon-left"></i> {{ l.composition_element_match_content_aspect_ratio }}
+                        </button>
+                    </div>
+
+{#                    <div class="form-group">#}
+{#                        <label for="elem-rotate">{{ l.common_angle }} (deg)</label>#}
+{#                        <div class="widget">#}
+{#                            <input type="number" id="elem-rotate" name="elem-rotate">#}
+{#                        </div>#}
+{#                    </div>#}
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="pickers hidden">
+        <div class="modals-outer">
+            <div class="modals-inner">
+                {% include 'slideshow/contents/modal/explr-picker.jinja.html' %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
